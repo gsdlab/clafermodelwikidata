@@ -1,0 +1,65 @@
+---
+title: Modeling Variability 7
+categories: demo
+toc: false
+...
+
+Partially configuring `BumbleBee`.
+
+```clafer
+BumbleBee : Camaro
+    [ transformer ]
+```
+
+Specializing `Car` into `Camaro` and extending with `transformer`.
+
+```clafer
+abstract Camaro : Car
+    [ ACC ]
+    [ backlight ]
+    transformer ?
+```
+
+Basic model of a `Car`.
+
+```clafer
+abstract Car
+    ABS ?
+    xor Transmission
+        Automatic
+        Manual
+    `FCA ?
+    `CC ?
+    [ ACC => FCA ]
+```
+
+The Forward Collision Alert (FCA) subsystem.
+
+```clafer
+abstract FCA
+    xor Sensor
+        Radar
+        Lidar
+    xor Alert
+        Haptic
+        Audible
+```
+
+The Cruise Control (CC) subsystem.
+
+```clafer
+abstract CC
+    switch
+        backlight ?
+    ACC ?
+```
+
+Summary
+
+```{.clafer .summary}
+```
+
+```{.clafer .ide}
+```
+
+> [Back to Intro](Intro)

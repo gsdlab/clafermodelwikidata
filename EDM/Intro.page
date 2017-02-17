@@ -1,0 +1,531 @@
+---
+title: Example-Driven Modeling Using Clafer
+toc: false
+...
+
+Examples for the paper [Example-Driven Modeling Using Clafer](http://gsd.uwaterloo.ca/node/537). 
+
+The model compiles and instantiates with Clafer/ClaferIG `v0.4.2` (revised on 2015-10-20).
+
+> "We learn by example and by direct experience because there are real limits to the adequacy of verbal instruction." 
+--Malcolm Gladwell
+
+Points
+======
+
+We are trying to make:
+
+* systematically using explicit examples for eliciting, modeling, verifying, and validating complex business knowledge
+* model = examples + abstractions
+* assumption: people can formulate simple abstractions directly (common sense)
+* assumption: experts drop down to concrete examples to clarify difficult, exceptional, and corner-cases(cog-psy)
+* different kinds of examples are useful, most notably: 
+    - partial examples that naturally express person's partial view of the world,
+    - near-miss, negative examples that show constraint violations
+    - contrasting examples that show alternative cases
+* Clafer is a lightweight structural modeling language which naturally supports EDM with the following language features:
+    - support for untyped and partially typed examples
+    - support for specializing and extending both the examples and abstractions (easy extension + constraints can be used in both)
+    - examples and abstractions are easily expressed and can be easily mixed in the same model
+    - both examples and abstractions look the same in syntax and have unified semantics
+    - examples are by default partial
+    - full support of the reasoner - this makes the model *playable*: constraints can be checked and full completions of partial examples can be automatically generated.
+* we'd like to show types of modeling scenarios and how they are supported by Clafer
+
+Scenario
+========
+
+Business domain modeling and requirements elicitation for a "Room Booking Software".
+
+```{.clafer .links}
+```
+
+Participants: Alice (SME), Bob (BA), Charlie (BA)
+
+Session 1: Bob and Alice
+------------------------
+
+> ALICE: Members of our organization often book rooms for meetings. Each meeting is organized by a chair and has at least one other participant. Each room has a maximum capacity it can hold. Depending on the room different equipment is available.
+
+> BOB: Please, give me examples of meetings and rooms.
+
+> ALICE: The mid-year review meeting always takes place in June. It is organized by Steven, our chair, and is held in the meeting room C. The room provides a whiteboard and audio-conferencing equipment to include online participants. Another example is an on-demand meeting organized within work hours. Joanna, a team-leader, sometimes meets other team members in room D. They use a whiteboard and have no online participants.
+
+*BOB writes down the examples, learns the domain and abstracts concepts to come up with a model.*
+
+Examples:
+
+```clafer
+midYearReview : Meeting
+    month -> June
+    [ chair = Steven ]
+    [ room = C ]
+    [ some onlineParticipant ]
+
+Steven : Member
+
+C : Room
+    [ whiteboard ]
+    [ audioConferencing ]
+```
+
+(using redefinition would be)
+
+```
+midYearReview : Meeting
+    month -> June
+    chair -> Steven 
+    room -> C
+    [ some onlineParticipant ]
+
+Steven : Member
+
+C : Room
+    whiteboard
+    audioConferencing
+```
+
+```clafer
+ondemandMeeting : Meeting
+    [ chair = Joanna ]
+    [ no onlineParticipant ]
+    [ room = D ]
+
+Joanna : Member
+
+D : Room
+    [ whiteboard ]
+```
+
+(using redefinition would be)
+
+```
+ondemandMeeting : Meeting
+    chair -> Joanna
+    [ no onlineParticipant ]
+    room -> D
+
+Joanna : Member
+
+D : Room
+    whiteboard
+```
+
+Abstractions:
+
+* Bob also makes reasonable assumptions about the numbers of participants and online participants and their relation to room capacity. Also no members can be both a `participant` and `onlineParticipant` at the same time.*
+
+```clafer
+abstract Meeting
+    chair -> Member
+        [ this not in participant.dref ]
+        [ this not in onlineParticipant.dref ]
+    participant -> Member +
+    onlineParticipant -> Member *
+    [ no (participant ** onlineParticipant) ]
+    room -> Room
+        [ this.capacity >= # participant + 1 ]
+    [ some onlineParticipant => room.audioConferencing ]
+    time -> integer
+    whiteboard -> Whiteboard
+    rep -> Rep
+
+enum Month = June | July 
+
+abstract Member
+```
+
+> BOB: So we have 3 main concepts: `Meeting`, `Room`, `Member`. The participants are on-site members or join remotely. There is one distinguished member: the chair. I assume there must be at least one participant other than a chair to call a meeting. I also assume that the chair is not part of the list of participants and that online participants do not count for room capacity calculation.
+
+> ALICE: Yes, these assumptions are correct. 
+
+> BOB: I have one question. Are all types of the equipment available in each meeting room? For example, can there be a meeting room without `audioConferencing` equipment?
+
+> ALICE: Well, each room provides either a traditional or an electronic whiteboard. All other equipment is optional (such as projectors and computers). Only if the meeting includes remote participants, must the room offer at least audio-conferencing equipment.
+
+> BOB: Aha, an important constraint must be added!
+
+*Bob adds the constraint* `[ some onlineParticipant => room.audioConferencing ]` *to the `Meeting`.*
+
+```clafer
+abstract Room
+    capacity -> integer
+    num -> integer
+    or whiteboard ?
+        traditional
+        electronic
+    projector ?
+    computer ?
+    audioConferencing ?
+```
+
+Next, Bob verifies his model.
+
+*Bob creates a few Members, who could chair or participate in meetings in addition to Steven and Joanna.*
+
+```clafer
+Al : Member
+Ben : Member
+Carl : Member
+Dennise : Member
+Ed : Member
+Fran : Member
+Georgia : Member
+Hellen : Member
+```
+
+*Next, Bob generates a series of completions of his model.*
+
+One completion is shown below.
+
+```
+June
+July
+Al
+Ben
+Carl
+Dennise
+Ed
+Fran
+Georgia
+Hellen
+midYearReview
+  month = June
+  chair$1 = Steven
+  participant$1 = Ed
+  participant$2 = Ben
+  participant$3 = Joanna
+  onlineParticipant = Hellen
+  room$1 = C
+Steven
+C
+  capacity$1 = 12
+  whiteboard$1
+    traditional
+  audioConferencing
+ondemandMeeting
+  chair$2 = Joanna
+  participant$4 = Ben
+  participant$5 = Al
+  room$2 = D
+Joanna
+D
+  capacity$2 = 13
+  whiteboard$2
+    electronic
+```
+
+*For each generated completion, Bob asks Alice to confirm whether the completion is valid or invalid*.
+
+> ALICE: all examples I've seen are correct.
+
+> BOB: can you think of an invalid example?
+
+> ALICE: For example, say Al invites Ben, Carl, Ed, Fran, and Hellen into a small room E with capacity 4. 
+Al also invites Dennise and Fran to participate online. The room E does not have audio conferencing equipment. Such a situation should not be allowed.
+
+> BOB: let's see whether it is allowed by our model so far.
+
+*Bob constructs a negative example and attempts to instantiate the model*.
+
+```clafer
+badMeeting : Meeting 
+   [ chair = Al ]
+   [ participant = Ben, Carl, Ed, Fran, Hellen ]
+   [ onlineParticipant = Dennise, Fran ]
+   [ room = E ]
+
+E : Room 
+   [ capacity = 4 ]
+   [ no audioConferencing ]
+```
+
+*Clafer Instance Generator responds:*
+
+```
+No more instances found. Try increasing scope to get more instances.
+The following set of constraints cannot be satisfied in the current scope.
+  1) onlineParticipant = Dennise, Fran (line 36, column 6)
+  2) no audioConferencing (line 41, column 6)
+  3) some onlineParticipant => room.audioConferencing (line 10, column 7)
+  4) participant = Ben, Carl, Ed, Fran, Hellen (line 33, column 4)
+  5) this.capacity >= # participant + 1 (line 9, column 11)
+Altering the following constraints produced the following near-miss example:
+  1) removed participant = Ben, Carl, Ed, Fran, Hellen
+  2) removed onlineParticipant = Dennise, Fran
+E
+  capacity = 4
+  whiteboard
+    traditional
+  projector
+Al
+Ben
+Carl
+Dennise
+Ed
+Fran
+Georgia
+Hellen
+badMeeting
+  chair = Al
+  participant = Hellen
+  room = E
+```
+
+> BOB: IG reported that constraints 1)-5) are mutually contradicting. Actually, constraints 1)-3) are mutually contradicting as well as constraints 4) and 5). IG removed one constraint from each group (UnSAT Core) to produce a near-miss instance. The resulting near-miss example shows that there cannot be any online participants and that Ben, Carl, Ed, Fran, Hellen cannot participate because that exceeds room's capacity.
+
+Session 2: Charlie and Alice
+----------------------------
+
+The first session between Alice and Charlie goes as follows.
+
+> ALICE: We need to keep track of bookings to ensure that rooms and people are not double-booked. Recently, for example, Sue, the head of research, had scheduled two meetings at the same day at 10am.
+
+> CHARLIE: How did that happen?
+
+> ALICE: First, she organized a meeting at 10am. The other meeting was organized by Sam also at 10am. Sue somehow understood that Sam wanted to attend her meeting and confirmed her attendance at Sam’s meeting. It wasn’t the first time that miscommunication happened.
+
+> CHARLIE: I see. So how does Sue deal with conflicting meetings?
+
+> ALICE: In several ways. First, she may cancel one of the meetings. Alternatively, she confirms only one of the meetings while keeping the other one unconfirmed. She can also confirm the two meetings but they cannot overlap. Sometimes she combines the two meetings into one if the topics are similar. Each employee should have a daily agenda of meetings. Based on that they should be able to confirm or decline each meeting.
+
+> CHARLIE: That’s quite complex. I think I understand...
+
+*Charlie writes down the possible ways of scheduling meetings.*
+
+`CD+`
+
+```clafer
+abstract Agenda
+    mt -> Meeting *
+
+SueAgenda : Agenda
+    m1 -> M1 ?
+    m2 -> M2 ?
+
+M1 : Meeting ?
+
+M2 : Meeting ?
+   [ time = 10 ]
+```
+
+completion `CD+`->`c1`
+
+```clafer
+SueAgenda_c1 : Agenda
+    m1 ->  M1_c1
+    m2 -> M2_c1 0
+
+M1_c1 : Meeting 1
+
+M2_c1 : Meeting 0
+   [ time = 10 ]
+```
+
+completion `CD+`->`c2`
+
+```clafer
+SueAgenda_c2 : Agenda
+    m1 -> M1_c2
+    m2 -> M2_c2 ?
+
+M1_c2 : Meeting 1
+   [ time = 11 ]
+M2_c2 : Meeting ?
+   [ time = 10 ]
+```
+
+completion `c1`->`c4` and `c2`->`c4` 
+
+```clafer
+SueAgenda_c4 : Agenda
+    m1 -> M1_c4
+
+M1_c4 : Meeting 1
+    [ time = 10 ]
+
+M2_c4 : Meeting 0
+   [ time = 10 ]
+```
+
+completion `c2`->`c6`
+
+```clafer
+SueAgenda_c6 : Agenda
+    m1 -> M1_c6
+    m2 -> M2_c6
+
+M1_c6 : Meeting
+   [ time = 11 ]
+M2_c6 : Meeting
+   [ time = 10 ]
+```
+
+completion `CD+`->`c3`
+
+```
+SueAgenda6
+    m1 -> M1_6
+    m2 -> M2_6
+
+M1_6 : Meeting 1
+
+M2_6 : Meeting 1
+   time -> 10
+
+M12_6 : M1, M2
+```
+
+Session 3: Bob and Alice
+------------------------
+
+The second session between Alice and Bob goes as follows.
+
+> ALICE: Each meeting is organized by a chair who is responsible for booking the room. Chair also notifies other participants about the meeting. Rooms have different equipment, and obviously, different numbers.
+
+CD I
+
+```clafer
+Sue : Member
+
+SM : Meeting
+  [ chair = Sue ]
+```
+
+> BOB: Let’s understand a concrete meeting. Could you please give me an example of room booking? What equipment is used?
+
+> ALICE: Sure. For example, Sue organizes meetings for her research group. They use an electronic whiteboard, as it simplifies sharing notes online.
+
+*Bob writes down the example*
+
+Bob I
+
+```clafer
+SM_BobI : Meeting
+  [ chair = Sue ]
+  [ whiteboard = Electronic ]
+  [ room = R_BobI ]
+
+R_BobI : Room
+```
+
+```clafer
+enum Whiteboard = Electronic | Traditional
+```
+
+> BOB: Perfect. Do all rooms have an electronic whiteboard?
+
+> ALICE: No. All rooms have a traditional whiteboard, but only some rooms
+offer the electronic one.
+
+*Bob completes the example*
+
+Bob II
+
+```clafer
+SM_BobII : Meeting
+  [ chair = Sue ]
+  [ whiteboard = Electronic ]
+  [ room = R_BobII ]
+
+R_BobII : ERoom
+```
+
+```clafer
+abstract ERoom : Room
+  [ electronic ]
+```
+
+Session 4: Charlie and Alice
+----------------------------
+
+The second session between Alice and Charlie goes as follows.
+
+> ALICE: As you may know, each meeting is organized by a chair.
+
+> BOB: Right, such as Sue. Alice, how often are the meetings scheduled? Can
+you give me a concrete example?
+
+> ALICE: For example, Sue organizes weekly meetings at 10am. They discuss
+progress done on research projects.
+
+*Charlie writes down the example*
+
+Charlie
+
+```clafer
+SM_Charlie : Meeting
+  [ chair = Sue ]
+  [ rep = Weekly ]
+  [ time = 10 ]
+```
+
+```clafer
+enum Rep = Daily | Weekly
+```
+
+*Based on the partial examples Bob and Charlie create an example that merges their knowledge. The partial object diagram is a combination of Charlie’s example and Bob’s refined example. Fortunately, there are no conflicts in the merged example.*
+
+CD II
+
+```clafer
+SM_CDII : Meeting
+  [ chair = Sue ]
+  [ rep = Weekly ]
+  [ time = 10 ]
+  [ whiteboard = Electronic ] 
+  [ room = R_BobII ]
+```
+
+Session 5: Bob, Charlie, and Alice
+----------------------------------
+
+There is, however, still one unknown: the room number num where Sue meets her group. The two BAs propose a class diagram that provides an abstraction for meetings. Abstractions generalize information to improve understanding of a set of examples. The BAs were able to construct the class diagram only after consolidating their partial knowledge.
+
+OD
+
+```clafer
+SM_OD : Meeting
+  [ chair = Sue ]
+  [ rep = Weekly ]
+  [ time = 10 ]
+  [ whiteboard = Electronic ]
+  [ room = R_OD ]
+
+R_OD : ERoom
+  [ num = 200 ]
+```
+
+> BOB, CHARLIE: Is the final combined example valid?
+
+> ALICE: Yes, it seems valid; however, I am not sure since our model is already quite complex. Could you please show me a complete instantiation?
+
+> BOB: Sure.
+
+*Bob generates a few completions of the integrated example.*
+
+```
+Hellen
+Sue
+Electronic
+Traditional
+Daily
+Weekly
+SM_OD
+  chair = Sue
+  participant = Hellen
+  room = R_OD
+  time = 10
+  whiteboard$1 = Electronic
+  rep = Weekly
+R_OD
+  capacity = 21
+  num = 200
+  whiteboard$2
+    electronic
+```
+
+> ALICE: That looks great!
+
+```{.clafer .ide}
+```

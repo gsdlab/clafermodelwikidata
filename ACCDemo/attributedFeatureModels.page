@@ -1,0 +1,83 @@
+---
+title: Quality Modeling and Optimization
+... 
+
+> Back to [Intro]()
+
+Quality Attributes
+
+```clafer
+abstract Feature
+    cost -> integer
+
+abstract ComfortFeature : Feature
+    comfort -> integer
+
+abstract FuelFeature : ComfortFeature
+    fuel -> integer
+```
+
+Attributed Feature Model
+
+```clafer    
+abstract Car
+    ABS : Feature ?
+        [cost = 2]
+    CC : FuelFeature ?
+        [fuel = 1]
+        [comfort = 3]
+        [cost = 4]
+        ACC : FuelFeature ?
+            [fuel = 2]
+            [comfort = 6]
+            [cost = 3]
+            [FCA]
+    xor Transmission
+        Automatic : FuelFeature
+            [fuel = 2]
+            [comfort = 2]
+            [cost = 3]     
+        Manual : FuelFeature
+            [fuel = 0]
+            [comfort = 1]
+            [cost = 2]
+    FCA : FuelFeature ?
+        [fuel = 2]
+        [comfort = 4]
+        [cost = 5]
+        xor Sensor
+            Radar : Feature
+                [cost = 2]
+            Lidar : Feature
+                [cost = 4]
+                
+        xor Alert ?
+            Haptic : ComfortFeature
+                [comfort = 4]
+                [cost = 2]                
+            Audible : ComfortFeature
+                [comfort = 2]
+                [cost = 1]
+
+    total_cost -> integer = sum Feature.cost
+    total_comfort -> integer = sum ComfortFeature.cost
+    total_fuel -> integer = sum FuelFeature.cost
+```
+
+Partial Configuration 
+
+```clafer
+aCar : Car
+```
+
+Optimization objectives
+
+```clafer
+<< min aCar.total_cost >>
+<< min aCar.total_fuel >>
+<< max aCar.total_comfort >>
+```
+
+```{.clafer .mooviz}
+```
+ 

@@ -1,0 +1,32 @@
+1. Set Comprehension
+
+>	a). {p:SetExp|expression-with-p}
+	    Example: {p:Person|p.age > 15} represents all persons whose age is greater than 15.
+	
+>	b). {p:SetExp|expression-with-p|set-expression-with-p}
+	    Example: {p:Person|p.age > 15|p.name} represents the names of all persons whose age is greater than 15.
+
+2. Reverse reference
+
+>	ClaferId.~ClaferId
+
+3. Transitive Closure
+
+>	ClaferId.^SubClaferId
+
+4. InstanceOf
+
+>	ClaferId instanceOf ClaferId	
+	
+>	Example:
+     	
+>	abstract Person
+>		......
+>		canDrive?
+			[parent instanceOf adults]
+>
+>	adults:Person *
+>		......
+>
+>	children:Person *
+>		......

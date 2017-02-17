@@ -1,0 +1,150 @@
+---
+title: Modeling hardware failures
+...
+
+> Back to [Intro]()
+
+While the fixed example captures the structure of the auto pilot system there are no interesting properties we can investigate. For example, imagine we wanted to observe whether the system would still be functional if one of the vision and algorithm processors failed. This would be interesting for two reasons:
+
+1. We can test the tolerance of the system to certain hardware faults.
+2. We can synthesize the various designs due to the reconfiguration of the system in response to hardware faults.
+
+For the purposes of this example we consider a hardware fault only to be the failure of a device node (i.e. it is as if the device node has been removed from the system).
+
+To enable this analysis, we must first add variability to the device nodes. We do this by marking each device node optional (with multiplicity `0..1` denoted by `?`). 
+
+> ![**Figure 1:** Fixed functional analysis architecture (FAA) for auto pilot system](/fixed_FAA.PNG)
+
+> ![**Figure 2:** All device nodes (DN) are made optional to model the possibility of failure](/deviceNodes.png)
+
+# Reference model
+
+First our reference model, in which we now have the concepts of deployment and device node:
+
+```clafer
+abstract System
+abstract FunctionalAnalysis
+abstract HardwareArchitecture
+abstract DeviceNodeClassification
+abstract Deployment
+
+abstract FunctionalAnalysisComponent
+    deployedTo -> DeviceNode 1..2  // Most functions are at most double redundant
+    xor implementation
+        hardware
+            [deployedTo.type in (EEDeviceNode, SmartDeviceNode)]
+        software
+            [deployedTo.type in SmartDeviceNode]
+abstract AnalysisFunction : FunctionalAnalysisComponent
+abstract FunctionalDevice : FunctionalAnalysisComponent
+abstract FunctionConnector
+    sender -> FunctionalAnalysisComponent
+    receiver -> FunctionalAnalysisComponent
+
+enum DeviceNodeType = SmartDeviceNode | EEDeviceNode | PowerDeviceNode
+
+abstract DeviceNode
+    [ some fac : FunctionalAnalysisComponent | this in fac.deployedTo ]
+    type -> DeviceNodeType
+```
+
+# Architecture of the autopilot system
+
+Then, below the functional analysis architecture, we add the hardware architecture with optional devices, as well as, the deployment of the functional to the hardware layer.
+
+```clafer
+AutoPilot : System
+    AP_FAA : FunctionalAnalysis
+        frontDriverLidar : FunctionalDevice
+            [implementation.hardware]
+        frontPassengerLidar : FunctionalDevice
+            [implementation.hardware]
+        lidarProcessing : AnalysisFunction
+            [implementation.software]
+        pointCloudClustering : AnalysisFunction
+            [implementation.software]
+        frontRadar : FunctionalDevice
+            [implementation.hardware]
+        dynamicObjectDetection : AnalysisFunction
+            [implementation.software]
+        trajectoryPlanningAP : AnalysisFunction
+            [implementation.software]
+        speedControl : AnalysisFunction
+            [implementation.software]
+        frontDriverLidarVal : FunctionConnector
+            [sender = frontDriverLidar && receiver = lidarProcessing]
+        frontPassengerLidarVal : FunctionConnector
+            [sender = frontPassengerLidar && receiver = lidarProcessing]
+        compositePointCloud : FunctionConnector
+            [sender = lidarProcessing && receiver = pointCloudClustering]
+        frontRadarVal : FunctionConnector
+            [sender = frontRadar && receiver = dynamicObjectDetection]
+        pointCloudCusterVal : FunctionConnector
+            [sender = pointCloudClustering && receiver = dynamicObjectDetection]
+        dynamicObjects : FunctionConnector
+            [sender = dynamicObjectDetection && receiver = trajectoryPlanningAP]
+        velocityProfile : FunctionConnector
+            [sender = trajectoryPlanningAP && receiver = speedControl]
+
+    AP_HA : HardwareArchitecture
+        dn -> AP_DN
+        // devices
+        AP_DN : DeviceNodeClassification
+            visionProcessor1 : DeviceNode ?
+                [type = SmartDeviceNode]
+            visionProcessor2 : DeviceNode ?
+                [type = SmartDeviceNode]
+            algorithmProcessor1 : DeviceNode ?
+                [type = SmartDeviceNode]
+            algorithmProcessor2 : DeviceNode ?
+                [type = SmartDeviceNode]
+
+            frontDriverLidarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+            frontPassengerLidarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+
+            frontRadarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+    // deployment of functions to devices
+    AP_Dpl : Deployment
+        fa -> AP_FAA
+        ha -> AP_HA
+        [fa.frontDriverLidar.deployedTo = ha.dn.frontDriverLidarSensor]
+        [fa.frontPassengerLidar.deployedTo = ha.dn.frontPassengerLidarSensor]
+        [fa.lidarProcessing.deployedTo in (ha.dn.visionProcessor1, ha.dn.visionProcessor2)]
+        [fa.pointCloudClustering.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.frontRadar.deployedTo = ha.dn.frontRadarSensor]
+        [fa.dynamicObjectDetection.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.trajectoryPlanningAP.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.speedControl.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+```
+
+Next we have to update the deployment constraints in which we want to say that the analysis functions can be deployed to either processing unit. This allows us to model a failure of a device node and as long as there exists another device node to which the function can be deployed to.
+
+# Exploration scenarios
+
+Then using this model we can model a couple of different scenarios. The fist scenario is to remove one of the vision and algorithm processors. The architecture can still be synthesized despite and unavailability of these two nodes. It means that our system is still functional after the failure of `visionProcessor1` and `algorithmProcessor1`.
+
+```clafer
+[no AP_DN.visionProcessor1]
+[no AP_DN.algorithmProcessor1]
+```
+
+However, if we were to model the failure of the front radar as follows:
+```clafer
+[no AP_DN.frontRadarSensor]
+```
+
+We would find that we get UNSAT from the solver. This translates to saying that if we lose the front radar sensor, the system is no longer functional (i.e., the system has failed).
+
+```{.clafer .links}
+```
+
+```{.clafer .ide}
+```
+
+
+> ![next](/next.png) [Modeling FAA Re-configurations](model-faa-reconfig)
+
+> Back to [Intro]()

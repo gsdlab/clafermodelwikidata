@@ -1,0 +1,50 @@
+---
+title: Modeling Variability 6
+categories: demo
+toc: false
+...
+
+Specializing `Car` into `Camaro` and extending with `transformer`.
+
+```clafer
+abstract Camaro : Car
+    [ ACC ]
+    [ backlight ]
+    transformer ?
+```
+
+Basic model of a `Car`.
+
+```clafer
+abstract Car
+    ABS ?
+    xor Transmission
+        Automatic
+        Manual
+    `FCA ?
+    `CC ?
+    [ ACC => FCA ]
+```
+
+The Forward Collision Alert (FCA) subsystem.
+
+```clafer
+abstract FCA
+    xor Sensor
+        Radar
+        Lidar
+    xor Alert
+        Haptic
+        Audible
+```
+
+The Cruise Control (CC) subsystem.
+
+```clafer
+abstract CC
+    switch
+        backlight ?
+    ACC ?
+```
+
+[Modeling Variability 7]()

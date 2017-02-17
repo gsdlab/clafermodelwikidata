@@ -1,0 +1,67 @@
+---
+title: Exercise - Modeling a Concept "Book"
+toc: false
+...
+
+The goal of the exercise is to reconstruct the model of a concrete concept: `book`. Please write down the model based on the domain description below and compare it with the reference solution provided in the last section. The instructions below are designed for "top-down" or "abstraction-first" analysis, which is suitable when the concept is well understood. An example of a "concrete-to-abstract" analysis, which is most suitable for concepts discovery from examples, can be found at: 
+[Concrete-to-abstract modeling with Clafer example](http://gsd.uwaterloo.ca/node/356).
+
+Idea/a concept/a topic
+----------------------
+
+A book.
+
+Points, parts, properties, features, kinds, roles, anything closely related to the concept
+------------------------------------------------------------------------------------------
+
+Some of them are about your concept, others can be separate concepts.
+
+A book has a title, sometimes a subtitle (does not make sense to have a subtitle without a title), at least 2 pages, and the year of publication. It can be of different formats: paper or electronic. If paper, can be hardcover or not. It can be of different kinds such as a text book, manual, reference, fiction, non-fiction, or of some other kind. A book must have at least one author. An author is a person who has at least one book. A person has name and date of birth (dob). Some books may have an ISBN number, which is 10 digits long. All books published after (including) 1970 are required to have the ISBN number. An ISBN number may have a three digit GS1 prefix. All books published after (including) 2007 must have a GS1 prefix.
+
+From the above description, we can identify a few clafers: `book` (concept), `title`, `subtitle ?`, `page 2..*`, `year`, `format`, `paper`, `electronic`, `hardcover`, `kind`, `text book`, `manual`, `reference`, `fiction`, `nonfiction`, `other -> string`, `author` (concept), `author` (reference from `book` to `author`), `person` (concept), `name`, `dob`, and `book` (reference from `author` to `book`), `ISBN`, `GS1`.
+
+> **Note:** It is currently not possible to specify the length and format (e.g., `only digits` or `dd/mm/yyyy`) of strings in Clafer.
+
+Concrete examples of concepts
+-----------------------------
+
+Krzysztof Czarnecki and Urlich Eisenecker wrote a book called "Generative Programming" published in year 2000, ISBN: 0201309775.
+
+From that description, we can identify three concrete clafers: `Czarnecki` and `Eisenecker`, who are `Authors`, `GenerativeProgramming`, which is a `Book`. Appropriate children of each have to be restricted to correct values. `GenerativeProgramming` has 589 `page`s, it is `paper`, and it does not have a `hard cover`.
+
+> Tip! Use `[ # page = 589 ]` to specify the number of pages.
+
+> Tip! Use `[ GenerativeProgramming in book ]` to specify that GenerativeProgramming is one of the books of Czarnecki (the same for `Eisenecker`).
+
+> Tip! Use `[ year >= 1970 => ISBN ]` to specify that when year is greater or equal than 1970, ISBN number is required. The symbol `=>` means "requires"/"implies".
+
+Create a model
+--------------
+
+Put your concept top left and add its direct clafers below. Use indentation to add children clafers. Give clafers their types. Choose clafer and group cardinalities. Add the other concepts. Keep all concepts you need to refer to or inherit from top level (not indented). Add children clafers that are the references (links) to other concepts. Decide which of the top level clafers are abstract or concrete.
+
+Add concrete clafers that represent the examples. Keep them not indented. Choose appropriate direct super clafers. Add appropriate constraints to restrict sets of examples described by these concrete clafers.
+
+Use the ClaferIDE to edit, compile, and validate through instantiation your model.
+
+```clafer
+abstract Book
+```
+
+```{.clafer .ide}
+```
+
+![next](/next.png)[Exercise - Example Reference Solution]()
+
+Acknowledgements
+----------------
+
+I would like to thank Maria Attarian, Marko Novakovic, Leonardo Passos, Jeniffer Janik, and Thiago Tonelli Bartolomei for submitting their results of the exercise and providing excellent feedback. We also thank all who provided constructive feedback.
+
+Please email comments/questions/critique/corrections/suggestions to the author at [mantkiew@gsd.uwaterloo.ca](mailto:mantkiew@gsd.uwaterloo.ca). Constructive feedback is much appreciated!
+
+--------------------
+
+> Back [Clafer a bit more precisely](ClaferMorePrecisely)
+
+> Back [Introduction](Intro)

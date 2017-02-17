@@ -1,0 +1,44 @@
+---
+title: APU Example
+categories: moo
+toc: false
+...
+
+> Back to [Introduction](/MOO/Introduction)
+
+APU = CPU + GPU
+
+```{.clafer .mooviz}
+```
+
+```clafer
+abstract Feature
+    cost -> integer
+    performance -> integer
+
+abstract Computer
+    CPU : Feature
+        [ cost = 2 ]
+        [ performance = 0 ]
+        IntegratedGPU : Feature ?
+            [ cost = 1 ]
+            [ performance = 1 ]
+            SharedMemory : Feature ?
+                [ cost = 0 ]
+                [ performance = 0 ]
+            
+    DiscreteGPU : Feature ?
+        [ cost = 2 ]
+        [ performance = 2 ]
+    [IntegratedGPU || DiscreteGPU]
+    total_cost -> integer = sum Feature.cost
+    total_performance -> integer = sum Feature.performance
+
+OptimalComputer : Computer
+
+<< minimize OptimalComputer.total_cost >>
+<< maximize OptimalComputer.total_performance >>
+```
+
+```{.clafer .links}
+```

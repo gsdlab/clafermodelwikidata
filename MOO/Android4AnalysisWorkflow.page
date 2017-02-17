@@ -1,0 +1,60 @@
+---
+title: Example workflow with the ClaferMoo Visualizer on Android4 model
+categories: moo
+toc: false
+...
+
+[Back to Introduction](/MOO/Introduction)
+
+1. Open
+
+[http://t3-necsis.cs.uwaterloo.ca:8091/MOO/Android4](http://t3-necsis.cs.uwaterloo.ca:8091/MOO/Android4)
+
+and browse through the model to see what's there.
+
+2. Click on the 
+
+`Analyze with ClaferMooVisualizer`
+
+link/button.
+
+3. In the Pareto front table 
+
+* press `Distinct`, 
+* click on `USB` once to select it, 
+* click on `Bluetooth` twice to eliminate it
+
+4. Select product for analysis by clicking on the bubbles in the Pareto front graph or on the column headers in the table. 
+Observe how both are synchronized.
+
+* Make sure you have `P11` selected.
+
+5. Now, select `WiFi` in the table. 
+Notice that `P11` disappears from the graph and the table but it still remains in the analysis view.
+
+6. In the Analysis view, if the message reads, for example
+
+`[Not Complete], add [P2,P4,P8,P15,P17,P21,25,P26]`
+
+* click on the `add` button to have all the suggested products added automatically.
+
+If the message reads 
+
+`[Complete] - The set is a complete concept`
+
+* you can make it incomplete again by selecting another product or removing one.
+
+6. Let's say you're not interested in `P11` anymore, 
+
+* click on the little `x` next to `P11` in the Analysis view in the section about differences.
+
+7. Finally, we'd like to show mass as bubble size and security as bubble opacity
+
+* drag `total_mass` from the Goals view onto the label with two bubbles on the right of the graph showing currently `total_security`. `Total_security` will change to `total_mass`.
+* drag `total_security` from the Goals view onto the label of the opacity currently showing `total_mass`. 
+
+8. Finally, hoover your mouse on the bubbles in the graph and observe the popup and and the little triangle showing the value on the opacity label.
+
+9. press the button `Reset` in the table to remove all filtering.
+
+10. click on `Normal` to remove dimming.

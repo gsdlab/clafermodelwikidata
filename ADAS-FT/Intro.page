@@ -1,0 +1,83 @@
+---
+title: Introduction to ADAS fault-tolerant architecture modeling in Clafer
+...
+
+The goal of this example is to demonstrate how Clafer can be used to model the hardware components which can fail and the impact on the available functionality of the system.
+
+We build the model of the AP system using the reference model that can be found in our [technical report](http://gsd.uwaterloo.ca/node/667).
+For the auto pilot we only consider one of the features, adaptive cruise control (ACC).
+The image below shows the functional analysis architecture of a simple ACC system. There are two LIDARs which are placed at the front of the car on the driver and passenger sides. There is also a short range radar which is placed at the front of the car. We do not model the actuators but rather just model the input into the main speed controller.
+
+> ![**Figure 1:** Fixed functional analysis architecture for auto pilot system](/fixed_FAA.PNG)
+
+We then need to capture the hardware architecture of the AP system. For the purposes of this example we only consider the device node classification and not the communication or power topologies.
+We consider one with the necessary sensors for the LIDARs and radar along with two vision processing units and two algorithm processing units.
+Lastly we define a fixed deployment in which the analysis functions (the rounded boxes in Figure 1 without the gear icon) associated with vision processing are deployed to both vision processing units. Similarly, all algorithm analysis functions are deployed to both algorithm processing units.
+Note however that we needed to make a change to the definition of the reference model concepts as provided in the technical report. Below we show the new concepts for analysis functions and functional devices in which they are allowed to be deployed to between 1 and 3 device nodes.
+
+# Reference model
+
+```clafer
+abstract System
+abstract FunctionalAnalysis
+
+abstract FunctionalAnalysisComponent
+    xor implementation
+        hardware
+        software
+abstract AnalysisFunction : FunctionalAnalysisComponent
+abstract FunctionalDevice : FunctionalAnalysisComponent
+abstract FunctionConnector
+    sender -> FunctionalAnalysisComponent
+    receiver -> FunctionalAnalysisComponent
+```
+
+# Auto Pilot (AP) in Clafer
+
+And now we can model our concrete system by extending the architectural abstractions.
+
+```clafer
+AutoPilot : System
+    AP_FAA : FunctionalAnalysis
+        // devices and functions
+        frontDriverLidar : FunctionalDevice
+            [implementation.hardware]
+        frontPassengerLidar : FunctionalDevice
+            [implementation.hardware]
+        lidarProcessing : AnalysisFunction
+            [implementation.software]
+        pointCloudClustering : AnalysisFunction
+            [implementation.software]
+        frontRadar : FunctionalDevice
+            [implementation.hardware]
+        dynamicObjectDetection : AnalysisFunction
+            [implementation.software]
+        trajectoryPlanningAP : AnalysisFunction
+            [implementation.software]
+        speedControl : AnalysisFunction
+            [implementation.software]
+        // connectors
+        frontDriverLidarVal : FunctionConnector
+            [sender = frontDriverLidar && receiver = lidarProcessing]
+        frontPassengerLidarVal : FunctionConnector
+            [sender = frontPassengerLidar && receiver = lidarProcessing]
+        compositePointCloud : FunctionConnector
+            [sender = lidarProcessing && receiver = pointCloudClustering]
+        frontRadarVal : FunctionConnector
+            [sender = frontRadar && receiver = dynamicObjectDetection]
+        pointCloudCusterVal : FunctionConnector
+            [sender = pointCloudClustering && receiver = dynamicObjectDetection]
+        dynamicObjects : FunctionConnector
+            [sender = dynamicObjectDetection && receiver = trajectoryPlanningAP]
+        velocityProfile : FunctionConnector
+            [sender = trajectoryPlanningAP && receiver = speedControl]
+```
+
+```{.clafer .links}
+```
+```{.clafer .ide}
+```
+
+> ![next](/next.png) [Modeling Hardware Failures](model-hw-failures)
+
+

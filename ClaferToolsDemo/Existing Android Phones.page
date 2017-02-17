@@ -1,0 +1,100 @@
+---
+title: Existing Android Phones
+toc: false
+...
+
+> Back to [Intro]()
+
+Existing products:
+
+<table>
+<tr>
+<th>
+Android Phone 1 / Team 1
+</th>
+<th>
+Android Phone 2 / Team 2
+</th>
+<th>
+Android Phone PL / Bob
+</th>
+</tr>
+
+<tr>
+<td>
+
+```clafer
+AndroidPhone1
+    Connectivity
+        Bluetooth40
+        GSM
+        WiFi
+        USB
+    Battery
+        LiBattery1450
+```
+
+</td>
+<td>
+
+```clafer
+AndroidPhone2
+    Connectivity
+        Bluetooth21
+        GSM
+        USB
+    Battery
+        LiBattery1150
+```
+
+</td>
+<td>
+
+Reusable model fragment `Bluetooth`:
+
+```clafer
+abstract xor Bluetooth
+    Bluetooth20 ?
+    Bluetooth21 ?
+    Bluetooth40 ?
+```
+
+Adding the fragment using backquote mechanism:
+
+```clafer
+abstract MobilePhone
+    Connectivity
+        `Bluetooth
+        GSM
+        LTE ?
+            [LiBattery1400]
+        WiFi ?
+        USB ?
+    xor Battery
+        LiBattery1150 ?
+        LiBattery1400 ?
+```
+
+Adding market segments.
+
+Low-end phones:
+
+```clafer
+LowEndPhones : MobilePhone
+    [no WiFi]
+```
+
+and high-end phones:
+
+```clafer
+HighEndPhones : MobilePhone
+    [USB && WiFi]
+    QuadCPU ?
+```
+
+</td>
+</tr>
+</table>
+
+```{.clafer .ide}
+```

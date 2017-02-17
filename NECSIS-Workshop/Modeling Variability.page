@@ -1,0 +1,17 @@
+---
+title: Modeling Variability 1
+categories: demo
+toc: false
+...
+
+Basic model of `Car`.
+
+```clafer
+abstract Car
+    ABS ?
+    xor Transmission
+        Automatic
+        Manual
+```
+
+[Modeling Variability 2]()

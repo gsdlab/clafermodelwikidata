@@ -1,0 +1,138 @@
+## Modeling Hardware Failures
+
+While the fixed example captures the structure of the auto pilot system there are no interesting properties we can investigate. For example, imagine we wanted to observe if the system would be functional if the one of the vision and algorithm processors failed. This would be interesting for two reasons:
+1. We can test the tolerance of the system to certain hardware faults.
+2. We can synthesize the various designs we can reconfigure our system to have if there is some hardware fault.
+
+For the purposes of this example we consider a hardware fault only to be the failure of a device node (i.e. it is as if the device node has been removed from the system).
+
+The first thing we must do to allow our fixed architecture to query these properties is to add variability to the device nodes. We do this by marking each device node with cardinality ```0..1```. 
+
+```clafer
+
+abstract System
+abstract FeatureModel
+abstract Architecture
+abstract FunctionalAnalysis
+abstract HardwareArchitecture
+abstract DeviceNodeClassification
+abstract CommTopology
+abstract PowerTopology
+abstract Deployment
+
+// Some generic "types" of Clafer's. Some types don't have properties but
+// are rather used for readability for a user
+abstract Feature
+
+abstract FunctionalAnalysisComponent
+    deployedTo -> DeviceNode 1..3 // Most functions are only double redudant at most but lets set the max at triple just in case.
+    xor implementation
+        hardware
+            [deployedTo.type in (EEDeviceNode, SmartDeviceNode)]
+        software
+            [deployedTo.type in SmartDeviceNode]
+abstract AnalysisFunction : FunctionalAnalysisComponent
+abstract FunctionalDevice : FunctionalAnalysisComponent
+abstract FunctionConnector
+    sender -> FunctionalAnalysisComponent
+    receiver -> FunctionalAnalysisComponent
+
+enum DeviceNodeType = SmartDeviceNode | EEDeviceNode | PowerDeviceNode
+
+abstract DeviceNode
+    type -> DeviceNodeType
+
+AutoPilot : System
+    AP_FM : FeatureModel
+        ACC : Feature // Adaptive cruise control  
+    AP_FAA : FunctionalAnalysis
+        // Functions  
+        frontDriverLidar : FunctionalDevice
+            [implementation.hardware]
+        frontPassengerLidar : FunctionalDevice
+            [implementation.hardware]
+        lidarProcessing : AnalysisFunction
+            [implementation.software]
+        pointCloudClustering : AnalysisFunction
+            [implementation.software]
+        frontRadar : FunctionalDevice
+            [implementation.hardware]
+        dynamicObjectDetection : AnalysisFunction
+            [implementation.software]
+        trajectoryPlanningAP : AnalysisFunction
+            [implementation.software]
+        speedControl : AnalysisFunction
+            [implementation.software]
+        
+        // Function Connectors  
+        frontDriverLidarVal : FunctionConnector
+            [sender = frontDriverLidar && receiver = lidarProcessing]
+        frontPassengerLidarVal : FunctionConnector
+            [sender = frontPassengerLidar && receiver = lidarProcessing]
+        compositePointCloud : FunctionConnector
+            [sender = lidarProcessing && receiver = pointCloudClustering]
+        frontRadarVal : FunctionConnector
+            [sender = frontRadar && receiver = dynamicObjectDetection]
+        pointCloudCusterVal : FunctionConnector
+            [sender = pointCloudClustering && receiver = dynamicObjectDetection]
+        dynamicObjects : FunctionConnector
+            [sender = dynamicObjectDetection && receiver = trajectoryPlanningAP]
+        velocityProfile : FunctionConnector
+            [sender = trajectoryPlanningAP && receiver = speedControl]
+
+    AP_HA : HardwareArchitecture
+        dn -> AP_DN
+        AP_DN : DeviceNodeClassification
+            visionProcessor1 : DeviceNode ?
+                [type = SmartDeviceNode]
+            visionProcessor2 : DeviceNode ?
+                [type = SmartDeviceNode]
+            algorithmProcessor1 : DeviceNode ?
+                [type = SmartDeviceNode]
+            algorithmProcessor2 : DeviceNode ?
+                [type = SmartDeviceNode]
+
+            frontDriverLidarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+            frontPassengerLidarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+
+            frontRadarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+
+    AP_Dpl : Deployment
+        fa -> AP_FAA
+        ha -> AP_HA
+        [fa.frontDriverLidar.deployedTo = ha.dn.frontDriverLidarSensor]
+        [fa.frontPassengerLidar.deployedTo = ha.dn.frontPassengerLidarSensor]
+        [fa.lidarProcessing.deployedTo in (ha.dn.visionProcessor1, ha.dn.visionProcessor2)]
+        [fa.pointCloudClustering.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.frontRadar.deployedTo = ha.dn.frontRadarSensor]
+        [fa.dynamicObjectDetection.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.trajectoryPlanningAP.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.speedControl.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+
+```
+
+Next we have to update the deployment constraints in which we want to say that the analysis functions can be deployed to either processing unit. This allows us to model a failure of a device node and as long as there exists one device node the function can deploy to it will be functional.
+
+Then using this model we can model a couple a different scenarios. The fist scenario is to remove one of the vision and algorithm processors. Executing this will still provide a solution. What this means is that our system is still functional after the failure of ```visionProcessor1``` and ```algorithmProcessor1```.
+
+```clafer
+[no AP_DN.visionProcessor1]
+[no AP_DN.algorithmProcessor1]
+```
+
+However, if were were to model the failure of the front radar as follows:
+```clafer
+[no AP_DN.frontRadarSensor]
+```
+
+We would find that we get UNSAT from the solver. This translates to saying that if we lose the front radar sensor, the system is no longer functional (i.e., the system has failed).
+
+```{.clafer .config}
+```
+
+> Next [Modeling FAA Reconfigurations](ADAS-FT/model-faa-reconfig)
+
+

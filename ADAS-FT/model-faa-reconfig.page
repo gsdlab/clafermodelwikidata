@@ -1,0 +1,187 @@
+---
+title: Modeling functional analysis architecture reconfigurations
+...
+
+> Back to [Intro]()
+
+# Adding degradation levels
+
+In the previous example, we were able to model and query the state and designs of the architecture given a certain hardware failure. It turned out that if we lost any of our sensors, our system would no longer be functional.
+We address this issue by being less restrictive and allowing functions to fail (i.e. they don't have a device node to deploy to) but to still allow the system to be considered functional but with some level of degradation. 
+
+> ![**Figure 1:** All functions optional to model function availability](/allFunctionsOptional.png)
+
+> ![**Figure 2:** All device nodes (DN) are made optional to model the possibility of failure](/deviceNodes.png)
+
+In order to do this we have to annotate each of our functions with a level of degradation.
+This level should be based on two things:
+
+1. The degradation level of the incoming connections (inputs).
+2. The degradation of the function itself (i.e., if only one of two inputs are provided, we are less functional).
+
+Furthermore, our control functions require at least one input to be considered functional. If the control function does not have any inputs we should remove it from the architecture. This requires that we annotate each function in our FAA to be optional. This means that while the function may not have failed, it is not longer providing any functionality to the system due to underlying hardware failure or missing inputs from cascading effects of removing functionality.
+
+Therefore we need to add the following *properties* or children clafers to the `FunctionalAnalysisComponent` concept:
+
+1. Input: The function connector providing the input to the function
+2. Output: The function connector providing the output to other functions
+3. Degradation Level: The degradation level of the function based on available inputs and hardware used.
+     a. Level 1: No degradation - fully functional
+     b. Level 2: Slightly degraded but functional to an acceptable standard
+     c. Level 3: Severely degraded. Most likely in "limp home"
+     d. Level 4: Not functional
+4. Resulting Degradation Level: The resulting degradation level which is computed as the maximum of the set containing the incoming input degradation levels and the degradation level of the function itself.
+
+# Updated reference model
+
+We encoded these additions as follows in our updated reference model:
+
+```clafer
+abstract System
+abstract FunctionalAnalysis
+abstract HardwareArchitecture
+abstract DeviceNodeClassification
+abstract Deployment
+
+abstract FunctionalAnalysisComponent
+    deployedTo -> DeviceNode 1..2 
+    xor implementation
+        hardware
+            [deployedTo.type in EEDeviceNode, SmartDeviceNode]
+        software
+            [deployedTo.type in SmartDeviceNode]
+    // connectors for which this function is the receiver
+    input -> FunctionConnector *
+        [this.receiver = parent]
+    // connectors for which this function is the sender
+    output -> FunctionConnector *
+        [this.sender = parent]
+    degradation -> integer
+        [this >= 1 && this <= 3]  // level 4 implies that the function is not available
+    resultingDegradation -> integer = max (input.sender.resultingDegradation.dref, degradation.dref)
+abstract AnalysisFunction : FunctionalAnalysisComponent
+abstract FunctionalDevice : FunctionalAnalysisComponent
+abstract FunctionConnector
+    sender -> FunctionalAnalysisComponent
+        [parent in this.output]
+    receiver -> FunctionalAnalysisComponent
+        [parent in this.input]
+
+
+enum DeviceNodeType = SmartDeviceNode | EEDeviceNode | PowerDeviceNode
+
+abstract DeviceNode
+    [ some fac : FunctionalAnalysisComponent | this in fac.deployedTo ]
+    type -> DeviceNodeType
+```
+
+# Architecture of the autopilot system with degradation levels
+
+We can then modify our architecture by setting these properties correctly as well as writing a set of constraints based on the inputs and outputs of a function to determine if it is functional (i.e., whether it is present in the architecture).
+
+```clafer
+AutoPilot : System
+    AP_FAA : FunctionalAnalysis          
+        frontDriverLidar : FunctionalDevice ?
+            [implementation.hardware]
+            [degradation = 1]
+            // must have an outgoing connector
+            [one output]  
+        frontPassengerLidar : FunctionalDevice ?
+            [implementation.hardware]
+            [degradation = 1]
+            [one output]
+        lidarProcessing : AnalysisFunction ?
+            [implementation.software]
+            [degradation = (if #input = 2 then 1 else 2)]
+            // must have at least one incoming and one outgoing connector
+            [some input && one output] 
+        pointCloudClustering : AnalysisFunction ?
+            [implementation.software]
+            [degradation = 1]
+            [some input && one output]
+        frontRadar : FunctionalDevice ?
+            [implementation.hardware]
+            [degradation = 1]
+            [one output]
+        dynamicObjectDetection : AnalysisFunction ?
+            [implementation.software]
+            [degradation = (if #input = 2 then 1 else if pointCloudCusterVal then 2 else 3)]  
+            [some input && one output]
+        trajectoryPlanningAP : AnalysisFunction ?
+            [implementation.software]
+            [degradation = 1]
+            [some input && one output]
+        speedControl : AnalysisFunction ?
+            [implementation.software]
+            [degradation = 1]
+            [some input]
+
+        // Function Connectors
+
+        frontDriverLidarVal : FunctionConnector ?
+            [sender = frontDriverLidar && receiver = lidarProcessing]
+        frontPassengerLidarVal : FunctionConnector ?
+            [sender = frontPassengerLidar && receiver = lidarProcessing]
+        compositePointCloud : FunctionConnector ?
+            [sender = lidarProcessing && receiver = pointCloudClustering]
+        frontRadarVal : FunctionConnector ?
+            [sender = frontRadar && receiver = dynamicObjectDetection]
+        pointCloudCusterVal : FunctionConnector ?
+            [sender = pointCloudClustering && receiver = dynamicObjectDetection]
+        dynamicObjects : FunctionConnector ?
+            [sender = dynamicObjectDetection && receiver = trajectoryPlanningAP]
+        velocityProfile : FunctionConnector ?
+            [sender = trajectoryPlanningAP && receiver = speedControl]
+
+    AP_HA : HardwareArchitecture
+        dn -> AP_DN
+        AP_DN : DeviceNodeClassification
+            visionProcessor1 : DeviceNode ?
+                [type = SmartDeviceNode]
+            visionProcessor2 : DeviceNode ?
+                [type = SmartDeviceNode]
+            algorithmProcessor1 : DeviceNode ?
+                [type = SmartDeviceNode]
+            algorithmProcessor2 : DeviceNode ?
+                [type = SmartDeviceNode]
+            frontDriverLidarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+            frontPassengerLidarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+            frontRadarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+
+    AP_Dpl : Deployment
+        fa -> AP_FAA
+        ha -> AP_HA
+        [fa.frontDriverLidar.deployedTo = ha.dn.frontDriverLidarSensor]
+        [fa.frontPassengerLidar.deployedTo = ha.dn.frontPassengerLidarSensor]
+        [fa.lidarProcessing.deployedTo in (ha.dn.visionProcessor1, ha.dn.visionProcessor2)]
+        [fa.pointCloudClustering.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.frontRadar.deployedTo = ha.dn.frontRadarSensor]
+        [fa.dynamicObjectDetection.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.trajectoryPlanningAP.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.speedControl.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+```
+
+Now we can reason about a failure of the front radar sensor as before and find that a functional architecture does exists, however it is degraded (and we know what the degradation level is)
+
+``` clafer
+[no AP_DN.frontRadarSensor]  
+
+// Further more I could ask that I don't want a configuration that leaves the trajectoryPlanningAP function with a degradation of 3.  
+
+
+[AP_FAA.trajectoryPlanningAP.resultingDegradation < 3]
+```
+
+```{.clafer .ide}
+```
+
+
+> ![next](/next.png) [Replacement Functions to Mitigate Failures](model-repl-func)
+
+> Back to [Modeling HW Failures](model-hw-failures)
+
+> Back to [Intro]()

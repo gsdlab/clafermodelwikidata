@@ -1,0 +1,10 @@
+## Modeling Functional Analysis Architecture Re-configurations
+
+In the last example we were able to model and query the state and designs of the architecture given a certain hardware failure. In the model it turned out that if we lost any of our sensors our system would no longer be functional.
+We address this issue by being less restrictive and allowing sensors to fail but to still allow the system to be considered function but with some level of degradation. In order to do this we have to annotate each of our functions with a level of degradation.
+This level should be based on two things:
+1. The incoming inputs degradation level
+2. The degradation of the function itself (i.e., if only one of two inputs is provided we are less functional).
+
+In order to capture the degredation of the inputs 
+

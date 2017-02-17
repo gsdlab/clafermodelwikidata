@@ -1,0 +1,307 @@
+---
+title: The Business Motivation Model
+...
+
+This model is based on "The Business Motivation Model - Business Governance in a Volatile World" by [The Business Rules Group](http://www.BusinessRulesGroup.org).
+
+The model contains both the structural aspects based on the metamodels and semantic aspects of the concepts based on the natural language description. For example, an `End` can be `attainable`, `short`- or `long term`, and `focused on` `enterprise` or a `business area`. These properties are important for communicating the nature of the concepts and should aid the modeller in evaluating whether her model is semantically correct (e.g., a `long-term` and `unattainable` Objective 
+is incorrect). These semantic properties constitute a "checklist" for the modeller.
+
+Model Summary
+=============
+
+```{.clafer .summary}
+```
+
+Model Details
+=============
+
+
+First, we define a generic BMM model `Element`:
+
+```clafer
+abstract Element
+```
+
+There are many types of `Element`s in a BMM model but two are most important: `End`s and `Mean`s. `End`s are what an enterprise is trying to accomplish. `Mean`s are the ways of accomplishing the `End`s.
+
+```clafer
+abstract End : Element	
+    attainable ?
+    xor term
+        short
+        long
+    xor focusedOn
+        enterprise
+        businessArea
+```
+
+and 
+
+```clafer 
+abstract Mean : Element
+```
+
+Ends
+----
+
+The `Vision` is *what* an enterprise is supposed to look like, without regard to *how* it can be achieved.
+
+```clafer
+abstract Vision : End		
+    [ enterprise ]
+    [ long ]
+    amplifiedBy -> Goal + 		// inverseOf amplifies
+    madeOperativeBy -> Mission  	// inverseOf makesOperative
+```
+
+A `DesiredResult` is a different type of `End` than the `Vision` and represents a tangible outcome that can be either `qualitative` or `quantitative`.
+
+```clafer
+abstract DesiredResult : End
+    supportedBy -> CourseOfAction +
+    xor kind
+        qualitative
+        quantitative
+```
+
+```clafer
+abstract Goal : DesiredResult
+    amplifies -> Vision		// inverseOf isAmplifiedBy
+    general
+    ongoing
+    [ businessArea ]
+    [ attainable ]
+    [ qualitative ]
+    [ long ]
+    // measuresOfPerformance -> Metric +
+```
+
+```clafer
+abstract Objective : DesiredResult
+    SMART
+        specific
+        // measurable -> Metric +
+        [ attainable ]
+        relevant
+        timeBound
+    limitedInTimeframe  
+        cyclical ?
+    [ businessArea ]
+    [ quantitative ]
+    [ short ]
+    quantifies -> Goal +
+```
+
+Means
+-----
+
+```clafer
+abstract CourseOfAction : Mean
+    channelsEffortsToward -> DesiredResult	// inverseOf supportedBy
+    governedBy -> Directive  				// inverseOf governs
+    formulatedBasedOn -> Directive  		// inverseOf sourceOf
+    //realizedBy -> BusinessProcess
+    xor scope
+        broad
+        narrow
+    xor term
+        short
+        long
+    [ broad && long || narrow && short ]
+    includes -> CourseOfAction *  // composition of courses of action
+    enables -> CourseOfAction *
+```
+
+```clafer
+abstract Strategy : CourseOfAction
+    implementedBy -> Tactic   // inverseOf implements
+    aComponentOfThePlanFor -> Mission  // inverseOf plannedByMeansOf 
+    // [ channelsEffortsToward -> Goal ]
+    rightApproachGiven
+        // constraints -> Constraint *
+        // risks -> Risk *
+    /* 
+    [ includes -> Strategy  * // strategies can only contain other strategies and not tactics
+      enables -> Strategy *    // strategies can only enable other strategies and not tactics ]  
+   */
+```
+
+```clafer
+abstract Tactic : CourseOfAction
+    implements -> Strategy // inverseOf implementedBy
+    effectsEnforcementLevelOf -> BusinessRule
+    /* 
+    [ channelsEffortsToward -> Objective
+      includes -> Tactic *  // tactics can only contain other tactics and not strategies
+      enables -> Tactic * // tactics can only enable other tactics and not strategies ] 
+   */
+```
+
+```clafer
+abstract Mission : Mean
+    makesOperative -> Vision	  	// inverseOf madeOperativeBy
+    plannedByMeansOf -> Strategy  	// inverseOf aComponentOfTHePlanFor
+```
+
+```clafer
+abstract Directive : Mean
+    governs -> CourseOfAction
+    sourceOf -> CourseOfAction
+    supportsTheAchievementOf -> DesiredResult
+    xor influencesAspectOfEnterprise
+        defines
+        constraints
+        liberates
+        asserts
+        controls
+    declarative
+    actsAs -> Regulation  // inverseOf aRolePlayedBy
+    xor degreeOfStructure
+        lessStructured
+        highlyStructured
+    xor granularity
+        lessDiscreteAndComposite
+        discreteAndAtomic
+    actionable ?
+    automatable ?
+    // motivatedBy -> Assessment 
+```
+
+```clafer
+abstract BusinessPolicy : Directive
+    providesBasisFor -> BusinessRule +
+    // governsBP -> BusinessProcess +    /* = governs.realizedBy // derived from the processes that realize the courses of action */
+    governs -> CourseOfAction *
+       control
+       guide
+       shape
+    // [ supportsTheAchievementOf -> Goal ]    
+    [ lessStructured ]
+    [ lessDiscreteAndComposite ]
+    [ ! actionable ]
+    [ ! automatable ]
+    includes -> BusinessPolicy *  // composition of business policies
+```
+
+```clafer
+abstract BusinessRule : Directive
+   // [ supportsTheAchievementOf -> Objective ]  - explicit constraint is needed for this
+   [ all o : supportsTheAchievementOf | o.ref in Objective ]
+   xor enforcementLevel
+      strictlyEnforced
+      deferredEnforcement
+      preAuthorizedOverride
+      postJustifiedOverride
+      overrideWithExplanation
+      guideline
+   hasEnforcementLevelEffectedBy -> Tactic
+   [ highlyStructured ]
+   [ discreteAndAtomic ]
+   [ actionable ]
+   expressedUsingStandardBusinessVocabulary
+```
+
+Other Elements
+--------------
+
+```clafer
+abstract Regulation : Element 
+   aRolePlayedBy -> Directive 		// inverseOf actsAs
+```
+
+```clafer
+abstract or Influencer : Element	// multiple inheritance in spec expressed by 'or' groups
+    or externalInfluencer
+        environment
+        technology
+        regulation 
+            xor prescribedBy
+                government
+                management
+        supplier
+            xor provides
+                products
+                services
+        customer
+            xor productsOrServices
+                investigated
+                ordered
+                received
+                paidFor
+        competitor
+        partner
+    or internalInfluencer
+        infrastructure
+        issue
+        assumption
+        resource
+        habit
+        managementPrerogative
+        xor corporateValue
+            explicitCorporateValue
+            implicitCorporateValue
+```
+
+*Michal: in some particular cases different kinds of `influencer`s may be required. One could extend `Influencer` but currently, it is not possible to add clafers to its children, e.g., a new type of internalInfluencer?  *
+
+`Assessment` is a judgement that an `influencer` affects the employment of `Mean`s or the achievement of `End`s.
+
+```clafer
+abstract Assessment : Element 
+    identifies -> PotentialImpact  // inverseOf significantTo
+    about -> Influencer
+    or affects
+        employmentOf -> Mean +
+        achievementOf -> End +
+    madeBy -> OrganizationUnit  // Michal: how to inject a derived inverse 'makes' into the TOGAF metamodel?
+    uses -> Assessment *
+    xor SWOT
+        strength
+        weakness
+        opportunity
+        threat
+```
+
+```clafer
+abstract PotentialImpact : Element
+    significantTo -> Assessment
+    providesImpetusFor -> Directive
+    xor type
+        risk
+            probabilityOfLoss : integer 	// in %
+            potentialLoss : integer
+            unitOfMeasure -> Currency			
+        potentialReward
+            probabilityOfGain : integer 	// in %
+            potentialGain : integer
+            unitOfMeasure -> Currency
+```
+
+```clafer
+abstract Metric : Element
+```
+
+```clafer    
+abstract KeyPerformanceIndicator : Metric
+```
+
+```clafer
+abstract CriticalSuccessFactor : Metric
+```
+
+General Purpose Definitions
+---------------------------
+
+```clafer
+enum Currency = USD | EUR | CAD
+```
+
+Imported TOGAF concepts
+-----------------------
+
+```clafer
+abstract OrganizationUnit
+
+abstract BusinessProcess
+```

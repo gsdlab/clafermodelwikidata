@@ -1,0 +1,127 @@
+---
+title: Architecture of Clafer Tools
+categories: dogfooding
+...
+
+> Back to [Clafer Tools](/ClaferTools/Overview)
+
+Module Summary
+==============
+
+This page describes a Clafer model of Clafer-related tools. 
+
+```{.clafer .summary}
+```
+
+Module Details
+==============
+
+Currently we've got three tools *clafer compiler*, *clafer instance generator*, and *clafer with multi-objective optimization*. They are all based on a single library (`claferLib`) that reads, interprets, and transforms clafer models.
+
+```clafer
+claferCompiler : claferLib
+
+claferIG : claferLib
+
+claferMOO : claferLib
+    moo
+```
+
+Clafer library is organized into the several modules: `common` provides functions used by all other modules, `front` is an implementation of compiler's front-end, `intermediate` performs model analyses and transformations, `optimizer` transforms models so that other tools can efficiently reason on them, `generator` outputs corresponding models in other languages.
+
+```clafer
+abstract claferLib
+    common
+    front : Front
+    intermediate : Intermediate
+    optimizer
+    generator : Generator
+```
+
+Before we describe modules of `claferLib`, let us first learn about data structures used by the library. `text` is a textual input, such as model read from a text file. `tokens` is a stream of tokens recognized by lexer. `ast` is an in-memory tree representation of parsed Clafer models. `ast` is tightly related to the input grammar and provides different data-types for different elements. `ir` is another tree representation that unifies elements of `ast` to support better code reuse.
+
+```clafer
+enum Representation = text | tokens | ast | ir
+```
+
+Each module in `claferLib` transforms data from one `Representation` type to another:
+
+```clafer
+abstract io
+    input -> Representation
+    output -> Representation
+```
+
+in particular, we've got transformations of the following types:
+
+```clafer
+abstract text2tokens : io
+    [input = text && output = tokens]
+
+abstract tokens2tokens : io
+    [input = tokens && output = tokens]
+
+abstract tokens2ast : io
+    [input = tokens && output = ast]
+
+abstract ast2ast : io
+    [input = ast && output = ast]
+
+abstract ast2text : io
+    [input = ast && output = text]
+
+abstract ast2ir : io
+    [input = ast && output = ir]
+
+abstract ir2ir : io
+    [input = ir && output = ir]
+
+abstract ir2text : io
+    [input = ir && output = text]
+```
+
+The front-end of `claferLib` is responsible for reading input files and building their `ast` representations. The process starts with tokenizing input text into a stream of tokens (`lexer`). Clafer models use indentation to represent hierarchy of concepts. Such files are not parsable by traditional tools. We use `layoutResolver` to transform such input files to the form that is suitable for traditional parsers. Next, `parser` takes the resolved stream of tokens and builds `ast` out of them. To support better bug reporting, parser needs to map each `ast` node to its position in the input file. This functionality is supported by `mapper`. `prettyPrinter` transforms `ast` to text to make it human-readable.
+
+```clafer
+abstract Front
+    lexer : text2tokens
+    xor layoutResolver : tokens2tokens ?
+        stable
+        experimental
+    parser : tokens2ast
+    mapper : ast2ast
+    prettyPrinter : ast2text ?
+```
+
+`ast` isn't very convenient to work with. Most of the work the library does is performed by the `Intermediate` module. `desugarer` converts that representation to `ir` (intermediate representation). It also removes syntactic sugar and sets some predefined default values if they were not specified in the input model. `findDuplicates` analyzes the model for name uniqueness. Next, `resolver` runs several analyses and transformations. It starts with generating unique names for each clafer (`setUid`). Then, optional `inheritanceFlattener` may remove inheritance from models to improve reasoning efficiency over Clafer models. `nameResolution` module resolves clafers' names if they are not unique. It also resolves (`inheritanceresolver`) inherited names and other properties (e.g., group cardinalities). `typeResolver` finds types of each element used in constraints. `transformer` performs transformations that can be done after the name resolution phase. `stringAnalyzer` transforms strings to integers, as not all reasoners can deal with strings. `scopeAnalyzer` determines the minimal scope for each clafer to improve reasoning efficiency. It is important for reasoners with finite scope, such as the Alloy Analyzer.
+
+```clafer
+abstract Intermediate
+    desugarer : ast2ir
+    findDuplicates ?
+    resolver : ir2ir ?
+        setUid
+        inheritanceFlattener ?
+        nameResolution
+            nameResolver ?
+                [findDuplicates]
+            inheritanceResolver
+            typeResolver
+    transformer : ir2ir
+    stringAnalyzer : ir2ir ?
+    scopeAnalysis : ir2ir ?
+```
+
+After resolving Clafer models, code generators go through `ir` and output corresponding textual representation in other languages. We typically use `alloy` output to do analyses. `xml` output is preferable for exchange models between tools.
+
+```clafer
+abstract xor Generator : ir2text
+    alloy
+        [Intermediate.stringAnalyzer && Intermediate.scopeAnalysis]
+    stats
+    xml
+    desClafer
+        [Front.prettyPrinter]
+    xsdSchema
+```
+

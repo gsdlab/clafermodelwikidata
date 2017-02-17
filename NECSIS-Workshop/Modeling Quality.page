@@ -1,0 +1,31 @@
+---
+title: Modeling Quality
+categories: demo
+toc: false
+...
+
+Defining quality attributes.
+
+* basic feature with `cost` and `mass`.
+
+```clafer
+abstract Feature
+    cost: integer
+    mass: integer
+```
+
+* feature that impacts `comfort`
+
+```clafer
+abstract ComfortFeature : Feature
+    comfort: integer
+```
+
+* feature that impacts `fuel` consumption
+
+```clafer
+abstract FuelFeature : ComfortFeature
+    fuel: integer
+```
+
+[Modeling Quality 2]()

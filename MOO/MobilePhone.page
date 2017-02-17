@@ -1,0 +1,176 @@
+---
+title: A Mobile Phone Example with four Objectives
+categories: moo
+toc: false
+...
+
+> Back to [Introduction](/MOO/Introduction)
+
+Here's a simple example of a model suitable for optimization using [ClaferMoo](https://github.com/gsdlab/claferMooStandalone).
+In order to analyze the model and explore the Pareto front in ClaferMoo Visualizer, click the link below:
+
+```{.clafer .mooviz}
+```
+
+## Modeling the Optimization Problem
+
+First, we need to define features with some quality attributes `productivity`, `cost`, `batterylife`, and `security`:
+
+```clafer
+abstract Feature
+    productivity -> integer
+    cost -> integer
+    batterylife -> integer
+    security -> integer
+```
+
+Next, we need to write a model of our product line with some variability regarding the features.
+We need to set the values for quality attributes of each feature.
+
+```clafer
+abstract MobilePhone
+    Connectivity : Feature
+        [ batterylife = -12]
+        [ productivity = 14]
+        [ security = 43]
+        [ cost = 101]        
+        xor Bluetooth
+            Bluetooth20EDR : Feature
+                [ batterylife = -4]
+                [ productivity = 1]
+                [ security = -15]
+                [ cost = 1]
+            Bluetooth21EDR : Feature
+                [ batterylife = -2]
+                [ productivity = 4]
+                [ security = -10]
+                [ cost = 1]
+            Bluetooth40 : Feature
+                [ batterylife = -1]
+                [ productivity = 16]
+                [ security = -2]
+                [ cost = 2]
+        GSM : Feature
+            [ batterylife = -2]
+            [ productivity = 2]
+            [ security = -10]
+            [ cost = 1]
+        LTE : Feature ?
+            [ batterylife = -1]
+            [ productivity = 16]
+            [ security = -3]
+            [ cost = 3]
+            [ LiBattery1400 ]
+        WiFi: Feature ?
+            [ batterylife = -10]
+            [ productivity = 20]
+            [ security = -15]
+            [ cost = 20]
+        USB : Feature ?
+            [ batterylife = 10]
+            [ productivity = 20]
+            [ security = 0]
+            [ cost = 3]
+    xor Battery
+        LiBattery1150 : Feature
+            [ batterylife = 60]
+            [ productivity = 0]
+            [ security = 0]
+            [ cost = 10]
+        LiBattery1400 : Feature
+            [ batterylife = 70]
+            [ productivity = 0]
+            [ security = 0]
+            [ cost = 15]
+   
+    total_productivity -> integer = sum Feature.productivity
+    total_batterylife -> integer = sum Feature.batterylife 
+    total_security -> integer = sum Feature.security
+    total_cost -> integer = sum Feature.cost
+```
+
+We could define a specialization and extension like this (currently not supported)
+
+```clafer
+abstract HighEndPhone : MobilePhone
+   [ WiFi ]
+   [ Bluetooth40 ]
+   QuadCore : Feature ?
+       [ batterylife = -10]
+       [ productivity = 30]
+       [ security = 0 ]
+       [ cost = 25 ] 
+```
+
+Next, we define our product `OptimalPhone`. 
+
+```clafer
+OptimalPhone : MobilePhone
+```
+
+The product is underspecified allowing for all possible valid combinations of features.
+
+Finally, we define the following four optimization goals.
+
+"Maximize total battery life":
+
+```clafer
+<< maximize OptimalPhone.total_batterylife >>
+```
+
+"Maximize total productivity":
+
+```clafer
+<< maximize OptimalPhone.total_productivity >>
+```
+
+"Maximize total security":
+
+```clafer
+<< maximize OptimalPhone.total_security >>
+
+```
+
+"Minimize total cost":
+
+```clafer
+<< minimize OptimalPhone.total_cost >>
+```
+
+In order to analyze the model and explore the Pareto front in ClaferMoo Visualizer, click the link below:
+
+```{.clafer .mooviz}
+```
+
+## Comparing existing products
+
+Engineers may want to compare the existing product variants (e.g., currently in production) with the optimal variants available in the new version of the product line (e.g., after the feature `LTE` has been added).
+
+For example, consider an existing product `MyOldPhone` which has an older version of Bluetooth, `20EDR`, and no `WiFi`, `LTE`, nor `USB`.
+Here is the  configuration of that product in Clafer notation:
+
+```
+MyOldPhone : MobilePhone 
+    [ Bluetooth20EDR ]
+    [ no LTE ]
+    [ no WiFi ]
+    [ no USB ]
+    [ LiBattery1150 ]
+```
+
+In order to load that configuration into the visualizer
+
+1. Download the [instance data file](/MOO/MobilePhone.cfr.1.data) corresponding to the above instance specification,
+2. In Visualizer, open that file in the `Inputs` view and click on the button `Add Instances`.
+* The visualizer will load this configuration and show it alongside the optimal products as a square.
+
+Now, you may proceed with some exploration. For example, 
+
+1. Select the existing variant `17` and the closest optimal variant `2`.
+* The visualizer will show the differences in the view `Comparison`
+2. Observe that changing the feature `Bluetooth20EDR` to `Bluetooth21EDR` would make the product optimal
+3. Set the upper bound for `cost` to `120` in the view `Objectives`
+* The cost `120` is the largest acceptable in the market segment
+* The visualizer only shows variants costing less or equal to `120`
+4. Select the best variant `16` for comparison
+* Observe that by increasing cost by just `7`, we can obtain a far superior variant which includes the latest `Bluetooth40`, `LTE`, and `USB` but no `Wifi`. 

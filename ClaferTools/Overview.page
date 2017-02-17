@@ -1,0 +1,11 @@
+---
+title: Overview
+categories: dogfooding
+...
+
+This section of the wiki is about [**Dogfooding**](http://en.wikipedia.org/wiki/Eating_your_own_dog_food), that is using Clafer for different aspects of the Clafer Tools.
+
+* [Clafer Compiler Command Line Arguments](CommandLineArguments) - modeling valid combinations and constraints among command line arguments
+* [Clafer Name Resolver Specification](NameResolverSpecification) - description of the name resolver using rules and test cases
+* [Clafer Tooling Architecture](ToolingArchitecture) - modeling different components of Clafer Tools and relationships among them
+* [ClaferMooVisualizer Abstract State](ClaferMooVizAbstractState) - modeling valid snapshots in time of ClaferMoo Vizualizer

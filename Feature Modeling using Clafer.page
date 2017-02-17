@@ -1,0 +1,72 @@
+---
+title: Guidelines for feature modeling using Clafer
+...
+
+# Learning the Clafer language
+
+The subset of Clafer most relevant to feature modeling is presented in these two resources:
+
+* Feature modeling using Clafer tutorial 
+
+>The tutorial [Attributed Feature Models in Clafer](https://github.com/gsdlab/clafer/raw/master/doc/tutorial/attributed/doc.pdf) explains how to read and encode attributed feature models in Clafer. It also presents Clafer constructions that go beyond feature modeling but which are useful for encoding variability models.
+
+* Feature modeling with quality and multi-objective optimization using Clafer
+
+> An [interactive assignment](http://t3-necsis.cs.uwaterloo.ca:8099/) designed to introduce the concepts of *variability management*, *multi-objective optimization*, and *computational decision-making* in product line engineering. The assignment introduces basic feature modeling, modularizing feature models, modeling with quality attributes (e.g., `cost`, `performance`), and defining and solving multiple objective problems (e.g., minimize cost while maximizing performance and security). The assignment uses on-line tools: ClaferIDE and Clafer Multi-Objective Optimizer and Visualizer.
+
+# Working with Clafer models
+
+Clafer is a textual language and in order to be used effectively, it requires a powerful text editor. 
+Specifically, since a model in Clafer is a tree and the nesting is expressed through indentation, the editor should support 
+
+* **block indentation** to be able to indent a few lines of clafers for nesting, 
+* **indentation level visualization** to be able to see the nesting depth of clafers, and
+* **name completion** to be able to easily refer to the names of already defined clafers in other parts of the model.
+
+## On desktop
+
+One such editor is [Sublime Text 2/3](http://www.sublimetext.com/) and we offer simple integration of the Clafer compiler (as a build system) and instance generator (as a REPL).
+
+In Sublime Text, **block indentation** is performed using `tab` and `shift+tab` keyboard shortcuts. A block can be a single line or a few consecutive lines. It is important to consistently use either `tab` characters for indentation or the same number of space characters (e.g., usually 3 or 4). If the `tab` indentation is mixed with indentation using spaces, or varying number of spaces are used under the same parent, the compiler may misinterpret the nesting of clafers. Sublime offers easy conversion from `tab` characters to spaces and back.
+
+**Indentation level visualization** is automatically done by Sublime Text, which draws lines for each level of indentation.
+
+**Name completion** is performed using `<ctrl>+<space>` keyboard shortcut or `<tab>` key. Sublime will, by default, suggest all words already typed into the model with a given prefix as completions. For example, typing `en<ctrl>+<space>` will suggest both `engine` and `end` as completions provided they are already present in the model.
+
+Another good editor is [Atom](https://atom.io/); and we are planning to provide support for working with Clafer in the future.
+
+### Using Clafer Tools with Sublime Text 2/3 Integration
+
+We provide an integration with Sublime Text 2/3. For installation and usage instructions see [ClaferToolsST](https://github.com/gsdlab/ClaferToolsST#readme). We highly recommend using this for best Clafer experience on desktop.
+
+It is useful to use the 2-column layout in Sublime (`View->Layout->Columns:2` or keyboard shortcut `<alt>+<shift>+2`). The editors can be easily shifted to the second column using `<ctrl>+<shift>+2` or back using `<ctrl>+<shift>+1`.
+
+### Using Clafer Tools from Command Line
+
+#### Set up
+
+There is no need for installation. Just download the archive from [Clafer Tools Binary Distribution](gsd.uwaterloo.ca/clafer-tools-binary-distributions) and unzip to the hard drive or a USB memory stick. Add the location to `PATH`.
+
+#### Invoking the Clafer compiler and the instance generator
+
+The instructions are in the READMEs of the respective tools:
+
+* [Clafer compiler usage](https://github.com/gsdlab/Clafer#usage).
+* [Choco-based instance generator and optimizer](https://github.com/gsdlab/chocosolver#getting-started-with-the-cli). See the detailed [interactive session usage](https://github.com/gsdlab/chocosolver#cli-interactive-mode).
+* [Alloy-based instance generator](https://github.com/gsdlab/ClaferIG#usage). See the detailed [interactive session usage](https://github.com/gsdlab/claferIG/#interactive-session-usage).
+
+We recommend using the Choco-based instance generator for most purposes since it is faster and it can perform multi-objective optimization.
+
+## On-line
+
+### ClaferIDE
+
+For editing, compiling, and instantiating full Clafer models, we provide [ClaferIDE](http://t3-necsis.cs.uwaterloo.ca:8094/). The tool provides an editor with syntax highlighting and good indentation support. The tool also integrates the compiler and the Alloy-based and Choco3-based instance generators. 
+
+### ClaferConfigurator
+
+For exploring multiple valid configurations of a feature model we provide [ClaferConfigurator](http://t3-necsis.cs.uwaterloo.ca:8093/).
+
+### ClaferMooVisualizer
+
+For visualizing and exploring optimal configurations of a feature model with quality attributes and optimization objectives we provide [ClaferMooVisualizer](http://t3-necsis.cs.uwaterloo.ca:8092/).

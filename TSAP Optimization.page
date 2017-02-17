@@ -1,0 +1,120 @@
+Generic model customized to handle time-varied requirements
+=======================================================
+
+Model overview
+--------------
+
+```{.clafer .summary}
+```
+
+```{.clafer .mooviz}
+```
+
+Service prototype
+-----------------
+
+```clafer
+abstract Service
+    requirements : Requirements  // resources required by a service
+    machine -> Machine          // machine the service is allocated to 
+    [this in machine.services]  // inverse relationship constraint
+```
+
+
+Requirements and Resources prototypes
+-------------------------------------
+
+```clafer
+abstract Requirements
+    morning_cpu -> integer
+    midday_cpu -> integer
+    evening_cpu -> integer
+    night_cpu -> integer
+
+abstract Resources
+    cpu -> integer
+```
+
+Machine prototype
+-----------------
+
+```clafer
+abstract Machine
+    services -> Service*        
+        [this.machine = Machine]
+        
+    isFree? 
+    [isFree <=> no services]
+
+    limits : Resources
+
+/* constraints for limiting total requirements */
+
+    morning_utilization : Resources
+        [cpu = sum services.requirements.morning_cpu]
+        [cpu < limits.cpu]
+
+    midday_utilization : Resources
+        [cpu = sum services.requirements.midday_cpu]
+        [cpu < limits.cpu]
+
+    evening_utilization : Resources
+        [cpu = sum services.requirements.evening_cpu]
+        [cpu < limits.cpu]
+
+    night_utilization : Resources
+        [cpu = sum services.requirements.night_cpu]
+        [cpu < limits.cpu]
+```
+
+A machine is free when no services are allocated.
+Utilization of the machine must satisfy limits varied by time of day.
+
+Optimization goals and constraints
+----------------------------------
+
+```clafer
+Task   
+    // total number of machines free
+    total_free -> integer = #Machine.isFree
+<<max Task.total_free>>
+```
+
+Particular data (machines and services)
+=======================================================
+
+Machines
+--------
+
+```clafer
+GoogleCA : Machine
+    [limits.cpu = 10]
+
+GoogleNY : Machine
+    [limits.cpu = 16]
+
+GoogleTX : Machine
+    [limits.cpu = 14]
+```
+
+Services
+
+```clafer
+MailService : Service
+    [requirements.morning_cpu = 5]
+    [requirements.midday_cpu = 4]
+    [requirements.evening_cpu = 5]
+    [requirements.night_cpu = 1]
+
+SearchService : Service
+    [requirements.morning_cpu = 7]
+    [requirements.midday_cpu = 7]
+    [requirements.evening_cpu = 8]
+    [requirements.night_cpu = 3]
+
+CalendarService : Service
+    [requirements.morning_cpu = 2]
+    [requirements.midday_cpu = 2]
+    [requirements.evening_cpu = 2]
+    [requirements.night_cpu = 1]
+```

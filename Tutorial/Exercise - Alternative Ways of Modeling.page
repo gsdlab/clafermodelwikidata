@@ -1,0 +1,51 @@
+---
+title: Exercise - Alternative Ways of Modeling
+...
+
+Since the model is always developed with a particular purpose in mind, there is no single best solution. Below we present some alternatives, which are equally valid because the exercise was not completely constrained, i.e., it did not describe the context in which the model is to be used.
+
+```clafer
+abstract Book
+  title -> string
+  subtitle -> string ? // subtitle does not have to be a child of the title because title is 
+                      // mandatory, although conceptually subtitle is a point about title as well
+  page -> integer     // if we don't really care about individual pages, just the number
+  [ page >= 2 ]
+  or format           // the choice between xor and or depends on the context. For example,
+    paper             // whether the book store has a single entry for a book with multiple
+      hardcover ?     // formats or whether there must be a separate entry with exactly one
+    electronic        // format at the time
+  kind -> Kind        // can be modeled as an enumeration
+```
+
+```clafer
+enum Kind = textbook | manual | reference | fiction | nonfiction | other 
+```
+
+However, we cannot have `other -> string` in the enumeration.
+
+```clafer
+GenerativeProgramming : Book
+  [ title = "Generative Programming" ]
+  [ page = 589 ] // because the type of page is integer
+  [ paper ] // the book is in both paper and electronic formats but not hardcover
+  [ electronic ]
+  [ no hardcover ]
+  [ kind = nonfiction ] // because kind is a reference to Kind
+```
+
+```{.clafer .ide}
+```
+
+```{.clafer .summary}
+```
+
+--------------------
+
+> Back [Exercise - Example Reference Solution]()
+
+> Back [Exercise - Modeling a Concept]()
+
+> Back [Clafer a bit more precisely](ClaferMorePrecisely)
+
+> Back [Introduction](Intro)

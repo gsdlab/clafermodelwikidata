@@ -1,0 +1,98 @@
+---
+title: Example of composing of a multi-set with a multi-relation
+...
+
+A span from Bundle to Item. 
+
+```clafer
+abstract Bundle
+    contains ->> Item +
+```
+
+Two bundles.
+
+```clafer
+B1 : Bundle
+    [ contains in Bread ]
+    [ #contains = 2 ]
+
+B2 : Bundle
+    [ contains = Milk, Butter ] 
+```
+
+And three items.
+
+```clafer
+abstract Item
+Bread : Item
+Butter : Item 
+Milk : Item
+```
+
+A family of bundles
+
+```clafer
+abstract bundles ->> Bundle
+bundlesIB1 : bundles ->> B1 2
+bundlesIB2 : bundles ->> B2
+``` 
+
+A family to represent the result of the composition `bundles ; contains`.
+
+```clafer
+allItem ->> Item 6..*
+
+[alloy|
+fact {
+  compose 
+  [ c0_bundles,  c0_bundles_ref
+  , c0_contains, ~r_c0_contains, c0_contains_ref
+  , c0_allItem,  c0_allItem_ref
+  ]
+}
+
+pred compose[
+  idx: univ, i_elem: idx->univ,
+  hd:  univ, sleg:   hd->univ,  tleg: hd->univ,
+  res: univ, r_elem: res->univ]               
+{
+  some r1: res->idx | some r2: res->hd |
+   all a: idx, b: hd |
+    a.i_elem = b.sleg implies { one r: res | r.r1 = a && r.r2 = b } &&
+    #res = #(idx<:i_elem).~(hd<:sleg) &&
+    res<:r_elem = r2.(hd<:tleg)
+}
+|]
+```
+
+Escape to Alloy to compose `allItem = bundles ; contains`:
+
+```
+[alloy|
+fact {
+  compose 
+  [ c0_bundles,  c0_bundles_ref                   // family
+  , c0_contains, ~r_c0_contains, c0_contains_ref  // span
+  , c0_allItem,  c0_allItem_ref                   // family
+  ]
+}
+
+pred compose[
+  idx: univ, i_elem: idx->univ,                 // family
+  hd:  univ, sleg:   hd->univ,  tleg: hd->univ, // span
+  res: univ, r_elem: res->univ]                 // family
+{
+  some idx && some hd    // why is it needed? we should be able to compose empty families and spans as well
+  some r1: res->idx | some r2: res->hd |
+   all a: idx, b: hd |
+    a.i_elem = b.sleg implies { one r: res | r.r1 = a && r.r2 = b } &&
+    #res = #(idx<:i_elem).~(hd<:sleg) &&
+    res<:r_elem = r2.(hd<:tleg)
+}
+|]
+```
+
+```{.clafer .ide}
+```
+
+Next, we elaborate the model to illustrate the [composition of two multi-relations](multi-relation-composition2).

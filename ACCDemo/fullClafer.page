@@ -1,0 +1,55 @@
+---
+title: Domain Modeling, Verification, and Validation
+... 
+
+> Back to [Intro]()
+
+Car 
+
+```clafer
+abstract car
+    xor transmission
+        automatic
+        manual
+    `fca ?
+    `cc
+    [acc => fca]
+```
+
+Forward Collision Alert
+
+```clafer
+abstract fca
+    xor sensor
+        radar
+        lidar
+```
+
+Cruise Control
+
+```clafer
+abstract cc
+    switches 2..3
+        backlight ?
+    acc ?
+```
+
+Specialization 
+
+```clafer
+abstract camaro : car
+    [all s : switches | s.backlight]
+    transformer ?
+        [ # switches = 3 ]
+```
+
+Partial product configuration
+
+```clafer
+bumbleBee : camaro
+    [ transformer ]
+    [ manual ]
+```
+
+```{.clafer .summary}
+```

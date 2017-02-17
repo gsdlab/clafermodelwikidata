@@ -1,0 +1,225 @@
+---
+title: OMG Diagram Definition metamodels
+...
+
+
+```{.clafer}
+//OMG Diagram Definition metamodels
+//DC
+abstract Point
+    x : int 
+    y : int 
+
+abstract Dimension
+    width : int 
+    height : int 
+    [width >= 0 && height >=0]
+
+abstract Bounds
+    x : int 
+    y : int 
+    width : int 
+    height : int 
+    [width > 0 && height > 0]
+
+enum AlignmentKind = start | end | center
+
+enum KnownColor = maroon | red | orange | yellow | olive | purple | fuchsia | white | lime | green | navy | blue | aqua | teal | black | silver | gray
+
+abstract Color
+    red : int 
+    green : int 
+    blue : int
+    [red >= 0 && red <= 255 && green >= 0 && green <= 255 && blue >=0 && blue <= 255]
+
+//DG
+
+abstract RadialGradient : Gradient 
+    centerX : int 
+    centerY : int 
+    radius : int 
+    focusX : int 
+    focusY : int 
+    [focusX >= 0 && focusX <= 1 && focusY >= 0 && focusY <= 1]
+    [radius >= 0 && radius <= 1]
+
+abstract Gradient : Fill 
+    stop : GradientStop 2..*
+
+abstract Fill
+    canvas -> Canvas 
+        [parent in this.fill]
+    transform : Transform *
+
+abstract Canvas : Group 
+    backgroundFill -> Fill ?
+    backgroundColor : Color ?
+    marker : Marker *
+        [parent in this.canvas]
+    fill : Fill *
+        [parent in this.canvas]
+
+abstract Group : GraphicalElement 
+    member : GraphicalElement *
+        [parent in this.group]
+
+abstract GraphicalElement
+    group -> Group ?
+        [parent in this.member]
+    localStyle : Style ?
+    sharedStyle -> Style ?
+    transform : Transform *
+    clipPath : ClipPath ?
+        [parent in this.clippedElement]
+
+abstract Style
+    fillOpacity : int ?
+	[this >= 0 && this <= 1]
+    strokeWidth : int ?
+	[this >= 0]
+    strokeOpacity : int ?
+	[this >= 0 && this <= 1]
+    strokeDashLength : int *
+    fontSize : int ?
+	[this >= 0]
+    fontName : string ?
+    fontItalic ?
+    fontBold ?
+    fontUnderline ?
+    fontStrikeThrough ?
+    fill -> Fill ?
+    fillColor : Color ?
+    strokeColor : Color ?
+    fontColor : Color ?
+    [(#strokeDashLength) - ((#strokeDashLength)/2)*2 = 0]
+    
+    
+
+abstract Transform
+
+abstract ClipPath : Group 
+    clippedElement -> GraphicalElement 
+        [parent in this.clipPath]
+
+abstract Marker : Group 
+    size : Dimension 
+    reference : Point 
+    canvas -> Canvas 
+        [parent in this.marker]
+
+abstract GradientStop
+    offset : int 
+    opacity : int 
+    color : Color 
+    [offset >= 0 && offset <= 1]
+    [opacity >= 0 && opacity <= 1]
+
+abstract Pattern : Fill 
+    bounds : Bounds 
+    tile : GraphicalElement 
+
+abstract LinearGradient : Gradient 
+    x1 : int 
+    x2 : int 
+    y1 : int 
+    y2 : int 
+    [x1 >= 0 && x1 <= 1 && x2 >= 0 && x2 <= 1 && y1 >= 0 && y1 <= 1 && y2 >= 0 && y2 <= 1]
+
+abstract MarkedElement : GraphicalElement 
+    startMarker -> Marker ?
+    endMarker -> Marker ?
+    midMarker -> Marker ?
+
+abstract Rectangle : GraphicalElement 
+    cornerRadius : int 
+    bounds : Bounds 
+
+abstract Ellipse : GraphicalElement 
+    center : Point 
+    radii : Dimension 
+
+abstract Text : GraphicalElement 
+    data : string 
+    alignment -> AlignmentKind 
+    bounds : Bounds 
+
+abstract Line : MarkedElement 
+    start : Point 
+    end : Point 
+
+abstract Polyline : MarkedElement 
+    point : Point 2..*
+
+abstract Polygon : MarkedElement 
+    point : Point 3..*
+
+abstract Path : MarkedElement 
+    commands : PathCommand *
+
+abstract PathCommand
+    isRelative ?
+
+abstract Translate : Transform 
+    deltaX : int 
+    deltaY : int 
+
+abstract Scale : Transform 
+    factorX : int 
+    factorY : int
+    [ factorX >= 0 && factorY >= 0]
+
+abstract Rotate : Transform 
+    angle : int 
+    center : Point ?
+
+abstract Skew : Transform 
+    angleX : int 
+    angleY : int 
+
+abstract Image : GraphicalElement 
+    source : string 
+    isAspectRatioPreserved ?
+    bounds : Bounds 
+
+abstract Circle : GraphicalElement 
+    radius : int 
+    center : Point 
+    [radius >= 0]
+
+abstract Matrix : Transform 
+    a : int 
+    b : int 
+    c : int 
+    d : int 
+    e : int 
+    f : int 
+
+abstract MoveTo : PathCommand 
+    point : Point 
+
+abstract LineTo : PathCommand 
+    point : Point 
+
+abstract CubicCurveTo : PathCommand 
+    point : Point 
+    startControl : Point 
+    endControl : Point 
+
+abstract QuadraticCurveTo : PathCommand 
+    point : Point 
+    control : Point 
+
+abstract EllipticalArcTo : PathCommand 
+    rotation : int 
+    isLargeArc ?
+    isSweep ?
+    point : Point 
+    radii : Dimension 
+
+abstract ClosePath : PathCommand 
+
+
+```
+
+```{.clafer .summary}
+```

@@ -1,0 +1,103 @@
+---
+title: Example of composing two multi-relations
+...
+
+A span from Bundle to Item and from Bundle to Category. 
+
+```clafer
+abstract Bundle
+    contains ->> Item +
+    uniqueCategory -> Category 2..* = contains . category
+    allCategory ->> Category 4..* 
+```
+
+We would like to write the following but it's not supported in Clafer currently (as of 0.4.3). 
+We'll do that in an Alloy escape later.
+
+```
+  allCategory = this <: contains >< category
+```
+
+One bundle.
+
+```clafer
+B1 : Bundle
+    [ contains = Bread, Muffin, Milk, Butter ] 
+```
+
+Every item belongs to a product category.
+
+```clafer
+abstract Item
+    category ->> Category
+```
+
+Categories.
+
+```clafer
+enum Category = Bakery | Dairy
+```
+
+And four items:
+
+```clafer
+Bread : Item
+    [ category = Bakery ]
+Muffin : Item
+    [ category = Bakery ]
+Butter : Item 
+    [ category = Dairy ]
+Milk : Item
+    [ category = Dairy ]
+
+[alloy|
+fact {
+     compose
+     [ c0_contains,    ~r_c0_contains,    c0_contains_ref
+     , c0_category,    ~r_c0_category,    c0_category_ref
+     , c0_allCategory, ~r_c0_allCategory, c0_allCategory_ref
+     ]
+}
+pred compose[
+  hd1: univ, sleg1: hd1->univ, tleg1: hd1->univ,
+  hd2: univ, sleg2: hd2->univ, tleg2: hd2->univ,
+  res: univ, slegr: res->univ, tlegr: res->univ ]
+{
+  some r1: res->hd1 | some r2: res->hd2 |
+   all a: hd1, b: hd2 |
+    a.tleg1 = b.sleg2 implies { one r: res | r.r1 = a && r.r2 = b } &&
+    #res = #(hd1<:tleg1).~(hd2<:sleg2) &&
+    res<:slegr = r1.(hd1<:sleg1) && res<:tlegr = r2.(hd2<:tleg2)
+}
+|]
+
+```
+Escape to Alloy to compose `all b : Bundle | b.allCategory = b <: contains >< category`:
+
+```
+[alloy|
+fact {
+     compose
+     [ c0_contains,    ~r_c0_contains,    c0_contains_ref
+     , c0_category,    ~r_c0_category,    c0_category_ref
+     , c0_allCategory, ~r_c0_allCategory, c0_allCategory_ref
+     ]
+}
+pred compose[
+  hd1: univ, sleg1: hd1->univ, tleg1: hd1->univ,  // span
+  hd2: univ, sleg2: hd2->univ, tleg2: hd2->univ,  // span
+  res: univ, slegr: res->univ, tlegr: res->univ ] // span
+{
+  some r1: res->hd1 | some r2: res->hd2 |
+   all a: hd1, b: hd2 |
+    a.tleg1 = b.sleg2 implies { one r: res | r.r1 = a && r.r2 = b } &&
+    #res = #(hd1<:tleg1).~(hd2<:sleg2) &&
+    res<:slegr = r1.(hd1<:sleg1) && res<:tlegr = r2.(hd2<:tleg2)
+}
+|]
+```
+
+```{.clafer .ide}
+```
+
+Go back to [composing a multi-set with a multi-relation](multi-relation-composition).

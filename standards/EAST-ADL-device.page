@@ -1,0 +1,9 @@
+```clafer
+abstract Device
+  electronic ?
+  smart ?
+    [electronic]
+```
+
+```{.clafer .links}
+```

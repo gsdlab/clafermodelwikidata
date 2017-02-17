@@ -1,0 +1,202 @@
+---
+title: Feature model for ClaferTools: Visualizer, Configurator, and IDE
+...
+
+Development History
+===================
+
+ClaferTools is a set of tools based on the Clafer modeling language. 
+ClaferWebTools are three web-based tools: 
+ClaferMooVisualizer (the “visualizer”), 
+ClaferConfigurator (the “configurator”), and 
+ClaferIDE (the “IDE”). 
+They have been developed using the clone and own approach. 
+The visualizer was developed first. 
+It accepts a model in Clafer file with optimization objectives, runs a multi-objective optimization, and visualizes the resulting set of optimal configurations. 
+The configurator is a clone of the visualizer. 
+It also accepts a model in Clafer, runs Clafer Instance Generator, and presents the resulting configurations. 
+After the initial cloning, the two tools evolved and many features implemented in one of them were subsequently propagated to the other one. 
+For example, the help system and the ability to collapse and expand a subtree in the feature matrix view were added to the configurator and later propagated to the visualizer. 
+
+The two projects are structurally very similar, they have the same folder structure, use the same technology for the server and web UI components, share various utilities (e.g., processing of resulting configurations), and have consistent look and feel.
+They also have significant differences, which are specific to their core functionality. 
+
+In that context, the third tool, called ClaferIDE (the “IDE”), was created. 
+It offers basic editing, compilation, instantiation services over a web-based interface. 
+That new tool reused a lot of functionality from the visualizer and the configurator. 
+
+Below we present the feature models of the two existing tools and of the new tool. 
+Most of the features of IDE came from the visualizer and the configurator.
+The only one new feature unique to the IDE is `claferTextEditor`.
+Also, despite having the same features, their contents are different. 
+The help pages and examples are be different, the windows support different workflows and they are linked in different ways.
+The specific layout and interactions among these features is different to provide the IDE functionality. 
+For example, users can load, compile, and instantiate an example model or a model from a file without affecting the contents of the editor. 
+The models presented here are more oriented towards the solution-space rather than problem space. 
+Also, the models are incomplete (e.g., missing the feature `loadFromURL`). 
+
+Feature Models
+==============
+
+```{.clafer .summary}
+```
+
+<table>
+<tr>
+<td>
+
+```clafer
+ClaferMooVisualizer : ClaferWebTool
+    server
+        or backends
+            ClaferMoo
+            ChocoSingle
+        cache
+        examples
+        processManagement
+            polling
+            timeouts
+            errorHandling
+            cancellation
+    client
+        jquery
+            windowsEngine
+            forms
+        hottracking
+        help_pages
+        automaticViewSizing // from IDE
+        views
+            bubbleFrontGraph
+            variantComparer
+                removeVariant
+            featureAndQualityMatrix
+                expandCollapse
+                sorting
+                    byId
+                    byQuality
+                filtering 
+            objectives
+            claferSourceView
+            input         
+                examples
+        icons
+```
+
+</td>
+<td>
+
+```clafer
+ClaferConfigurator : ClaferWebTool
+    server
+        backends
+            ClaferIG
+        processManagement
+            interactive
+            timeouts
+            errorHandling
+    client
+        jquery
+            windowsEngine
+            forms
+        help_pages
+        views
+            featureAndQualityMatrix
+                expandCollapse
+                filtering
+                removeVariant    // from visualizer's variantComparer
+            input
+            control
+            output
+            constraints
+        icons
+```
+
+</td>
+<td>
+
+```clafer
+ClaferIDE : ClaferWebTool
+    server
+        backends
+            ClaferIG
+        examples
+        processManagement
+            interactive
+            polling
+            timeouts
+            errorHandling
+            cancellation
+    client
+        jquery
+            windowsEngine
+            forms
+        help_pages
+        automaticViewSizing
+        views
+            claferSourceView
+            input  
+                examples  
+                claferTextEditor     
+            control
+            output
+        icons
+```
+
+</td>
+<td>
+
+```clafer
+abstract ClaferWebTool
+    server
+        or backends
+            ClaferIG
+            ClaferMoo
+            ChocoSingle
+        cache ?
+        examples ?
+        processManagement
+            interactive ?
+            polling ?
+            timeouts
+            errorHandling
+            cancellation ?
+    client
+        jquery
+            windowsEngine
+            forms
+        hottracking ?
+            [ bubbleFrontGraph ]
+            [ featureAndQualityMatrix ]
+        help_pages
+        automaticViewSizing ?
+        or views
+            bubbleFrontGraph
+            variantComparer
+                removeVariant
+            featureAndQualityMatrix
+                expandCollapse
+                sorting ?
+                    byId
+                    byQuality
+                       [ ClaferMoo || ChocoSingle ]
+                filtering 
+                removeVariant ?
+            objectives
+               [ ClaferMoo || ChocoSingle ]
+            claferSourceView 
+            input
+                examples ?
+                   [ server.examples ]
+                claferTextEditor ?
+            control
+               [ ClaferIG ]
+            output
+               [ ClaferIG ]
+            constraints
+               [ ClaferIG ]
+        icons
+```
+
+</td>
+</tr>
+</table>

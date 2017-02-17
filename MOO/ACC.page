@@ -1,0 +1,29 @@
+```{.clafer}
+acc
+    xor sensor
+        radar
+        lidar
+    xor alert ?
+        haptic
+        audible
+    powertrain
+        xor transmission
+            automatic
+            manual
+        xor driverId
+            single
+            multiple
+        xor braking
+            bas
+            discrete
+    switches
+        xor gap
+            two
+            three
+        cruiseInput
+            cancel ?
+    xor display
+        headUp
+        highHeadDown
+        cluster
+```

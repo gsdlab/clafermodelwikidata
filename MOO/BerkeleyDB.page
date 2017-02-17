@@ -1,0 +1,113 @@
+---
+title: BerkeleyDB Example
+categories: moo
+toc: false
+...
+
+> Back to [Introduction](/MOO/Introduction)
+
+Here we have another example adapted and scaled down from SQJ 2011
+
+In order to analyze the model, click the link below: (not the right link)
+
+```{.clafer .mooviz}
+```
+
+First, we need to define components with some quality attributes `price`, `footprint`, and `reliability`:
+
+```clafer
+abstract IMeasurable
+	price -> integer
+	footprint -> integer
+	reliability -> integer
+```
+
+Next, write a model of our product line with some variability regarding the components.
+We need to set the values for quality attributes of each component.
+
+```clafer
+// Scaled down by dividing numbers by 2048 and rounding.
+
+abstract BerkeleyDbC
+	HAVE_STATISTICS : IMeasurable  ?
+		[ footprint = 139  ]
+		[ price = 0 ]
+		[ reliability = 0]
+	HAVE_CRYPTO : IMeasurable  ?
+		[ footprint = 19 ]
+		[ price = 300 ]
+		[ this.reliability = 0]
+	HAVE_INDEXES : IMeasurable
+		[ footprint = 0 ]
+		[ price = 0 ]
+		[ reliability = 0]
+		xor HAVE_BTREE	    
+		    BTREE_FAST : IMeasurable
+			[ footprint = 1800 ]
+			[ price = 0]
+			[ reliability = 0]
+		    BTREE_SMALL : IMeasurable 
+			[ footprint = 340 ]
+			[ price = 0 ]
+			[ reliability = 0]
+		HAVE_HASH : IMeasurable  ?
+			[ footprint = 56]
+			[ price = 125 ]
+			[ reliability = 0]
+		HAVE_QUEUE : IMeasurable  ?
+			[ footprint = 28]
+			[ price = 50 ]
+			[ reliability = 0]
+	HAVE_REPLICATION : IMeasurable  ?
+		[ footprint = 89 ]
+		[ price = 200]
+		[ reliability = 1]
+	HAVE_VERIFY : IMeasurable  ?
+		[ footprint = 50]
+		[ price = 100]
+		[ reliability = 1]
+	DIAGNOSTIC : IMeasurable  ?
+		[ footprint = 191 ]
+		[ price = 0 ]
+		[ reliability = 1]
+	HAVE_SEQUENCE : IMeasurable  ?
+		[ footprint = 20]
+		[ price = 50 ]
+		[ reliability = 0]
+	total_footprint -> integer = sum IMeasurable.footprint
+	total_price -> integer = sum IMeasurable.price
+	total_reliability -> integer = sum IMeasurable.reliability
+```
+
+Next, we define an unconstrained configuration allowing for all combinations of options:
+
+```clafer
+simpleConfig : BerkeleyDbC 
+```
+
+Finally, we define the optimization goals:
+
+"Minimize total footprint":
+
+```clafer
+<< minimize simpleConfig.total_footprint >>
+```
+
+"Minimize total price":
+
+```clafer
+<< minimize simpleConfig.total_price >>
+```
+
+
+"Maximize total reliability":
+
+```clafer
+<< maximize simpleConfig.total_reliability >>
+```
+
+The analyzer will fail to produce any instances because the default maximum integer is too small.
+Set the `max int` parameter to 4095 and click on `Optimize` just above the editor.
+
+```{.clafer .mooviz}
+```

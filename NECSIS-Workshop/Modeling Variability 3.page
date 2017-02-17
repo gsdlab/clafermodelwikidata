@@ -1,0 +1,38 @@
+---
+title: Modeling Variability 3
+categories: demo
+toc: false
+...
+
+Extracting subsystems.
+
+```clafer
+abstract Car
+    ABS ?
+    xor Transmission
+        Automatic
+        Manual
+```
+
+The Forward Collision Alert (FCA) subsystem.
+
+```clafer
+abstract FCA
+        xor Sensor
+            Radar
+            Lidar
+        xor Alert
+            Haptic
+            Audible
+```
+
+The Cruise Control (CC) subsystem.
+
+```clafer
+abstract CC
+        switch
+            backlight ?
+        ACC ?
+```
+
+[Modeling Variability 4]()

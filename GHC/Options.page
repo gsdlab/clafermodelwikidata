@@ -1,0 +1,34 @@
+---
+title: GHC Compilation Options
+...
+
+Model based on a blog post [Haskell Web Server in a 5MB Docker Image](https://www.fpcomplete.com/blog/2015/05/haskell-web-server-in-5mb). The actual reference for build options is on [GHC Haskell Wiki](https://ghc.haskell.org/trac/ghc/wiki/Building/Using#Buildconfiguration).
+
+When building GHC compiler, one can choose from the following compilation options:
+
+```clafer
+CompilationOptions
+  with_ghc -> GHC  // the existing version of GHC used for the build
+  // should there be a LLVM version of the existing GHC?
+  xor buildFlavor
+    quick
+    perf
+    perfLlvm  
+      // [ llvm ] // should perfLlvm require choosing GHCBackend.llvm?
+  xor INTEGER_LIBRARY
+    integer_gmp
+    integer_simple
+  xor GHCBackend
+    asm
+    llvm -> LLVM
+```
+
+And the available choices for GHC and LLVM:
+
+```clafer
+enum GHC =  GHC_784 | GHC_7101
+enum LLVM = LLVM_34 | LLVM_35
+```
+
+```{.clafer .config}
+```

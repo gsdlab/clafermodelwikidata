@@ -1,0 +1,210 @@
+---
+title: RBAC metamodel
+...
+
+
+```{.clafer}
+//RBAC metamodel
+
+abstract User
+    name : string 
+    maxRoles : int ?
+    maxRolesRespectingHierarchy ?
+    maxSessions : int ?
+    role -> Role +
+        [parent in this.user]
+    session -> Session *
+        [parent in this.user]
+    pred -> User ?
+        [parent in this.succ]
+    succ -> User ?
+        [parent in this.pred]
+    snapshot -> Snapshot 
+        [parent in this.user]
+    numberOfRoles:int
+	[this = if maxRolesRespectingHierarchy then (#(role++role.junior)) else (#role)]
+    [maxRoles => numberOfRoles < maxRoles]
+    [maxSessions => #session < maxSessions]
+    [all r:Resource|r.resourceBasedDynamicSeparationOfDuty => (one u_r:User_Resource|u_r.usr = this && u_r.res = r && lone u_r.tempSet1.action)]
+    [all r:Resource|r.historyBasedDynamicSeparationOfDuty =>(one u_r:User_Resource|u_r.usr = this && u_r.res = r && #u_r.tempSet1.action < #r.action)]
+    [succ => succ.snapshot = snapshot.succ]
+    [succ => succ.name.ref = name.ref]
+    
+
+
+User_Resource *//Hepler clafer, used to implement set comprehensions in constraints that quantifies over all pairs of User-Resource.
+    usr -> User
+    res -> Resource
+    tempSet1 -> Access*
+	[this in res.access && this.session.user in (usr ++ usr.succ)]
+    [all a:Access| (a in res.access && a.session.user in (usr ++ usr.succ)) => a in tempSet1]
+
+abstract Role
+    name : string 
+    maxMembers : int ?
+    maxJuniors : int ?
+    exclusiveJuniorsAllowed ?
+    maxSeniors : int ?
+    permission -> Permission +
+        [parent in this.role]
+    user -> User *
+        [parent in this.role]
+    senior -> Role *
+        [parent in this.junior]
+    junior -> Role *
+        [parent in this.senior]
+    required -> Role *
+        [parent in this.dependent]
+    dependent -> Role *
+        [parent in this.required]
+    session -> Session *
+        [parent in this.role]
+    mutuallyExclusiveA -> MutuallyExclusive *
+        [parent in this.roleA]
+    mutuallyExclusiveB -> MutuallyExclusive *
+        [parent in this.roleB]
+    [this not in senior]
+    [maxMembers => #user < maxMembers]
+    [all u:user|required in u.role]
+    [maxJuniors => #junior < maxJuniors]
+    [maxSeniors => #senior < maxSeniors]
+    [exclusiveJuniorsAllowed ||(all r1;r2:junior|(all m:r1.mutuallyExclusiveA |(m.wrtUserAssignment && m.roleB = r2) => m.identicalSeniorAllowed) &&(all m:r1.mutuallyExclusiveB |(m.wrtUserAssignment && m.roleB = r2) => m.identicalSeniorAllowed) )]
+//Bug: Can't quantify over set union: [all a:(mutuallyExclusiveA++mutuallyExclusiveB)|......]
+    
+
+
+abstract Permission
+    name : string 
+    maxRoles : int ?
+    maxSessions : int ?
+    action -> Action *
+        [parent in this.permission]
+    resource -> Resource 
+        [parent in this.permission]
+    role -> Role *
+        [parent in this.permission]
+    required -> Permission *
+        [parent in this.dependent]
+    dependent -> Permission *
+        [parent in this.required]
+    [maxRoles => #role < maxRoles]
+    [all r:role|required in r.permission]
+    [maxSessions => (all sna:Snapshot|(one p_s:Permission_Snapshot|p_s.perm = this && p_s.snap = sna && #p_s.sess < maxSessions))]
+
+Permission_Snapshot * //Hepler clafer, used to implement set comprehensions in constraints that quantifies over all pairs of Permission-Snapshot.
+    perm -> Permission
+    snap -> Snapshot
+    sess -> Session *
+	[this in perm.role.session && this.user.snapshot = snap]
+    [all s:Session|(s in perm.role.session && s.user.snapshot = snap) => s in sess]
+
+abstract Action
+    name : string 
+    access -> Access *
+        [parent in this.action]
+    mutuallyExclusiveA -> MutuallyExclusiveActions *
+        [parent in this.roleA]
+    mutuallyExclusiveB -> MutuallyExclusiveActions *
+        [parent in this.roleB]
+    permission -> Permission *
+        [parent in this.action]
+    resource -> Resource *
+        [parent in this.action]
+
+abstract Resource
+    name : string 
+    resourceBasedDynamicSeparationOfDuty ?
+    historyBasedDynamicSeparationOfDuty ?
+    access -> Access *
+        [parent in this.resource]
+    action -> Action *
+        [parent in this.resource]
+    permission -> Permission *
+        [parent in this.resource]
+
+abstract Session
+    id : string 
+    user -> User 
+        [parent in this.session]
+    role -> Role *
+        [parent in this.session]
+    access -> Access *
+        [parent in this.session]
+	neededPermissions -> Permission *
+	    [this in parent.action.permission && this.resource = parent.resource]
+	[all p:Permission|(p in this.action.permission && p.resource = this.resource) => p in neededPermissions]
+    pred -> Session ?
+        [parent in this.succ]
+    succ -> Session ?
+        [parent in this.pred]
+    [user.role in (user.role ++ user.role.junior)]
+    [all a:access|some a.neededPermissions && a.neededPermissions in (role.permission ++ role.junior.permission)]
+    [this not in succ && (some s:Snapshot| (Snapshot -- s) in s.succ)]
+    [succ => succ.user = user.succ]
+    [succ => succ.id.ref = id.ref]				
+	
+abstract Access
+    id : string 
+    session -> Session 
+        [parent in this.access]
+    action -> Action 
+        [parent in this.access]
+    resource -> Resource 
+        [parent in this.access]
+    pred -> Access ?
+        [parent in this.succ]
+    succ -> Access ?
+        [parent in this.pred]
+    [succ => succ.session = session.succ]
+    [succ => succ.id.ref = id.ref]
+
+abstract PrerequisiteActions
+    wrtResource ?
+    wrtResourceAndUser ?
+    required -> Action *
+    dependent -> Action *
+
+/*
+abstract PrerequisiteActions_Resource *
+    prerquis -> PrerequisiteActions
+    resc -> Resource
+    tempSet1 -> Access *
+	[this in prerquis.dependent.access && this.resource = resc]
+    [all a:Access|(a in prerquis.dependent.access && a.resource = resc) => a in tempSet1]
+*/
+
+abstract MutuallyExclusive
+    id : string 
+    wrtUserAssignment ?
+    identicalSeniorAllowed ?
+    wrtPermissionAssignment ?
+    wrtActiveRoles ?
+    wrtJuniors ?
+    wrtSeniors ?
+    roleA -> Role 
+        [parent in this.mutuallyExclusiveA]
+    roleB -> Role 
+        [parent in this.mutuallyExclusiveB]
+    [wrtUserAssignment || wrtPermissionAssignment || wrtActiveRoles|| wrtJuniors || wrtSeniors]
+    [roleA != roleB]
+
+abstract MutuallyExclusiveActions
+    id : string 
+    wrtResourceAndUser ?
+    roleA -> Action 
+        [parent in this.mutuallyExclusiveA]
+    roleB -> Action 
+        [parent in this.mutuallyExclusiveB]
+    
+
+abstract Snapshot
+    pred -> Snapshot ?
+        [parent in this.succ]
+    succ -> Snapshot ?
+        [parent in this.pred]
+    user -> User *
+        [parent in this.snapshot]  
+```
+
+```{.clafer .summary}
+```

@@ -1,0 +1,231 @@
+---
+title: Name Resolver Specification
+toc: false
+...
+
+Introduction
+============
+
+The goal of the name resolver in the Clafer compiler is to determine which clafer in the model is referred to by a given reference by name. In a Clafer model, names can repeat as each clafer declaration includes a new namespace. For example, there can be many clafers called `X` in various places in the model. The clafer `X` can be referred to in these two ways:
+
+1. as a super clafer: `a : X` (done in `ResolveInheritance.hs`), `a -> X`, and `a ->> X` (`ResolveName.hs`), and
+2. inside expressions in constraints and goals: `[ some X ]`, `X + 1`, and `<< max sum X.ref >>`.
+
+The name resolver decides which of the potentially multiple `X`s is being referred to. 
+Clafer `X` can be resolved as
+
+* `Special`     -- `this`, `parent`, `children`, `ref`
+* `TypeSpecial` -- primitive type: integer, string, (need to add real, natural, etc.)
+* `Binding`     -- local variable (in constraints with quantifier)
+* `Subclafers`  -- in descendants (BFS)+ inheritance
+* `Reference`   -- same as `Subclafers` + reachable via references
+* `Ancestor`    -- in ancestors
+* `AbsClafer`   -- abstract , top-level clafer
+* `TopClafer`   -- concrete, top-level clafer
+
+Currently (Clafer 0.3.3), the name resolver applies the following sequence of resolution strategies (in that exact order) given the current environment `env` and the clafer's `id`:
+
+`resolve env id [resolveSpecial, resolveBind, resolveDescendants, resolveAncestor pos, resolveTopLevel pos, resolveNone pos]`
+
+The strategy `resolveNone` reports an error that the clafer with the given `id` was not found.
+
+
+Test Cases
+==========
+
+Resolving Special
+-----------------
+
+* `this` refers to `S1`
+
+```clafer
+S1
+   [ this ]
+```
+
+* `parent` refers to `S2`
+
+```clafer
+S2
+   a
+      [ parent ]
+```
+
+* `children` refers to `a ++ b`
+
+
+```
+S3
+   a
+   b
+   [ children ]
+```
+
+results in `resolver: unknown uid 'children'`
+
+Resolving TypeSpecial
+---------------------
+
+* `integer`, `string`, `real` resolve to primitive types
+
+```clafer
+age -> integer
+age2 -> int
+name -> string
+```
+
+```
+interestRate -> real
+interestRate -> double
+```
+
+results in `resolver: real not found within` and `resolver: double not found within`
+
+Resolving Binding
+-----------------
+
+* `b` in `b.c` resolves to `b` in `b : B1`. `c` in `b.c` resolves to `B1.c` via inheritance.
+
+```clafer
+abstract B1
+   c ?
+
+[ all b : B1 | b.c ]
+[ all disj b1; b2 : B1 | b1.c && b2.c ]
+[ some b : B1 | b.c ]
+[ no b : B1 | b.c ]
+```
+
+Resolving Subclafers
+--------------------
+
+* `b` in `some b` resolves to `a.b` and not to `a.b.b`
+
+```clafer
+Sub
+  [ some b ]
+  a ?
+     b ?
+        b ?
+```
+
+Resolving Reference
+-------------------
+
+* `a` in `some a` should resolve to `A5.a`
+
+```clafer
+A5 *
+  a *
+
+refA5 ->> A5
+  [ some this.a ]
+```
+
+* `B` in `-> A.B` should resolve to `A.B`
+
+```
+refAB -> A.B *
+  [ some B ]
+```
+
+results in an error `B` not found
+
+Resolving Ancestor
+------------------
+
+* `A1` in `some A1` resolves to the top-level `A1`
+
+```clafer
+A1 ?
+  B 
+    [ some A1 ]
+```
+
+* `A2` in `some A2` resolves to `A2.A2` and not the top-level `A2`
+
+```
+A2 ?
+  A2 ?
+    B 
+      [ some A2 ]
+```
+
+results in an unexplained compilation error.
+
+Resolving AbsClafer
+-----------------
+
+* `Abs` in `: Abs`, `-> Abs`, and `->> Abs` resolves to `abstract Abs`
+
+```clafer
+abstract Abs
+
+AbsColon : Abs
+AbsSet -> Abs
+AbsMultiSet ->> Abs
+```
+
+* nested abstract
+
+```clafer
+abstract Year
+	abstract Month
+
+y2013 : Year
+	month : Month 12
+
+// this is not allowed - improper nesting
+// myMonth : Month  
+```
+
+Resolving TopClafer
+-------------------
+
+* `T` in `some T` resolves to `T ?`
+
+```clafer
+T ?
+
+[ some T ]
+```
+
+Resolving Redefinition
+----------------------
+
+* (this affects name resolution for inheritance)
+
+```
+abstract A
+	d 0..1
+
+/* redefines A.d, narrows cardinality */
+
+abstract B : A
+	d 1..1 
+		b ?
+
+refA -> A
+
+[ refA.ref.d.b ] this should produce error 'b' not found
+
+refB -> B
+
+[ refB.ref.d.b ] // this should work
+```
+
+Related BugBot Issues
+=====================
+
+* [231 name resolver should search through nested clafers](http://gsd.uwaterloo.ca:8888/question/962/name-resolver-should-search-through-nested-clafers)
+* [217 reference to nested clafers](http://gsd.uwaterloo.ca:8888/question/918/reference-to-nested-clafers)
+* [216 inheritance among concrete clafers](http://gsd.uwaterloo.ca:8888/question/917/inheritance-among-concrete-clafers)
+* [206 Parent Required when Defining Ad-Hoc Set](http://gsd.uwaterloo.ca:8888/question/891/parent-required-when-defining-ad-hoc-set)
+* [169 No match in record selector sident](http://gsd.uwaterloo.ca:8888/question/729/no-match-in-record-selector-sident)
+* [145 Quantify over union](http://gsd.uwaterloo.ca:8888/question/675/quantify-over-union)
+* [95 children clafers not visible via reference to a reference](http://gsd.uwaterloo.ca:8888/question/451/children-clafers-not-visible-via-reference-to-a)
+* [65 summary working with local clafers and global](http://gsd.uwaterloo.ca:8888/question/268/summary-working-with-local-clafers-and-global)
+* [60 add support for hierarchy specification and instantiation](http://gsd.uwaterloo.ca:8888/question/252/add-support-for-hierarchy-specification-and)
+* [48 add the lookup navigation operator to clafer](http://gsd.uwaterloo.ca:8888/question/212/add-the-lookup-navigation-operator-to-clafer)
+
+Issues 48 and 65 are just proposals, we have not decided yet.

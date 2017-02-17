@@ -1,0 +1,28 @@
+---
+title: Modeling Variability 2
+categories: demo
+toc: false
+...
+
+Adding `CC` and `FCA` features.
+
+```clafer
+abstract Car
+    ABS ?
+    xor Transmission
+        Automatic
+        Manual
+    FCA ?
+        xor Sensor
+            Radar
+            Lidar
+        xor Alert
+            Haptic
+            Audible
+    CC ?
+        switch
+            backlight ?
+        ACC ?
+```
+
+[Modeling Variability 3]()

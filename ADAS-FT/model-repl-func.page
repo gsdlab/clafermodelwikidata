@@ -1,0 +1,174 @@
+---
+title: Modeling Replacement Functions to Mitigate Failures
+...
+
+> Back to [Intro]()
+
+Until now, we have been able to model and reason about hardware failures as well as reconfigure the resulting functional analysis architecture in response to these failures. Now, we want to cover one more possibility which is common in fault tolerant architectures; that is, to replace a function with another.
+This replacement function is usually limited and not fully functional or provides results with a lesser degree of accuracy. We will capture this through the degradation level.
+
+In our example, if the front radar fails we could use the front camera for obstacle detection and feed its input into the dynamic object detection controller. For the purposes of this example and to keep it short we only model the camera sensor and not the control that goes with it.
+
+All we need to do to add this *replacement* function is to define the function and give it cardinality ```0..1``` as with the others. We also write the same input and output constraints for what constitutes a failure of the front camera. Then we need to write a replacement constraint which states if the front radar function is missing then we should have the front camera instead in the architecture. The resulting architecture is as follows:
+
+> ![**Figure 1:** All functions optional, camera a replacement for the radar](/cameraReplacementForRadar.png)
+
+```clafer
+AutoPilot : System
+    AP_FAA : FunctionalAnalysis          
+        frontDriverLidar : FunctionalDevice ?
+            [implementation.hardware]
+            [degradation = 1]
+            [one output]
+        frontPassengerLidar : FunctionalDevice ?
+            [implementation.hardware]
+            [degradation = 1]
+            [one output]
+        lidarProcessing : AnalysisFunction ?
+            [implementation.software]
+            [degradation = (if #input = 2 then 1 else 2)]
+            [some input && one output]
+        pointCloudClustering : AnalysisFunction ?
+            [implementation.software]
+            [degradation = 1]
+            [some input && one output]
+        frontRadar : FunctionalDevice ?
+            [implementation.hardware]
+            [degradation = 1]
+            [one output]
+        frontCamera : FunctionalDevice ? 
+            [implementation.hardware]
+            [degradation = 1] 
+            [one output]
+        dynamicObjectDetection : AnalysisFunction ?
+            [implementation.software]
+            [degradation = (if frontRadarVal && pointCloudCusterVal then 1 else if frontCameraVal && pointCloudCusterVal then 2 else 3)]  
+            [some input && one output]
+        trajectoryPlanningAP : AnalysisFunction ?
+            [implementation.software]
+            [degradation = 1]
+            [some input && one output]
+        speedControl : AnalysisFunction ?
+            [implementation.software]
+            [degradation = 1]
+            [some input]
+        
+        // Function Connectors
+
+        frontDriverLidarVal : FunctionConnector ?
+            [sender = frontDriverLidar && receiver = lidarProcessing]
+        frontPassengerLidarVal : FunctionConnector ?
+            [sender = frontPassengerLidar && receiver = lidarProcessing]
+        compositePointCloud : FunctionConnector ?
+            [sender = lidarProcessing && receiver = pointCloudClustering]
+        frontRadarVal : FunctionConnector ?
+            [sender = frontRadar && receiver = dynamicObjectDetection]
+        frontCameraVal : FunctionConnector ?
+            [sender = frontCamera && receiver = dynamicObjectDetection]
+        pointCloudCusterVal : FunctionConnector ?
+            [sender = pointCloudClustering && receiver = dynamicObjectDetection]
+        dynamicObjects : FunctionConnector ?
+            [sender = dynamicObjectDetection && receiver = trajectoryPlanningAP]
+        velocityProfile : FunctionConnector ?
+            [sender = trajectoryPlanningAP && receiver = speedControl]
+
+        // Replacement constraints
+        [no frontRadar => frontCamera]
+
+
+    AP_HA : HardwareArchitecture
+        dn -> AP_DN
+        AP_DN : DeviceNodeClassification
+            visionProcessor1 : DeviceNode ?
+                [type = SmartDeviceNode]
+            visionProcessor2 : DeviceNode ?
+                [type = SmartDeviceNode]
+            algorithmProcessor1 : DeviceNode ?
+                [type = SmartDeviceNode]
+            algorithmProcessor2 : DeviceNode ?
+                [type = SmartDeviceNode]
+
+            frontDriverLidarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+            frontPassengerLidarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+
+            frontRadarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+            frontCameraSensor : DeviceNode ?
+                [type = EEDeviceNode]
+
+    AP_Dpl : Deployment
+        fa -> AP_FAA
+        ha -> AP_HA
+        [fa.frontDriverLidar.deployedTo = ha.dn.frontDriverLidarSensor]
+        [fa.frontPassengerLidar.deployedTo = ha.dn.frontPassengerLidarSensor]
+        [fa.lidarProcessing.deployedTo in (ha.dn.visionProcessor1, ha.dn.visionProcessor2)]
+        [fa.pointCloudClustering.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.frontRadar.deployedTo = ha.dn.frontRadarSensor]
+        [fa.frontCamera.deployedTo = ha.dn.frontCameraSensor]
+        [fa.dynamicObjectDetection.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.trajectoryPlanningAP.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.speedControl.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+
+
+```
+
+Now, using Clafer's [assertions](/Clafer Cheat Sheet#assertion) we can assert that there are no single points of failure for our system. We capture this by noting we have 8 device nodes in our architecture so we constrain to have only 7 (i.e. only one has failed). Then we can assert that the trajectory planning AP and speed control are always present; which we do find.
+
+```clafer
+[#(DeviceNode) = 7]
+assert [AP_FAA.trajectoryPlanningAP && AP_FAA.speedControl]
+```
+
+```{.clafer .links}
+```
+
+```{.clafer .ide}
+```
+
+> ![next](/next.png) [Modeling communication topology]()
+
+> Back to [Modeling FAA Re-configurations](model-faa-reconfig)
+
+> Back to [Intro]()
+
+The reference remains unchanged.
+
+```clafer
+abstract System
+abstract FunctionalAnalysis
+abstract HardwareArchitecture
+abstract DeviceNodeClassification
+abstract Deployment
+
+abstract FunctionalAnalysisComponent
+    deployedTo -> DeviceNode 1..2 
+    xor implementation
+        hardware
+            [deployedTo.type in EEDeviceNode, SmartDeviceNode]
+        software
+            [deployedTo.type in SmartDeviceNode]
+    input -> FunctionConnector *
+        [this.receiver = parent]
+    output -> FunctionConnector *
+        [this.sender = parent]
+    degradation -> integer
+        [this > 0 && this <= 3]
+    resultingDegradation -> integer = max (input.sender.resultingDegradation.dref, degradation.dref)
+abstract AnalysisFunction : FunctionalAnalysisComponent
+abstract FunctionalDevice : FunctionalAnalysisComponent
+abstract FunctionConnector
+    sender -> FunctionalAnalysisComponent
+        [parent in this.output]
+    receiver -> FunctionalAnalysisComponent
+        [parent in this.input]
+
+
+enum DeviceNodeType = SmartDeviceNode | EEDeviceNode | PowerDeviceNode
+
+abstract DeviceNode
+    [ some fac : FunctionalAnalysisComponent | this in fac.deployedTo ]
+    type -> DeviceNodeType
+```
+

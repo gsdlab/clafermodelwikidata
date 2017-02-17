@@ -1,0 +1,114 @@
+---
+title: Android Phone Example with four Objectives
+categories: moo
+toc: false
+...
+
+> Back to [Introduction](/MOO/Introduction)
+
+Here's a simple example of a model suitable for optimization using [ClaferMoo](https://github.com/gsdlab/claferMooStandalone).
+In order to analyze the model and explore the Pareto front in ClaferMoo Visualizer, click the link below:
+
+```{.clafer .mooviz}
+```
+
+If you're not sure what you can do in the analyzer, try the following [workflow](Android4AnalysisWorkflow).
+
+In this model, we have a product line of phones that consists of `Features` and `SecurityFeatures`.
+We want to find all optimal configurations of `aPhone`.
+
+```{.clafer .graph}
+```
+
+From the graph, we can see that the phone product line consists of four features and two security features.
+
+## Modeling the Optimization Problem
+
+First, we need to define features with some quality attributes `performance`, `energy`, and `mass`:
+
+```clafer
+abstract Feature
+    performance -> integer
+    energy -> integer
+    mass-> integer
+```
+
+There's also a special kind of feature, `SecurityFeature`, which has another quality attribute `security`:
+    
+```clafer
+abstract SecurityFeature : Feature
+    security -> integer
+```
+
+Next, we need to write a model of our product line with some variability regarding the features.
+We need to set the values for quality attributes of each feature.
+
+```clafer
+abstract MobilePhone
+    or Connectivity
+        Bluetooth : Feature
+            [ this.performance = 9]
+            [ this.energy = 10 ]
+            [ this.mass = 2]
+        USB : Feature
+            [ this.performance = 10]
+            [ this.energy = 5 ]
+            [ this.mass = 3]
+        Wifi : Feature
+            [ this.performance = 22]
+            [ this.energy = 17 ]
+            [ this.mass = 6]
+    PasswordProtection : SecurityFeature ?
+        [ this.security = 5]
+        [ this.performance = 1]
+        [ this.energy = 2 ]
+        [ this.mass = 0]
+    FingerprintProtection : SecurityFeature ?
+        [ this.mass = 0]
+        [ this.security = 5]
+        [ this.performance = 2]
+        [ this.energy = 4 ]
+    total_performance -> integer = sum Feature.performance
+    total_energy -> integer = sum Feature.energy
+    total_security -> integer = sum SecurityFeature.security
+    total_mass -> integer = sum Feature.mass
+```
+
+Next, we define our product `aPhone`. 
+
+```clafer
+aPhone : MobilePhone
+```
+
+The product is underspecified allowing for all possible valid combinations of features.
+
+Finally, we define the following four optimization goals.
+
+"Minimize total energy":
+
+```clafer
+<< minimize aPhone.total_energy >>
+```
+
+"Maximize total performance":
+
+```clafer
+<< maximize aPhone.total_performance >>
+```
+
+"Minimize total mass":
+
+```clafer
+<< minimize aPhone.total_mass >>
+```
+
+"Maximize total security":
+
+```clafer
+<< maximize aPhone.total_security >>
+```
+
+In order to analyze the model and explore the Pareto front in ClaferMoo Visualizer, click the link below:
+
+```{.clafer .mooviz}
+```

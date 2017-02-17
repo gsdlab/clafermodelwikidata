@@ -1,0 +1,41 @@
+---
+title: Multi-Objective Optimization in Product Lines using Clafer
+categories: moo
+toc: true
+...
+
+# Introduction
+
+Product-line engineering (PLE) is an approach to engineering a family of different products with a shared architecture and common components.
+Individual product variants are characterized by a selection of features from the feature model of the product family.
+Some features contribute positively or negatively to the overall quality of a variant. 
+The challenge faced by product-line engineers is discovering which variants are optimal with respect to a set of objectives and what trade-offs have to be made when choosing among the optimal variants. 
+
+Figure 1 presents a workflow for multi-objective modeling in product line engineering:
+
+<figure>
+  <img src="/img/MOOworkflow.jpg" width="650px"/>
+<figcaption>Fig. 1: Multi-Objective Modeling Workflow</figcaption>
+</figure>
+
+The entire workflow is supported by Clafer Tools 0.4.2:
+
+* In phases *Variability Modeling* and *Measurement*, we use [Clafer](https://github.com/gsdlab/clafer) for specifying the feature models, quality attributes, individual feature contributions to quality, and optimization objectives. 
+  * For web-based editing, we use [ClaferIDE](https://github.com/gsdlab/ClaferIDE).
+  * For analyzing the variability space, we use [Clafer Configurator](https://github.com/gsdlab/ClaferConfigurator).
+* In phase *Multi-Objective Optimization*, we use [ClaferMoo](https://github.com/gsdlab/claferMooStandalone). 
+* Finally, in phase *Visualization & Exploration*, we use [ClaferMoo Visualizer](https://github.com/gsdlab/claferMooVisualizer).
+
+# Examples
+
+For some larger examples, visit the following pages:
+
+* [Mobile Phone Example](MobilePhone) - a running example from a paper
+* [Android4 Example](Android4) - a synthetic example with four objectives
+* [BerkeleyDB Example](BerkeleyDB) - a real-world example with three objectives
+* [Adaptive Cruise Control](ACC) - a small realistic example
+* [APU Example](APU) - APU = CPU + GPU
+
+For an example step-by-step workflow with the Visualizer visit
+
+* [Example workflow with the ClaferMoo Visualizer on Android4 model](Android4AnalysisWorkflow)

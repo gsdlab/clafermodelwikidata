@@ -1,0 +1,53 @@
+---
+toc: no
+title: ClaferWiki-Specific Help Demonstration
+...
+
+**Add a Clafer code fragment as follows:**
+
+```clafer
+abstract A
+  c -> C *
+
+A1 : A
+  [ #c = 2 ]
+
+abstract B : A
+
+abstract C
+```
+
+**or in the full code block notation**
+
+```{.clafer}
+C1 : C
+
+C2 : C
+```
+
+**Add a graph in the simplified notation:**
+
+```{.clafer .graph}
+```
+
+Double click on the graph in the simplified notation to show/hide references. By default, the graph only shows inheritance relationships allowing for quick inspection of the inheritance hierarchy which is not directly visible in Clafer's textual notation. 
+
+**Add a graph in the CVL notation:**
+
+```{.clafer .cvlGraph}
+```
+
+**Add statistics:**
+
+```{.clafer .stats}
+```
+
+**Add download links for a complete model file (`.cfr`) and a self-contained HTML rendering of the model file (`.html`):**
+
+```{.clafer .links}
+```
+
+**Add summary, which includes 1) a graph in the simplified notation, 2) module statistics, and 3) the download links:**
+
+```{.clafer .summary}
+```

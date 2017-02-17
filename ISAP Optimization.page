@@ -1,0 +1,132 @@
+Generic model
+=============
+
+Model overview
+--------------
+
+```{.clafer .summary}
+```
+
+```{.clafer .mooviz}
+```
+
+Service prototype
+-----------------
+
+```clafer
+abstract Service
+    requirements: Requirements  // resources required by a service
+    machine -> Machine          // machine the service is allocated to 
+    [this in machine.services]  // inverse relationship constraint
+```
+
+Requirements and Resources prototypes
+----------------------------------
+
+```clafer
+abstract Requirements
+    cpu -> integer
+
+abstract Resources : Requirements
+```
+
+Machine prototype
+------------------
+
+```clafer
+abstract Machine
+    services -> Service*         
+        [this.machine = Machine]
+        
+    isFree? 
+    [isFree <=> no services] 
+
+    limits : Resources
+
+    utilization : Resources 
+        [cpu = sum services.requirements.cpu]
+        [cpu < limits.cpu]
+```
+
+A machine is free when no services are allocated.
+Utilization of the machine must satisfy limits.
+
+Optimization goals and constraints
+-----------------------------------
+
+We want to maximize the number of free machines.
+
+```clafer
+Task   
+    total_free -> integer = #Machine.isFree
+
+<<max Task.total_free>>
+```
+
+ISAP problem specifics
+======================
+
+```clafer
+abstract InterferenceData
+    memoryPressure ->> integer
+    memorySensitivity ->> integer
+```
+
+```clafer
+abstract MachineISAP : Machine
+    interferenceSensitiveServices -> ServiceISAP*
+
+    [all s: services | (s in ServiceISAP) <=> (s in interferenceSensitiveServices)]
+```
+
+```clafer
+abstract ServiceISAP: Service
+    interferenceData : InterferenceData
+
+    machineISAP -> MachineISAP           // typecasting the machine to MachineISAP
+        [this = machine]
+
+    totalPressure -> integer = sum machineISAP.interferenceSensitiveServices.interferenceData.memoryPressure
+    memoryPressureToThisService -> integer = totalPressure - interferenceData.memoryPressure
+    
+    // constraint:
+    [memoryPressureToThisService <= interferenceData.memorySensitivity]
+```
+
+Particular data (machines and services)
+=======================================
+
+Machines
+--------
+
+```clafer
+GoogleCA : MachineISAP
+    [limits.cpu = 10]
+
+GoogleNY : MachineISAP
+    [limits.cpu = 16]
+
+GoogleTX : MachineISAP
+    [limits.cpu = 14]
+```
+
+Services
+--------
+
+```clafer
+MailService : ServiceISAP
+    [requirements.cpu = 4]
+    [interferenceData.memoryPressure = 4]
+    [interferenceData.memorySensitivity = 6]
+
+SearchService : ServiceISAP
+    [requirements.cpu = 3]
+    [interferenceData.memoryPressure = 4]
+    [interferenceData.memorySensitivity = 2]
+
+CalendarService : Service
+    [requirements.cpu = 1]
+
+DriveService : Service
+    [requirements.cpu = 2]
+```
