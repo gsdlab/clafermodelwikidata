@@ -1,5 +1,5 @@
 ---
-title: Welcome to Clafer 0.4.4 Model Wiki!
+title: Welcome to Clafer 0.5.0 Model Wiki!
 ...
 
 # Introduction
@@ -10,12 +10,25 @@ Each wiki page contains a single Clafer model. The model can be split into model
 
 ## Release announcements and changes
 
+  | 0.5.0 (current development version: behavioral clafer)
+
+  | [0.4.5](http://www.clafer.org/2017/03/clafer-claferig-claferwiki-045-released.html)
   | [0.4.4](http://www.clafer.org/2016/09/clafer-tools-044-released.html)
   | [0.4.3](http://www.clafer.org/2015/12/clafer-tools-043-released.html)
   | [0.4.2](http://www.clafer.org/2015/10/clafer-tools-042-released.html)
   | [0.4.1 (compiler)](http://www.clafer.org/2015/09/clafer-claferig-claferwiki.html) [0.4.1 (web tools)](http://www.clafer.org/2015/09/clafer-web-tools-041-released.html) | [0.4.0](http://www.clafer.org/2015/07/clafer-claferig-claferwiki-040-released.html)
 
-  | [0.3.10](http://www.clafer.org/2015/04/clafer-claferig-claferwiki-chocosolver.html) | [0.3.9](http://www.clafer.org/2015/03/clafer-claferig-claferwiki-chocosolver.html) | [0.3.8](http://www.clafer.org/2015/01/clafer-claferig-and-claferwiki-038.html) | [0.3.7](http://www.clafer.org/2014/10/clafer-claferig-and-claferwiki-037.html) | [0.3.6.1](http://www.clafer.org/2014/07/clafer-compiler-and-ig-036-released.html) | [0.3.5](http://www.clafer.org/2014/01/clafer-tools-035-released.html) | [0.3.4](http://www.clafer.org/2013/09/clafer-tools-034-released.html) | [0.3.3](http://www.clafer.org/2013/08/clafer-tools-033-released.html) | [0.3.2](http://www.clafer.org/2013/04/clafer-tools-032-released.html) | [0.3.1](http://www.clafer.org/2012/10/clafer-tools-031-released.html) | [0.3.0](http://www.clafer.org/2012/07/clafer-tools-03-released.html) |
+  | [0.3.10](http://www.clafer.org/2015/04/clafer-claferig-claferwiki-chocosolver.html) 
+  | [0.3.9](http://www.clafer.org/2015/03/clafer-claferig-claferwiki-chocosolver.html) 
+  | [0.3.8](http://www.clafer.org/2015/01/clafer-claferig-and-claferwiki-038.html) 
+  | [0.3.7](http://www.clafer.org/2014/10/clafer-claferig-and-claferwiki-037.html) 
+  | [0.3.6.1](http://www.clafer.org/2014/07/clafer-compiler-and-ig-036-released.html) 
+  | [0.3.5](http://www.clafer.org/2014/01/clafer-tools-035-released.html)
+  | [0.3.4](http://www.clafer.org/2013/09/clafer-tools-034-released.html) 
+  | [0.3.3](http://www.clafer.org/2013/08/clafer-tools-033-released.html)
+  | [0.3.2](http://www.clafer.org/2013/04/clafer-tools-032-released.html)
+  | [0.3.1](http://www.clafer.org/2012/10/clafer-tools-031-released.html)
+  | [0.3.0](http://www.clafer.org/2012/07/clafer-tools-03-released.html) |
 
 # Learning Clafer
 
@@ -158,6 +171,14 @@ Below are some other examples:
 * [Models of Clafer tools](ClaferTools/Overview)
 * [Graph reachability](graphReachability)
 * [Multi-relation composition](multi-relation-composition)
+
+## Behavioral modeling
+
+Clafer can now be used to specify how the structures evolve over time. 
+In this setting, a static Clafer model describes the possible states of the system,
+whereas, the temporal aspects specify how the states can change.
+
+* [Simplified Web Socket Protocol](Behavioral/WebSocketProtocol)
 
 ## Demo spaces
 
