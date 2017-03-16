@@ -31,13 +31,13 @@ webSocketOpenedClosed : WebSocket
     [ ready --> request=open && request.success --> opened -->> request=close && request.success --> closed --> closed ]
 ```
 
-<table border=1>
+<table>
 <tr>
-<td>|WebSocket</td><td>WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td>
+<td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td>
 </tr><tr>
-<td>|</td><td>&nbsp;&nbsp;request-&gt;open</td><td>|</td><td>|&nbsp;&nbsp;request-&gt;close</td><td>|</td><td>|</td>
+<td>|</td><td>|&nbsp;&nbsp;request-&gt;open</td><td>|</td><td>|&nbsp;&nbsp;request-&gt;close</td><td>|</td><td>|</td>
 </tr><tr>
-<td>|</td><td>&nbsp;&nbsp;&nbsp;&nbsp;success</td><td>|</td><td>&nbsp;&nbsp;&nbsp;&nbsp;success</td><td>|</td><td>|</td>
+<td>|</td><td>|&nbsp;&nbsp;&nbsp;&nbsp;success</td><td>|</td><td>|&nbsp;&nbsp;&nbsp;&nbsp;success</td><td>|</td><td>|</td>
 </tr><tr>
 <td>|&nbsp;&nbsp;ready</td><td>|&nbsp;&nbsp;ready</td><td>|&nbsp;&nbsp;opened</td><td>|</td><td>|&nbsp;&nbsp;closed</td><td>|&nbsp;&nbsp;closed</td>
 </tr>
@@ -50,15 +50,15 @@ webSocketOpenedFailed : WebSocket
     [ ready --> request=open && request.success --> opened -->> request=close && request.failure --> failed --> failed ]
 ```
 
-<table border=1>
+<table>
 <tr>
-<td>WebSocket</td><td>WebSocket</td><td>WebSocket</td><td>WebSocket</td><td>WebSocket</td><td>WebSocket</td>
+<td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td>
 </tr><tr>
-<td></td><td>&nbsp;&nbsp;request-&gt;open</td><td></td><td>&nbsp;&nbsp;request-&gt;close</td><td></td><td></td>
+<td>|</td><td>|&nbsp;&nbsp;request-&gt;open</td><td>|</td><td>|&nbsp;&nbsp;request-&gt;close</td><td>|</td><td>|</td>
 </tr><tr>
-<td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;success</td><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;failure</td><td></td><td></td>
+<td>|</td><td>|&nbsp;&nbsp;&nbsp;&nbsp;success</td><td>|</td><td>|&nbsp;&nbsp;&nbsp;&nbsp;failure</td><td>|</td><td>|</td>
 </tr><tr>
-<td>&nbsp;&nbsp;ready</td><td>&nbsp;&nbsp;ready</td><td>&nbsp;&nbsp;opened</td><td></td><td>&nbsp;&nbsp;failed </td><td>&nbsp;failed </td>
+<td>|&nbsp;&nbsp;ready</td><td>|&nbsp;&nbsp;ready</td><td>|&nbsp;&nbsp;opened</td><td>|</td><td>|&nbsp;&nbsp;failed </td><td>|&nbsp;failed</td>
 </tr>
 </table>
 
@@ -69,15 +69,14 @@ webSocketFailed : WebSocket
     [ ready --> request=open && request.failure --> failed --> failed ]
 ```
 
-<table border=1>
+<table>
 <tr>
-<td>WebSocket</td><td>WebSocket</td><td>WebSocket</td><td>WebSocket</td>
+<td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td>
 </tr><tr>
-<td></td><td>&nbsp;&nbsp;request-&gt;open</td><td></td><td></td>
+<td>|</td><td>|&nbsp;&nbsp;request-&gt;open</td><td>|</td><td>|</td>
 </tr><tr>
-<td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;failure</td><td></td><td></td>
+<td>|</td><td>|&nbsp;&nbsp;&nbsp;&nbsp;failure</td><td>|</td><td>|</td>
 </tr><tr>
-<td>&nbsp;&nbsp;ready</td><td>&nbsp;&nbsp;ready</td><td>&nbsp;&nbsp;failed</td><td>&nbsp;&nbsp;failed</td>
+<td>|&nbsp;&nbsp;ready</td><td>|&nbsp;&nbsp;ready</td><td>|&nbsp;&nbsp;failed</td><td>|&nbsp;&nbsp;failed</td>
 </tr>
 </table>
-
