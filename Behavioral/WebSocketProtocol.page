@@ -1,0 +1,83 @@
+# Simplified Web Socket Protocol
+
+```clafer
+enum Request = open | close
+
+abstract WebSocket
+    xor request -> Request ?
+        success
+        failure
+    xor states
+        initial ready
+            [ initially no request ]
+            [ request=open -[request.success]-> opened ]
+            [ request=open -[request.failure]-> failed ]
+        opened 
+            [ initially no request ]
+            [ request=close -[request.success]->  closed ]
+            [ request=close -[request.failure]->  failed ]
+        closed --> closed
+            [ no request ]
+        failed --> failed
+            [ no request ]
+```
+
+## Example scenarios
+
+1. Web socket successfully opened and closed
+
+```clafer
+webSocketOpenedClosed : WebSocket
+    [ ready --> request=open && request.success --> opened -->> request=close && request.success --> closed --> closed ]
+```
+
+<table border=1>
+<tr>
+<td>WebSocket</td><td>WebSocket      </td><td>WebSocket</td><td>WebSocket       </td><td>WebSocket</td><td>WebSocket</td>
+</tr><tr>
+         <td></td><td>&nbsp;&nbsp;request->open</td><td>         </td><td>&nbsp;&nbsp;request->close</td><td>         </td><td>         </td>
+</tr><tr>
+         <td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;success    </td><td>         </td><td>&nbsp;&nbsp;&nbsp;&nbsp;success     </td><td>         </td><td>         </td>
+</tr><tr>
+  <td>ready  </td><td>&nbsp;&nbsp;ready        </td><td>&nbsp;&nbsp;opened   </td><td>                </td><td>&nbsp;&nbsp;closed </td><td>&nbsp;&nbsp;closed </td>
+</tr>
+</table>
+
+2. Web socket successfully opened but failed to be closed
+
+```clafer
+webSocketOpenedFailed : WebSocket
+    [ ready --> request=open && request.success --> opened -->> request=close && request.failure --> failed --> failed ]
+```
+
+<table border=1>
+<tr>
+<td>WebSocket</td><td>WebSocket      </td><td>WebSocket</td><td>WebSocket       </td><td>WebSocket</td><td>WebSocket</td>
+</tr><tr>
+<td></td><td>&nbsp;&nbsp;request->open</td><td>         </td><td>&nbsp;&nbsp;request->close</td><td>         </td><td>         </td>
+</tr><tr>
+<td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;success    </td><td>         </td><td>&nbsp;&nbsp;&nbsp;&nbsp;failure     </td><td>         </td><td>         </td>
+</tr><tr>
+<td>&nbsp;&nbsp;ready  </td><td>&nbsp;&nbsp;ready        </td><td>&nbsp;&nbsp;opened   </td><td>                </td><td>&nbsp;&nbsp;failed </td><td>&nbsp;failed </td>
+</tr>
+</table>
+
+3. Web socket failed to be opened
+
+```clafer
+webSocketFailed : WebSocket
+    [ ready --> request=open && request.failure --> failed --> failed ]
+```
+
+<table border=1>
+<tr>
+<td>WebSocket</td><td>WebSocket</td><td>WebSocket</td><td>WebSocket</td>
+</tr><tr>
+<td></td><td>&nbsp;&nbsp;request->open</td><td></td><td></td>
+</tr><tr>
+<td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;failure</td><td></td><td></td>
+</tr><tr>
+<td>&nbsp;&nbsp;ready  </td><td>&nbsp;&nbsp;ready</td><td>&nbsp;&nbsp;failed</td><td>&nbsp;&nbsp;failed </td>
+</tr>
+</table>
+
