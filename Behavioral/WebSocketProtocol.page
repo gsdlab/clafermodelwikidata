@@ -33,13 +33,13 @@ webSocketOpenedClosed : WebSocket
 
 <table border=1>
 <tr>
-<td>WebSocket</td><td>WebSocket</td><td>WebSocket</td><td>WebSocket</td><td>WebSocket</td><td>WebSocket</td>
+<td>|WebSocket</td><td>WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td>
 </tr><tr>
-<td></td><td>&nbsp;&nbsp;request-&gt;open</td><td></td><td>&nbsp;&nbsp;request-&gt;close</td><td></td><td></td>
+<td>|</td><td>&nbsp;&nbsp;request-&gt;open</td><td>|</td><td>|&nbsp;&nbsp;request-&gt;close</td><td>|</td><td>|</td>
 </tr><tr>
-<td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;success</td><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;success</td><td></td><td></td>
+<td>|</td><td>&nbsp;&nbsp;&nbsp;&nbsp;success</td><td>|</td><td>&nbsp;&nbsp;&nbsp;&nbsp;success</td><td>|</td><td>|</td>
 </tr><tr>
-<td>ready</td><td>&nbsp;&nbsp;ready</td><td>&nbsp;&nbsp;opened</td><td></td><td>&nbsp;&nbsp;closed</td><td>&nbsp;&nbsp;closed</td>
+<td>|&nbsp;&nbsp;ready</td><td>|&nbsp;&nbsp;ready</td><td>|&nbsp;&nbsp;opened</td><td>|</td><td>|&nbsp;&nbsp;closed</td><td>|&nbsp;&nbsp;closed</td>
 </tr>
 </table>
 
