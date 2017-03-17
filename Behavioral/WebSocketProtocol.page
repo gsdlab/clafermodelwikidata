@@ -41,14 +41,14 @@ webSocketOpenedClosed : WebSocket
 
 <table>
 <tr>
-<td>
+<td valign="top">
 ```clafer
 WebSocket11
   states
     ready
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket12
   states
@@ -57,14 +57,14 @@ WebSocket12
     success
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket13
   states
     opened
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket14
   states
@@ -73,14 +73,14 @@ WebSocket14
     success
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket15
   states
     closed
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket16
   states
@@ -100,14 +100,14 @@ webSocketOpenedFailed : WebSocket
 
 <table>
 <tr>
-<td>
+<td valign="top">
 ```clafer
 WebSocket21
   states
     ready
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket22
   states
@@ -116,14 +116,14 @@ WebSocket22
     success
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket23
   states
     opened
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket24
   states
@@ -132,14 +132,14 @@ WebSocket24
     failure
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket25
   states
     failed
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket26
   states
@@ -159,14 +159,14 @@ webSocketFailed : WebSocket
 
 <table>
 <tr>
-<td>
+<td valign="top">
 ```clafer
 WebSocket31
   states
     ready
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket32
   states
@@ -175,14 +175,14 @@ WebSocket32
     failure
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket33
   states
     failed
 ```
 </td>
-<td>
+<td valign="top">
 ```clafer
 WebSocket34
   states
