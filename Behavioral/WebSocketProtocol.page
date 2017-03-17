@@ -4,15 +4,12 @@ title: Behavioral Modeling - WebSocket Protocol
 
 # Simplified Web Socket Protocol
 
-> Note: this is a contrived example, no the actual protocol.
+> Note: this is a contrived example, not the actual protocol.
 
 ```clafer
 enum Request = open | close
 
 abstract WebSocket
-    xor request -> Request ?
-        success
-        failure
     xor states
         initial ready
             [ initially no request ]
@@ -26,6 +23,9 @@ abstract WebSocket
             [ no request ]
         failed --> failed
             [ no request ]
+    xor request -> Request ?
+        success
+        failure
 ```
 
 ## Example scenarios
@@ -51,10 +51,10 @@ WebSocket11
 <td>
 ```clafer
 WebSocket12
-  request->open
-    success
   states
     ready
+  request->open
+    success
 ```
 </td>
 <td>
@@ -67,10 +67,10 @@ WebSocket13
 <td>
 ```clafer
 WebSocket14
-  request->close
-    success
   states
     opened
+  request->close
+    success
 ```
 </td>
 <td>
@@ -110,10 +110,10 @@ WebSocket21
 <td>
 ```clafer
 WebSocket22
-  request->open
-    success
   states
     ready
+  request->open
+    success
 ```
 </td>
 <td>
@@ -126,10 +126,10 @@ WebSocket23
 <td>
 ```clafer
 WebSocket24
-  request->close
-    failure
   states
     opened
+  request->close
+    failure
 ```
 </td>
 <td>
@@ -169,10 +169,10 @@ WebSocket31
 <td>
 ```clafer
 WebSocket32
-  request->open
-    failure
   states
     ready
+  request->open
+    failure
 ```
 </td>
 <td>
