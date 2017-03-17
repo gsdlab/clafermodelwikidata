@@ -1,4 +1,10 @@
+---
+title: Behavioral Modeling - WebSocket Protocol
+...
+
 # Simplified Web Socket Protocol
+
+> Note: this is a contrived example, no the actual protocol.
 
 ```clafer
 enum Request = open | close
