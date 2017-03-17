@@ -24,155 +24,161 @@ abstract WebSocket
 
 ## Example scenarios
 
-1. Web socket successfully opened and closed
+### Web socket successfully opened and closed
 
 ```clafer
 webSocketOpenedClosed : WebSocket
     [ ready --> request=open && request.success --> opened -->> request=close && request.success --> closed --> closed ]
 ```
 
-<table>
-<tr>
-<td>
-```clafer
-WebSocket1
-  states
-    ready
-```
-</td>
-<td>
-```clafer
-WebSocket2
-  request->open
-    success
-  states
-    ready
-```
-</td>
-<td>
-```clafer
-WebSocket3
-  states
-    opened
-```
-</td>
-<td>
-```clafer
-WebSocket4
-  request->close
-    success
-  states
-    opened
-```
-</td>
-<td>
-```clafer
-WebSocket5
-  states
-    closed
-```
-</td>
-<td>
-```clafer
-WebSocket6
-  states
-    closed
-```
-</td>
-</table>
-
-2. Web socket successfully opened but failed to be closed
-
-```clafer
-webSocketOpenedFailed : WebSocket
-    [ ready --> request=open && request.success --> opened -->> request=close && request.failure --> failed --> failed ]
-```
+#### Trace 1
 
 <table>
 <tr>
-<td>
-```clafer
-WebSocket7
-  states
-    ready
-```
-</td>
-<td>
-```clafer
-WebSocket8
-  request->open
-    success
-  states
-    ready
-```
-</td>
-<td>
-```clafer
-WebSocket9
-  states
-    opened
-```
-</td>
-<td>
-```clafer
-WebSocket10
-  request->close
-    failure
-  states
-    opened
-```
-</td>
 <td>
 ```clafer
 WebSocket11
   states
-    failed
+    ready
 ```
 </td>
 <td>
 ```clafer
 WebSocket12
+  request->open
+    success
   states
-    failed
+    ready
 ```
 </td>
-</table>
-
-3. Web socket failed to be opened
-
-```clafer
-webSocketFailed : WebSocket
-    [ ready --> request=open && request.failure --> failed --> failed ]
-```
-
-<table>
-<tr>
 <td>
 ```clafer
 WebSocket13
   states
-    ready
+    opened
 ```
 </td>
 <td>
 ```clafer
 WebSocket14
-  request->open
-    failure
+  request->close
+    success
   states
-    ready
+    opened
 ```
 </td>
 <td>
 ```clafer
 WebSocket15
   states
-    failed
+    closed
 ```
 </td>
 <td>
 ```clafer
 WebSocket16
+  states
+    closed
+```
+</td>
+</table>
+
+### Web socket successfully opened but failed to be closed
+
+```clafer
+webSocketOpenedFailed : WebSocket
+    [ ready --> request=open && request.success --> opened -->> request=close && request.failure --> failed --> failed ]
+```
+
+#### Trace 2
+
+<table>
+<tr>
+<td>
+```clafer
+WebSocket21
+  states
+    ready
+```
+</td>
+<td>
+```clafer
+WebSocket22
+  request->open
+    success
+  states
+    ready
+```
+</td>
+<td>
+```clafer
+WebSocket23
+  states
+    opened
+```
+</td>
+<td>
+```clafer
+WebSocket24
+  request->close
+    failure
+  states
+    opened
+```
+</td>
+<td>
+```clafer
+WebSocket25
+  states
+    failed
+```
+</td>
+<td>
+```clafer
+WebSocket26
+  states
+    failed
+```
+</td>
+</table>
+
+### Web socket failed to be opened
+
+```clafer
+webSocketFailed : WebSocket
+    [ ready --> request=open && request.failure --> failed --> failed ]
+```
+
+#### Trace 3
+
+<table>
+<tr>
+<td>
+```clafer
+WebSocket31
+  states
+    ready
+```
+</td>
+<td>
+```clafer
+WebSocket32
+  request->open
+    failure
+  states
+    ready
+```
+</td>
+<td>
+```clafer
+WebSocket33
+  states
+    failed
+```
+</td>
+<td>
+```clafer
+WebSocket34
   states
     failed
 ```
