@@ -67,7 +67,7 @@ WebSocket4
 </td>
 <td>
 ```clafer
-WebSocket1
+WebSocket5
   states
     closed
 ```
