@@ -33,14 +33,52 @@ webSocketOpenedClosed : WebSocket
 
 <table>
 <tr>
-<td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td><td>|WebSocket</td>
-</tr><tr>
-<td>|</td><td>|&nbsp;&nbsp;request-&gt;open</td><td>|</td><td>|&nbsp;&nbsp;request-&gt;close</td><td>|</td><td>|</td>
-</tr><tr>
-<td>|</td><td>|&nbsp;&nbsp;&nbsp;&nbsp;success</td><td>|</td><td>|&nbsp;&nbsp;&nbsp;&nbsp;success</td><td>|</td><td>|</td>
-</tr><tr>
-<td>|&nbsp;&nbsp;ready</td><td>|&nbsp;&nbsp;ready</td><td>|&nbsp;&nbsp;opened</td><td>|</td><td>|&nbsp;&nbsp;closed</td><td>|&nbsp;&nbsp;closed</td>
-</tr>
+<td>
+```clafer
+WebSocket1
+  states
+    ready
+```
+</td>
+<td>
+```clafer
+WebSocket2
+  request->open
+    success
+  states
+    ready
+```
+</td>
+<td>
+```clafer
+WebSocket3
+  states
+    opened
+```
+</td>
+<td>
+```clafer
+WebSocket4
+  request->close
+    success
+  states
+    opened
+```
+</td>
+<td>
+```clafer
+WebSocket1
+  states
+    closed
+```
+</td>
+<td>
+```clafer
+WebSocket5
+  states
+    closed
+```
+</td>
 </table>
 
 2. Web socket successfully opened but failed to be closed
