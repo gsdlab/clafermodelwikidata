@@ -1,0 +1,17 @@
+---
+title: Behavioral Modeling - Power Window
+...
+
+# Modeling variability and structures with variability
+
+## Feature modeling
+
+```clafer
+abstract final Feature
+abstract final FeatureModel
+
+WinFeatures : FeatureModel
+    manualUpDown : Feature
+    express : Feature ?
+        pinchProtection : Feature ?
+```
