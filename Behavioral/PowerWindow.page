@@ -2,9 +2,15 @@
 title: Behavioral Modeling - Power Window
 ...
 
+
+This example demonstrates modeling both structure and behavior with variability. 
+
 # Modeling variability and structures with variability
 
 ## Feature modeling
+
+We model features as final, that is, we do not allow dynamic reconfiguration.
+Feature configuration from the first snapshot remains unchanged for the entire trace.
 
 ### Metamodel
 
@@ -15,6 +21,9 @@ abstract final FeatureModel
 
 ### Model 
 
+The optional feature `express` indicates the functionality of automatically closing the window.
+The feature `pinchProtection` indicates the functionality of obstacle detection and stopping the window closure.
+
 ```clafer
 WinFeatures : FeatureModel
     manualUpDown : Feature
@@ -22,32 +31,33 @@ WinFeatures : FeatureModel
         pinchProtection : Feature ?
 ```
 
-## Structural modeling
+## Component and statemachine modeling
 
 ### Metamodel
+
+Simple component modeling.
 
 ```clafer
 abstract final Component
     abstract Port
 abstract final Command
+```
+
+Inside the components, we will embed statemachines modeling their behavior.
+
+```clafer
 abstract State
 abstract StateMachine
 ```
 
 ### Model 
 
-Commands and requests.
+Commands received by the window motor.
 
 ```clafer
 motorUp : Command
 motorStop : Command
 motorDown : Command
-
-abstract final UserRequest
-up : UserRequest
-expressUp : UserRequest ?
-stop : UserRequest
-down : UserRequest
 ```
 
 Window motor
@@ -57,7 +67,26 @@ WinMotor : Component
     cmd : Port -> Command
 ```
 
-Window controller
+Requests from the user. 
+Observe, that the request `expressUp` is optional.
+
+```clafer
+abstract final UserRequest
+up : UserRequest
+expressUp : UserRequest ?
+stop : UserRequest
+down : UserRequest
+```
+
+#### Alphabet variability
+
+The user request `expressUp` is only available when the feature `express` is present. 
+
+```clafer
+[ express <=> expressUp ]
+```
+
+Window controller with an optional component `pinchDetector`. 
 
 ```clafer
 abstract WinController : Component
@@ -103,9 +132,7 @@ abstract WinController : Component
             [ req=down     --> movingDown ]
 ```
 
-## Variability in structural models
-
-### Linking the feature with the optional component (structural variability)
+#### Linking the feature with the optional component (structural variability)
 
 The component `pinchDetector` is only required if we support the feature `pinchProtection`.
 
@@ -113,7 +140,7 @@ The component `pinchDetector` is only required if we support the feature `pinchP
 [ pinchProtection <=> pinchDetector ]
 ```
 
-### Disabling `objectDetected` port
+#### Disabling `objectDetected` port
 
 Without the feature `pinchProtection`, the port `objectDetected` should be inactive. 
 Having the feature will allow receiving the signal `objectDetected`.
@@ -122,15 +149,7 @@ Having the feature will allow receiving the signal `objectDetected`.
 [ no pinchProtection => no WinController.objectDetected ]
 ```
 
-### Alphabet variability
-
-The user request `expressUp` is only available when the feature `express` is present. 
-
-```clafer
-[ express <=> expressUp ]
-```
-
-## Variability in Behavior Using Inheritance
+## Variability in behavior using inheritance
 
 Two kinds of window controllers:
  
@@ -152,7 +171,7 @@ WinCtrWithChime : WinController ?
     [ no chime && movingUpX --> (movingUpX => chime) ]
 ```
 
-## Variability in Behavior Using Strategy Pattern
+## Variability in behavior using strategy pattern
 
 We first define an abstract chiming strategy:
 chiming can be `audible` but only if `active` (expressed by nesting).
@@ -199,7 +218,7 @@ We can choose the chiming strategy using the following constraint:
 [ WinControllerStrategies.strategy = Intermittent ]
 ```
 
-## Scenarios and Properties
+## Scenarios and properties
 
 ### An example positive scenario
 
