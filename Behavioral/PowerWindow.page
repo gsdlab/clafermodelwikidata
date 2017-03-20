@@ -129,3 +129,25 @@ The user request `expressUp` is only available when the feature `express` is pre
 ```clafer
 [ express <=> expressUp ]
 ```
+
+## Variability in Behavior Using Inheritance
+
+Two kinds of window controllers:
+ 
+### With continuous chime 
+
+```clafer
+WinCtrWithContChime : WinController ?
+    chime : Port ?
+    [ movingUpX <=> chime ]
+```
+
+### With intermittent chime
+
+```clafer
+WinCtrWithChime : WinController ?
+    chime : Port ?
+    [ no movingUpX => no chime ]
+    [ chime --> no chime ]
+    [ no chime && movingUpX --> (movingUpX => chime) ]
+```
