@@ -4,7 +4,7 @@ title: Welcome to Clafer 0.5.0 Model Wiki!
 
 # Introduction
 
-This is a public instance of the [ClaferWiki](https://github.com/gsdlab/claferwiki#readme) to serve as a model repository. We are publishing example models that showcase [Clafer](http://clafer.org) as a lightweight structural modeling language. For installation, visit [Software](www.clafer.org/p/software.html).
+This is a public instance of the [ClaferWiki](https://github.com/gsdlab/claferwiki#readme) to serve as a model repository. We are publishing example models that showcase [Clafer](http://clafer.org) as a lightweight structural modeling language. For installation, visit [Software](http://www.clafer.org/p/software.html).
 
 Each wiki page contains a single Clafer model. The model can be split into model fragments and interwoven with rich-text contents (*literate modeling*). The model is compiled using the Clafer compiler and rendered as HTML, which provides syntax and error highlighting and hyperlinking, and as a Graph, which provides a different view on the model that emphasizes inheritance and references. Double click on the graph shows/hides references. 
 
@@ -174,7 +174,7 @@ Below are some other examples:
 
 ## Behavioral modeling
 
-Clafer can now be used to specify how the structures evolve over time. 
+As of version 0.5.0, Clafer can be used for specifying how the structures evolve over time. 
 In this setting, a static Clafer model describes the possible states of the system,
 whereas, the temporal aspects specify how the states can change.
 
