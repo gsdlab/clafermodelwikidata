@@ -54,6 +54,51 @@ Window motor
 
 ```clafer
 WinMotor : Component
-    // cmd : Port -> Command
-    cmd -> Command
+    cmd : Port -> Command
+```
+
+Window controller
+
+```clafer
+abstract WinController : Component
+    final motor -> WinMotor
+    pinchDetector : Component ?
+
+    req : Port -> UserRequest ?
+    endOfTravel : Port ?
+    objectDetected : Port ?
+
+    [ lone (req, endOfTravel, objectDetected )]
+
+    final xor WinStates : StateMachine
+        xor movingUp : State
+            [ motor.cmd = motorUp ]
+            [ req=down     --> movingDown ]
+            [ endOfTravel  --> closed     ]
+            [ req=up       --> movingUp ]
+            initial basic : State
+                [ req=stop      --> stopped   ]
+                [ req=expressUp --> movingUpX ]
+            movingUpX : State
+                [ this -[objectDetected]-> stopped ]
+
+        initial xor stopped : State
+            [ motor.cmd = motorStop ]
+            closed : State
+                [ req=down --> movingDown ]
+                [ (req=up || req=stop) --> closed ]
+            partlyOpen : State
+                [ req=up   --> movingUp   ]
+                [ req=down --> movingDown ]
+                [ req=stop --> partlyOpen ]
+            open : State
+                [ req=up   --> movingUp ]
+                [ (req=down || req=stop) --> open ]
+
+        movingDown : State
+            [ motor.cmd = motorDown ]
+            [ req=up       --> movingUp ]
+            [ endOfTravel  --> open     ]
+            [ req=stop     --> stopped  ]
+            [ req=down     --> movingDown ]
 ```
