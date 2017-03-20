@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=9">
+<style>.identifier{}
+.keyword{font-weight: bold;}
+.tKeyword{font-style: oblique;}
+.reference{}
+.code { background-color: lightgray; padding: 5px 5px 5px 5px; border: 1px solid darkgray; margin-bottom: 15px;
+        font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace; }
+.standalonecomment { color: green; font-style:italic }
+.inlinecomment { color: green; padding-left:20px; font-style:italic }
+.error{background-color: yellow; color: red }
+.deprecated{color: orange }
+.indent{padding-left:20px}
+a[href$='Lookup failed'] {color: red}
+a[href$='Uid not found'] {color: red}
+a[href$='Ambiguous name'] {color: yellow}
+</style></head>
+<body>
+
+<div>
+<span class="keyword">abstract</span> <span class="tKeyword">final</span> <span class="claferDecl" id="c0_Feature">Feature</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="tKeyword">final</span> <span class="claferDecl" id="c0_FeatureModel">FeatureModel</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WinFeatures">WinFeatures</span><span class="keyword"> : </span><a href="#c0_FeatureModel"><span class="reference">FeatureModel</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_manualUpDown">manualUpDown</span><span class="keyword"> : </span><a href="#c0_Feature"><span class="reference">Feature</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_express">express</span><span class="keyword"> : </span><a href="#c0_Feature"><span class="reference">Feature</span></a> ?
+    <div class="indent">
+    <span class="claferDecl" id="c0_pinchProtection">pinchProtection</span><span class="keyword"> : </span><a href="#c0_Feature"><span class="reference">Feature</span></a> ?</div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="tKeyword">final</span> <span class="claferDecl" id="c0_Component">Component</span>
+  <div class="indent">
+  <span class="keyword">abstract</span> <span class="claferDecl" id="c0_Port">Port</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="tKeyword">final</span> <span class="claferDecl" id="c0_Command">Command</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_State">State</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="tKeyword">final</span> <span class="claferDecl" id="c0_StateMachine">StateMachine</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_motorUp">motorUp</span><span class="keyword"> : </span><a href="#c0_Command"><span class="reference">Command</span></a></div>
+
+
+<div>
+<span class="claferDecl" id="c0_motorStop">motorStop</span><span class="keyword"> : </span><a href="#c0_Command"><span class="reference">Command</span></a></div>
+
+
+<div>
+<span class="claferDecl" id="c0_motorDown">motorDown</span><span class="keyword"> : </span><a href="#c0_Command"><span class="reference">Command</span></a></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WinMotor">WinMotor</span><span class="keyword"> : </span><a href="#c0_Component"><span class="reference">Component</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_cmd">cmd</span><span class="keyword"> : </span><a href="#c0_Port"><span class="reference">Port</span></a><span class="keyword"> -> </span><a href="#c0_Command"><span class="reference">Command</span></a></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="tKeyword">final</span> <span class="claferDecl" id="c0_UserRequest">UserRequest</span></div>
+
+
+<div>
+<span class="claferDecl" id="c0_up">up</span><span class="keyword"> : </span><a href="#c0_UserRequest"><span class="reference">UserRequest</span></a></div>
+
+
+<div>
+<span class="claferDecl" id="c0_expressUp">expressUp</span><span class="keyword"> : </span><a href="#c0_UserRequest"><span class="reference">UserRequest</span></a> ?</div>
+
+
+<div>
+<span class="claferDecl" id="c0_stop">stop</span><span class="keyword"> : </span><a href="#c0_UserRequest"><span class="reference">UserRequest</span></a></div>
+
+
+<div>
+<span class="claferDecl" id="c0_down">down</span><span class="keyword"> : </span><a href="#c0_UserRequest"><span class="reference">UserRequest</span></a></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">[</span> <a href="#c0_express"><span class="reference">express</span></a> &lt;=&gt; <a href="#c0_expressUp"><span class="reference">expressUp</span></a> <span class="keyword">]</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">[</span> <a href="#c0_pinchProtection"><span class="reference">pinchProtection</span></a> &lt;=&gt; <a href="#c0_pinchDetector"><span class="reference">pinchDetector</span></a> <span class="keyword">]</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_WinController">WinController</span><span class="keyword"> : </span><a href="#c0_Component"><span class="reference">Component</span></a>
+  <div class="indent">
+  <span class="tKeyword">final</span> <span class="claferDecl" id="c0_motor">motor</span><span class="keyword"> -> </span><a href="#c0_WinMotor"><span class="reference">WinMotor</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_pinchDetector">pinchDetector</span><span class="keyword"> : </span><a href="#c0_Component"><span class="reference">Component</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_req">req</span><span class="keyword"> : </span><a href="#c0_Port"><span class="reference">Port</span></a><span class="keyword"> -> </span><a href="#c0_UserRequest"><span class="reference">UserRequest</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_endOfTravel">endOfTravel</span><span class="keyword"> : </span><a href="#c0_Port"><span class="reference">Port</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_objectDetected">objectDetected</span><span class="keyword"> : </span><a href="#c0_Port"><span class="reference">Port</span></a> ?</div>
+  <div class="indent">
+  <span class="keyword">[</span> <span class="keyword">lone</span> <a href="#c0_req"><span class="reference">req</span></a>, <a href="#c0_endOfTravel"><span class="reference">endOfTravel</span></a>, <a href="#c0_objectDetected"><span class="reference">objectDetected</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="tKeyword">final</span> <span class="keyword">xor</span> <span class="claferDecl" id="c0_WinStates">WinStates</span><span class="keyword"> : </span><a href="#c0_StateMachine"><span class="reference">StateMachine</span></a>
+    <div class="indent">
+    <span class="keyword">xor</span> <span class="claferDecl" id="c0_movingUp">movingUp</span><span class="keyword"> : </span><a href="#c0_State"><span class="reference">State</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_motor"><span class="reference">motor</span></a>.<a href="#c0_cmd"><span class="reference">cmd</span></a> = <a href="#c0_motorUp"><span class="reference">motorUp</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_down"><span class="reference">down</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingDown"><span class="reference">movingDown</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_endOfTravel"><span class="reference">endOfTravel</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_closed"><span class="reference">closed</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_up"><span class="reference">up</span></a><span class="tKeyword"> --&gt; </span>movingUp <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="tKeyword">initial</span> <span class="claferDecl" id="c0_basic">basic</span><span class="keyword"> : </span><a href="#c0_State"><span class="reference">State</span></a>
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_stop"><span class="reference">stop</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_stopped"><span class="reference">stopped</span></a> <span class="keyword">]</span></div>
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_expressUp"><span class="reference">expressUp</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingUpX"><span class="reference">movingUpX</span></a> <span class="keyword">]</span></div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_movingUpX">movingUpX</span><span class="keyword"> : </span><a href="#c0_State"><span class="reference">State</span></a>
+        <div class="indent">
+        <span class="keyword">[</span> <span class="keyword">this</span><span class="tKeyword"> -[</span><a href="#c0_objectDetected"><span class="reference">objectDetected</span></a><span class="tKeyword">]--&gt; </span><a href="#c0_stopped"><span class="reference">stopped</span></a> <span class="keyword">]</span></div>
+      </div>
+    </div>
+    <div class="indent">
+    <span class="tKeyword">initial</span> <span class="keyword">xor</span> <span class="claferDecl" id="c0_stopped">stopped</span><span class="keyword"> : </span><a href="#c0_State"><span class="reference">State</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_motor"><span class="reference">motor</span></a>.<a href="#c0_cmd"><span class="reference">cmd</span></a> = <a href="#c0_motorStop"><span class="reference">motorStop</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_closed">closed</span><span class="keyword"> : </span><a href="#c0_State"><span class="reference">State</span></a>
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_down"><span class="reference">down</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingDown"><span class="reference">movingDown</span></a> <span class="keyword">]</span></div>
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_up"><span class="reference">up</span></a> &#124;&#124; <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_stop"><span class="reference">stop</span></a><span class="tKeyword"> --&gt; </span>closed <span class="keyword">]</span></div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_partlyOpen">partlyOpen</span><span class="keyword"> : </span><a href="#c0_State"><span class="reference">State</span></a>
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_up"><span class="reference">up</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingUp"><span class="reference">movingUp</span></a> <span class="keyword">]</span></div>
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_down"><span class="reference">down</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingDown"><span class="reference">movingDown</span></a> <span class="keyword">]</span></div>
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_stop"><span class="reference">stop</span></a><span class="tKeyword"> --&gt; </span>partlyOpen <span class="keyword">]</span></div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_open">open</span><span class="keyword"> : </span><a href="#c0_State"><span class="reference">State</span></a>
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_up"><span class="reference">up</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingUp"><span class="reference">movingUp</span></a> <span class="keyword">]</span></div>
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_down"><span class="reference">down</span></a> &#124;&#124; <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_stop"><span class="reference">stop</span></a><span class="tKeyword"> --&gt; </span>open <span class="keyword">]</span></div>
+      </div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_movingDown">movingDown</span><span class="keyword"> : </span><a href="#c0_State"><span class="reference">State</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_motor"><span class="reference">motor</span></a>.<a href="#c0_cmd"><span class="reference">cmd</span></a> = <a href="#c0_motorDown"><span class="reference">motorDown</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_up"><span class="reference">up</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingUp"><span class="reference">movingUp</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_endOfTravel"><span class="reference">endOfTravel</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_open"><span class="reference">open</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_stop"><span class="reference">stop</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_stopped"><span class="reference">stopped</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_down"><span class="reference">down</span></a><span class="tKeyword"> --&gt; </span>movingDown <span class="keyword">]</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_pinchProtection"><span class="reference">pinchProtection</span></a> =&gt; <span class="keyword">no</span> <a href="#c0_WinController"><span class="reference">WinController</span></a>.<a href="#c0_objectDetected"><span class="reference">objectDetected</span></a> <span class="keyword">]</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WinCtrWithContChime">WinCtrWithContChime</span><span class="keyword"> : </span><a href="#c0_WinController"><span class="reference">WinController</span></a> ?
+  <div class="indent">
+  <span class="claferDecl" id="c0_chime">chime</span><span class="keyword"> : </span><a href="#c0_Port"><span class="reference">Port</span></a> ?</div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_movingUpX"><span class="reference">movingUpX</span></a> &lt;=&gt; <a href="#c0_chime"><span class="reference">chime</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WinCtrWithChime">WinCtrWithChime</span><span class="keyword"> : </span><a href="#c0_WinController"><span class="reference">WinController</span></a> ?
+  <div class="indent">
+  <span class="claferDecl" id="c1_chime">chime</span><span class="keyword"> : </span><a href="#c0_Port"><span class="reference">Port</span></a> ?</div>
+  <div class="indent">
+  <span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_movingUpX"><span class="reference">movingUpX</span></a> =&gt; <span class="keyword">no</span> <a href="#c1_chime"><span class="reference">chime</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c1_chime"><span class="reference">chime</span></a><span class="tKeyword"> --&gt; </span><span class="keyword">no</span> <a href="#c1_chime"><span class="reference">chime</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <span class="keyword">no</span> <a href="#c1_chime"><span class="reference">chime</span></a> &amp;&amp; <a href="#c0_movingUpX"><span class="reference">movingUpX</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingUpX"><span class="reference">movingUpX</span></a> =&gt; <a href="#c1_chime"><span class="reference">chime</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_ChimingStrategy">ChimingStrategy</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_active">active</span><span class="keyword"> : </span><a href="#c0_State"><span class="reference">State</span></a> ?
+    <div class="indent">
+    <span class="claferDecl" id="c0_audible">audible</span><span class="keyword"> : </span><a href="#c0_State"><span class="reference">State</span></a> ?</div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_NoChiming">NoChiming</span><span class="keyword"> : </span><a href="#c0_ChimingStrategy"><span class="reference">ChimingStrategy</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <span class="keyword">not</span> <a href="#c0_audible"><span class="reference">audible</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_Continuous">Continuous</span><span class="keyword"> : </span><a href="#c0_ChimingStrategy"><span class="reference">ChimingStrategy</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_active"><span class="reference">active</span></a> =&gt; <a href="#c0_audible"><span class="reference">audible</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_Intermittent">Intermittent</span><span class="keyword"> : </span><a href="#c0_ChimingStrategy"><span class="reference">ChimingStrategy</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_audible"><span class="reference">audible</span></a><span class="tKeyword"> --&gt; </span><span class="keyword">not</span> <a href="#c0_audible"><span class="reference">audible</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <span class="keyword">not</span> <a href="#c0_audible"><span class="reference">audible</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_active"><span class="reference">active</span></a> =&gt; <a href="#c0_audible"><span class="reference">audible</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WinControllerStrategies">WinControllerStrategies</span><span class="keyword"> : </span><a href="#c0_WinController"><span class="reference">WinController</span></a> ?
+  <div class="indent">
+  <span class="claferDecl" id="c2_chime">chime</span><span class="keyword"> : </span><a href="#c0_Port"><span class="reference">Port</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_strategy">strategy</span><span class="keyword"> -> </span><a href="#c0_ChimingStrategy"><span class="reference">ChimingStrategy</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_strategy"><span class="reference">strategy</span></a>.<a href="#c0_active"><span class="reference">active</span></a> &lt;=&gt; <a href="#c0_movingUpX"><span class="reference">movingUpX</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_strategy"><span class="reference">strategy</span></a>.<a href="#c0_active"><span class="reference">active</span></a>.<a href="#c0_audible"><span class="reference">audible</span></a> &lt;=&gt; <a href="#c2_chime"><span class="reference">chime</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">[</span> <a href="#c0_WinControllerStrategies"><span class="reference">WinControllerStrategies</span></a>.<a href="#c0_strategy"><span class="reference">strategy</span></a> = <a href="#c0_Intermittent"><span class="reference">Intermittent</span></a> <span class="keyword">]</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">assert [</span> <span class="tKeyword">initially </span><a href="#c0_closed"><span class="reference">closed</span></a> &amp;&amp; <a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_down"><span class="reference">down</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingDown"><span class="reference">movingDown</span></a><span class="tKeyword"> --&gt;&gt; </span><a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_expressUp"><span class="reference">expressUp</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingUpX"><span class="reference">movingUpX</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_objectDetected"><span class="reference">objectDetected</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_stopped"><span class="reference">stopped</span></a> <span class="keyword">]</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">assert [</span> <span class="tKeyword">sometime </span><a href="#c0_closed"><span class="reference">closed</span></a><span class="tKeyword"> --&gt;&gt; </span><a href="#c0_partlyOpen"><span class="reference">partlyOpen</span></a><span class="tKeyword"> --&gt;&gt; </span><a href="#c0_open"><span class="reference">open</span></a> <span class="keyword">]</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">assert [</span> <span class="tKeyword">never </span><a href="#c0_req"><span class="reference">req</span></a> = <a href="#c0_down"><span class="reference">down</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_closed"><span class="reference">closed</span></a> <span class="keyword">]</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">assert [</span> <span class="tKeyword">never </span><a href="#c0_closed"><span class="reference">closed</span></a> &amp;&amp; <a href="#c0_cmd"><span class="reference">cmd</span></a> = <a href="#c0_motorUp"><span class="reference">motorUp</span></a> <span class="keyword">]</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">assert [</span> <span class="tKeyword">never </span><a href="#c0_objectDetected"><span class="reference">objectDetected</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_movingUp"><span class="reference">movingUp</span></a> <span class="keyword">]</span></div>
+
+</body>
+</html>

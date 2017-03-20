@@ -1,0 +1,102 @@
+enum Request = open | close
+
+abstract WebSocket
+    xor states
+        initial ready
+            [ initially no request ]
+            [ request=open -[request.success]-> opened ]
+            [ request=open -[request.failure]-> failed ]
+        opened 
+            [ initially no request ]
+            [ request=close -[request.success]->  closed ]
+            [ request=close -[request.failure]->  failed ]
+        closed --> closed
+            [ no request ]
+        failed --> failed
+            [ no request ]
+    xor request -> Request ?
+        success
+        failure
+
+webSocketOpenedClosed : WebSocket
+    [ ready --> request=open && request.success --> opened -->> request=close && request.success --> closed --> closed ]
+
+WebSocket11
+  states
+    ready
+
+WebSocket12
+  states
+    ready
+  request->open
+    success
+
+WebSocket13
+  states
+    opened
+
+WebSocket14
+  states
+    opened
+  request->close
+    success
+
+WebSocket15
+  states
+    closed
+
+WebSocket16
+  states
+    closed
+
+webSocketOpenedFailed : WebSocket
+    [ ready --> request=open && request.success --> opened -->> request=close && request.failure --> failed --> failed ]
+
+WebSocket21
+  states
+    ready
+
+WebSocket22
+  states
+    ready
+  request->open
+    success
+
+WebSocket23
+  states
+    opened
+
+WebSocket24
+  states
+    opened
+  request->close
+    failure
+
+WebSocket25
+  states
+    failed
+
+WebSocket26
+  states
+    failed
+
+webSocketFailed : WebSocket
+    [ ready --> request=open && request.failure --> failed --> failed ]
+
+WebSocket31
+  states
+    ready
+
+WebSocket32
+  states
+    ready
+  request->open
+    failure
+
+WebSocket33
+  states
+    failed
+
+WebSocket34
+  states
+    failed

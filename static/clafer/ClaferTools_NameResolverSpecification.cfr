@@ -1,0 +1,53 @@
+S1
+   [ this ]
+
+S2
+   a
+      [ parent ]
+
+age -> integer
+age2 -> int
+name -> string
+
+abstract B1
+   c ?
+
+[ all b : B1 | b.c ]
+[ all disj b1; b2 : B1 | b1.c && b2.c ]
+[ some b : B1 | b.c ]
+[ no b : B1 | b.c ]
+
+Sub
+  [ some b ]
+  a ?
+     b ?
+        b ?
+
+A5 *
+  a *
+
+refA5 ->> A5
+  [ some this.a ]
+
+A1 ?
+  B 
+    [ some A1 ]
+
+abstract Abs
+
+AbsColon : Abs
+AbsSet -> Abs
+AbsMultiSet ->> Abs
+
+abstract Year
+	abstract Month
+
+y2013 : Year
+	month : Month 12
+
+// this is not allowed - improper nesting
+// myMonth : Month  
+
+T ?
+
+[ some T ]

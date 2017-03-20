@@ -1,0 +1,78 @@
+abstract Argument
+
+abstract IntegerArgument ->> integer
+
+abstract StringArgument ->> string
+
+abstract Value
+
+abstract DefaultValue
+
+abstract xor ClaferArgs
+   functional
+      xor mode : Argument
+         alloy : DefaultValue
+            alloy_mapping : Argument ?
+         json : Value
+         desugaredClafer : Value
+         html : Value
+            [ keep_unused ]
+            self_contained : Argument ?
+            add_graph : Argument ?
+            add_comments : Argument ?
+            show_references : Argument ?
+         graph : Value
+            [ keep_unused ]
+            show_references : Argument ?
+         cvlGraph : Value
+            [ flatten_inheritance ]
+            [ keep_unused ]
+         choco : Value
+      console_output : Argument ?
+      flatten_inheritance : Argument ?
+      timeout_analysis : IntegerArgument ?
+      mux layout ?
+         no_layout : Argument
+         new_layout : Argument
+      check_duplicates : Argument ?
+      skip_resolver : Argument ?
+      keep_unused : Argument ?
+      no_stats : Argument ?
+      validate : Argument ?
+         [ no html ]
+         [ no graph ]
+         [ no cvlGraph ]
+         tooldir : StringArgument := "."
+      xor scope_strategy : Argument
+         none : Value
+         simple : DefaultValue
+      check_afm : Argument ?
+      meta_data : Argument ?
+   help : Argument
+   version : Argument
+   numeric_version : Argument
+
+ca1 : ClaferArgs
+   [ alloy ]
+
+ca2 : ClaferArgs
+   [ alloy ]
+   [ validate ]
+   [ tooldir = "~/clafer-tools-0.4.2/tools" ]
+
+ca3 : ClaferArgs
+   [ alloy ]
+   [ keep_unused ]
+   [ flatten_inheritance ]
+
+ca4 : ClaferArgs
+   [ html ]
+
+ca5 : ClaferArgs
+   [ html ]
+   [ self_contained ]
+   [ add_graph ]
+   [ add_comments ]
+
+ca6 : ClaferArgs
+   [ cvlGraph ]

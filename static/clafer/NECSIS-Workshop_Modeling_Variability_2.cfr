@@ -1,0 +1,16 @@
+abstract Car
+    ABS ?
+    xor Transmission
+        Automatic
+        Manual
+    FCA ?
+        xor Sensor
+            Radar
+            Lidar
+        xor Alert
+            Haptic
+            Audible
+    CC ?
+        switch
+            backlight ?
+        ACC ?

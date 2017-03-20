@@ -1,0 +1,120 @@
+//CPFSTool Metamodel
+
+abstract SecurityProblemFrame
+    name : string 
+    intent : string 
+    informalDescription : string 
+    effect -> Effect 
+    spfFrameDiagram -> FrameDiagram 
+
+abstract ConcretizedSecurityProblemFrame
+    name : string 
+    intent : string 
+    informalDescription : string 
+    cspfFrameDiagram -> FrameDiagram 
+    necessaryCondition -> NecessaryCondition *
+
+abstract FrameDiagram
+    domains -> Domain 3..*
+    interfaces -> Interface 2..*
+    requirementReferences -> RequirementReference 2..*
+    requirementTemplate -> RequirementTemplate 
+    [some d:domains|d.isMachine]
+    [some i:interfaces|some d:domains|some m:domains|(m.isMachine && i in m.isConnectedBy && i in d.isConnectedBy)]
+    [some i:interfaces|(some d:i.connects|d.isMachine)&&(some p:i.contains|p.isControlledBy.isMachine)]
+    [all d:domains|some i:interfaces|i in d.isConnectedBy]
+    [all d:domains|all p:d.controls|some i:d.isConnectedBy|p in i.contains]
+    [all d:domains|d.isConnectedBy in interfaces]
+    [some d:domains|(no d.isMachine => d.isConstrainedByUsing in requirementReferences)]
+    [all disj d1;d2:domains|d1.name.ref != d2.name.ref]
+    [all disj d1;d2:domains|d1.abbreviation.ref != d2.abbreviation.ref] 
+    [all d:domains|all i:interfaces|all p:i.contains|p.name != d.name]
+    [all i:interfaces|i.connects in domains]
+    [all i:interfaces|all p:i.contains|one d:domains|p in d.controls && d in i.connects]
+    [requirementTemplate.constrainsUsing in requirementReferences]
+    [requirementReferences in requirementTemplate.refersToUsing]
+    [all rr:requirementReferences|rr.isConnectedToReq = requirementTemplate]
+    [all rr:requirementReferences|rr.isConnectedToDomain in domains]
+
+abstract Effect
+    formulaE -> Formula +
+
+abstract NecessaryCondition
+    formulaNC -> Formula +
+
+abstract Formula
+    content : string 
+    informalDescription : string 
+
+abstract Domain
+    name : string 
+    abbreviation : string 
+    isGiven ?
+    isMachine ?
+    controls -> InterfacePhenomenon *
+        [parent in this.isControlledBy]
+    isConstrainedByUsing -> ConstrainingRequirementReference ?
+    isReferredToByUsing -> RequirementReference ?
+        [parent in this.isConnectedToDomain]
+    isConnectedBy -> Interface +
+        [parent in this.connects]
+    [isMachine => no isGiven]
+    [isMachine => no isReferredToByUsing]
+    [isMachine => no isConstrainedByUsing]
+
+abstract CausalDomain : Domain 
+
+abstract BiddableDomain : Domain
+    [isGiven]
+    [no isMachine]
+    [no isConstrainedByUsing]
+
+abstract LexicalDomain : CausalDomain 
+    [no isMachine]
+
+abstract DisplayDomain : CausalDomain 
+
+abstract Interface
+    name : string 
+    contains -> InterfacePhenomenon +
+    connects -> Domain 2..*
+        [parent in this.isConnectedBy]
+    [all p:contains|one d:connects|p.isControlledBy = d]
+
+enum PhenomenonType = causal | symbolic | event
+
+abstract Phenomenon
+    name : string 
+    type -> PhenomenonType 
+
+abstract InterfacePhenomenon : Phenomenon 
+    isControlledBy -> Domain 
+        [parent in this.controls]
+    isContainedInIf -> Interface +
+        [parent in this.contains]
+    [isControlledBy in isContainedInIf.connects]
+
+
+abstract RequirementPhenomenon : Phenomenon 
+
+abstract RequirementTemplate
+    content : string 
+    constrainsUsing -> ConstrainingRequirementReference +
+    refersToUsing -> RequirementReference *
+        [parent in this.isConnectedToReq]
+
+abstract RequirementReference
+    name : string 
+    contains -> RequirementPhenomenon +
+    isConnectedToReq -> RequirementTemplate 
+        [parent in this.refersToUsing]
+    isConnectedToDomain -> Domain 
+        [parent in this.isReferredToByUsing]
+    [no isConnectedToDomain.isMachine]
+
+abstract ConstrainingRequirementReference : RequirementReference 
+    related -> SecurityProblemFrame *
+    refined -> SecurityProblemFrame *
+    [no isConnectedToDomain.isMachine]
+
+

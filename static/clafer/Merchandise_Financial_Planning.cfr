@@ -1,0 +1,304 @@
+abstract MFPsystem
+	2..3 hierarchies
+		calendar -> CalendarHierarchy
+		producth -> ProductHierarchy
+		location -> LocationHierarchy
+	hasTheFollowingWorkflows -> workflow+
+//***************** Concrete Clafers *****************
+Oracle: MFPsystem
+	[ calendar = Cal2012 ]
+	[ producth = Menswear]
+	[ hasTheFollowingWorkflows = PreSeasonTargetSettingWorkflow ]
+	[ PreSeasonTargetSettingWorkflow, InSeasonTargetSettingWorkflow]
+
+abstract Hierarchy
+abstract CalendarHierarchy: Hierarchy
+	levels -> HierarchyLevel +
+	[ all l : levels | l.levelBelongsToThis = this ] 
+abstract ProductHierarchy: Hierarchy
+	levels -> HierarchyLevel +
+	[ all l : levels | l.levelBelongsToThis = this ]
+abstract LocationHierarchy: Hierarchy
+	levels -> HierarchyLevel +
+	[ all l : levels | l.levelBelongsToThis = this ]
+abstract HierarchyLevel
+	levelBelongsToThis -> Hierarchy
+	spreadsToLowerLevel -> HierarchyLevel ?
+	aggregatesToHigherLevel -> HierarchyLevel ?
+	[ all disj d1; d2 : HierarchyLevel | (d2 = d1.aggregatesToHigherLevel <=> d1 = d2.spreadsToLowerLevel) ]
+
+abstract HierarchyLevelInstance
+			instanceBelongsTo -> HierarchyLevel
+			instanceAggregatesTo -> HierarchyLevelInstance ?
+			instanceSpreadsTo -> HierarchyLevelInstance ?
+[ all disj d1; d2 : HierarchyLevelInstance | (d2 = d1.instanceAggregatesTo <=> d1 = d2.instanceSpreadsTo) ]
+
+//***************** Concrete Clafers ******************
+Cal2012: CalendarHierarchy
+	[ levels = Year, Season, Month, Week ]
+Menswear: ProductHierarchy
+	[ levels = MensCasualWear, MensSportsWear ]
+Year: HierarchyLevel
+	[ levelBelongsToThis = Cal2012 ]
+	[ spreadsToLowerLevel = Season ] 
+	[ no aggregatesToHigherLevel ]
+Season: HierarchyLevel
+	[ levelBelongsToThis = Cal2012 ]
+	[ spreadsToLowerLevel = Month ]
+	[ aggregatesToHigherLevel = Year ]
+Month: HierarchyLevel
+	[ levelBelongsToThis = Cal2012]
+	[ spreadsToLowerLevel = Week ]
+	[ aggregatesToHigherLevel = Season ]
+Week: HierarchyLevel
+	[ levelBelongsToThis = Cal2012 ]
+	[ no spreadsToLowerLevel]
+	[  aggregatesToHigherLevel = Month ]
+MensCasualWear: HierarchyLevel
+	[ levelBelongsToThis = Menswear 
+	  no spreadsToLowerLevel
+	  no aggregatesToHigherLevel ]
+MensSportsWear: HierarchyLevel
+	[ levelBelongsToThis = Menswear 
+	  no spreadsToLowerLevel
+	  no aggregatesToHigherLevel ]
+
+enum VersionAbbreviation = Op | Cp | Wp | Ly | Wa | Tgt
+abstract plan
+	PlanCreatedBy -> planningRole +
+	versionAbbreviation -> VersionAbbreviation
+//	planSeenInTheFollowingViews -> view +
+	xor retailChannels
+		store
+		internet
+		catalog
+
+abstract WorkingPlan: plan
+	[ versionAbbreviation = Wp ]
+	seeded?
+		seedingSource -> LastYear
+		lastSeedingDate: string
+		seededWithThoseInstances -> HierarchyLevelInstance *
+
+abstract OriginalPlan: plan
+	[ versionAbbreviation = Op ] 
+
+abstract CurrentPlan: plan
+	[ versionAbbreviation = Cp ]
+
+abstract LastYear: plan
+	[ versionAbbreviation = Ly ]
+
+abstract TargetPlan: plan
+	[ versionAbbreviation = Tgt ]
+	composedOf -> Target+
+
+abstract WaitingForApproval: plan
+	[ versionAbbreviation = Wa ] 
+
+//***************** Concrete Clafers ******************
+WorkingPlan2012: WorkingPlan
+		[ PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
+//		  planSeenInTheFollowingViews = 2012PlanningView
+		  seeded
+		  retailChannels.internet ]
+TargetPlan2012: TargetPlan
+		[  PlanCreatedBy = ExecutiveManager, PlanningDirector, MerchandisePlanner
+		   composedOf = TopDownSalesTargets2012, MiddleOutMarkdownTargets2012
+//		   planSeenInTheFollowingViews =  Targets2012PlanningView
+		   retailChannels.internet ]
+OriginalPlan2012: OriginalPlan
+		[  PlanCreatedBy = MerchandisePlanner
+//		   planSeenInTheFollowingViews = Targets2012ReviewView
+		   retailChannels.store ]
+
+abstract metric
+		xor metricName
+			xor sales
+				regularSales
+				promotionalSales
+				clearanceSales
+			xor markdown
+				regularMarkdown
+				promotionalMarkdown
+				permenantMarkdown
+			turn
+			receipts
+			inventory
+			grossMargin
+			openToBuy
+
+//***************** Concrete Clafers ******************
+sales2011: metric
+			[ regularSales ]
+markdown2011: metric
+			[ promotionalMarkdown ]
+
+enum PlanningRoleLevel = TopDown | MiddleOut | BottomUp
+abstract planningRole
+	roleLevel -> PlanningRoleLevel
+	roleCreatedTheFollowingPlans -> plan +
+	roleCreatedTheFollowingTargets -> Target *
+	[ roleLevel=BottomUp => no roleCreatedTheFollowingTargets ]
+	roleReceivesTheFollowingTargets -> Target *
+	[ roleLevel=TopDown => no roleReceivesTheFollowingTargets]
+	RoleSeesTheFollowingViews -> view +
+	roleEditsTheFollowingMeasures -> Measure *
+
+//***************** Concrete Clafers ******************
+PlanningDirector: planningRole
+	[  roleLevel = MiddleOut ]
+	[  roleCreatedTheFollowingPlans = WorkingPlan2012, TargetPlan2012 ]
+	[  roleCreatedTheFollowingTargets = MiddleOutMarkdownTargets2012 ]
+	[  roleReceivesTheFollowingTargets = TopDownSalesTargets2012 ]
+	[  RoleSeesTheFollowingViews = Targets2012ApprovalView, Targets2012ReviewView ]
+ExecutiveManager: planningRole
+	[  roleLevel = TopDown
+	   roleCreatedTheFollowingPlans = WorkingPlan2012, TargetPlan2012
+	   roleCreatedTheFollowingTargets = TopDownSalesTargets2012
+	   no roleReceivesTheFollowingTargets
+	   RoleSeesTheFollowingViews = Targets2012PlanningView, Targets2012ReviewView ]
+
+MerchandisePlanner: planningRole
+	[  roleLevel = BottomUp
+	   roleCreatedTheFollowingPlans = WorkingPlan2012, OriginalPlan2012   
+	   no roleCreatedTheFollowingTargets
+	   roleReceivesTheFollowingTargets = MiddleOutMarkdownTargets2012 
+	   RoleSeesTheFollowingViews = Targets2012ReviewView]
+
+abstract Target
+	belongsTo -> TargetPlan	
+	createdBy -> planningRole
+		[! createdBy.roleLevel = BottomUp] // BottomUp roles can't create Targets
+	publishedTo -> planningRole
+// The constraints below are used to ensure that targets are published to direct lower levels.
+	[ createdBy.roleLevel=TopDown => publishedTo.roleLevel = MiddleOut ]
+	[ createdBy.roleLevel=MiddleOut => publishedTo.roleLevel = BottomUp ]
+
+//**************** Concrete Clafers *******************
+TopDownSalesTargets2012: Target
+	[  belongsTo = TargetPlan2012   
+	   createdBy = ExecutiveManager   
+	   publishedTo = PlanningDirector ]
+
+MiddleOutMarkdownTargets2012: Target
+	[  belongsTo = TargetPlan2012   
+	   createdBy = PlanningDirector
+	   publishedTo = MerchandisePlanner ]
+
+abstract workflow
+	belongsToThisSystem -> MFPsystem
+	xor workflowPlanningSeason
+		preSeasonPlanning
+		inSeasonPlanning
+	proceededBy -> workflow ?
+	[proceededBy != workflow] //if I want to say can't be proceeded by the same workflow.
+	followedBy -> workflow ?
+	[followedBy != workflow] //if I want to say can't be followed by the same workflow instance.
+	
+// The following two constraints ensure that pre-season isn't proceeded by anything and is followed by in-season.
+	[all v: workflow | v.workflowPlanningSeason.preSeasonPlanning => no proceededBy]
+	[all v: workflow | v.workflowPlanningSeason.preSeasonPlanning => v.followedBy.workflowPlanningSeason.inSeasonPlanning]
+
+// The following two constraints ensure that in-season is proceeded by pre-season and isn't followed by anything.
+	[all v: workflow | v.workflowPlanningSeason.inSeasonPlanning => no followedBy]
+	[all v: workflow | v.workflowPlanningSeason.inSeasonPlanning => v.proceededBy.workflowPlanningSeason.preSeasonPlanning]
+	views -> view +
+
+
+//***************** Concrete Clafers ******************
+PreSeasonTargetSettingWorkflow: workflow
+	[  belongsToThisSystem = Oracle
+	   workflowPlanningSeason.preSeasonPlanning
+	   no proceededBy
+	   followedBy = InSeasonTargetSettingWorkflow
+	   views = Targets2012PlanningView, Targets2012ApprovalView]
+
+InSeasonTargetSettingWorkflow: workflow
+	[  belongsToThisSystem = Oracle
+	   workflowPlanningSeason.inSeasonPlanning
+	   proceededBy = PreSeasonTargetSettingWorkflow
+	   no followedBy
+	   views = Targets2012ReviewView]
+
+abstract view 
+	viewBelongsTo -> workflow
+	xor visibility
+		specificRole -> planningRole
+		[viewBelongsTo.workflowPlanningSeason.inSeasonPlanning => ! specificRole.roleLevel = TopDown ]
+	allRoles
+		roles -> planningRole * = planningRole
+	measures -> Measure +
+	planversion -> plan	
+	[viewBelongsTo.workflowPlanningSeason.inSeasonPlanning =>
+	 ! (planversion=WaitingForApproval || planversion = LastYear)]
+	xor viewType	
+		Approval
+			[ specificRole.roleLevel = MiddleOut ]	// Role has to be MiddleOut
+			[ planversion = WaitingForApproval ]	// Plan Version has to be Wa
+			[ viewBelongsTo.workflowPlanningSeason.preSeasonPlanning]
+		Seeding
+			[ viewBelongsTo.workflowPlanningSeason.preSeasonPlanning]
+			[ specificRole.roleLevel =TopDown || specificRole.roleLevel = MiddleOut]
+			[ planversion = WorkingPlan ]	//Seeding has to occur in the working plan
+		Review
+		Planning
+
+//***************** Concrete Clafers ******************
+Targets2012PlanningView: view	
+			[  viewBelongsTo = PreSeasonTargetSettingWorkflow
+			   specificRole = ExecutiveManager
+			   measures =  LyMarkdown, TgtSales
+			   planversion = TargetPlan2012
+			   viewType.Planning ]
+Targets2012ApprovalView: view
+			[  viewBelongsTo = PreSeasonTargetSettingWorkflow
+			   specificRole = PlanningDirector
+			   measures = LyMarkdown
+			   planversion = TargetPlan2012
+			   viewType.Approval ]
+Targets2012ReviewView: view
+			[  viewBelongsTo = InSeasonTargetSettingWorkflow
+			   allRoles
+			   measures = TgtSales
+			   planversion = OriginalPlan2012
+			   viewType.Review ]
+
+abstract Measure
+		// A measure belongs to one or more views.
+		belongsTo -> view+
+		measureMetric -> metric
+		or unitOfMeasure
+			amount
+			percentage
+		measureBelongsToThisPlan -> plan
+		xor measureType
+			referenceMeasure
+			nonReferenceMeasure
+				editedBy -> planningRole ?
+		derivedByAnotherMeasures?
+			derivedByTheseMeasures -> Measure +
+			derivedByThisRule -> Rule
+		derivesOtherMeasures?
+			derivesTheseMeasures ->  Measure +
+			derivesUsingThisRule -> Rule
+
+//***************** Concrete Clafers ******************
+TgtSales: Measure
+			[belongsTo = Targets2012PlanningView, Targets2012ReviewView
+			 measureMetric = sales2011
+			amount
+			 measureBelongsToThisPlan = TargetPlan2012
+			 nonReferenceMeasure ]
+
+LyMarkdown: Measure
+			[belongsTo = Targets2012PlanningView, Targets2012ApprovalView
+			measureMetric = markdown2011
+			percentage
+			measureBelongsToThisPlan = TargetPlan2012
+			referenceMeasure ]
+
+abstract Rule
+	RelatedMeasure -> Measure*
+		[ this.derivedByAnotherMeasures.derivedByThisRule = Rule ||
+		  this.derivesOtherMeasures.derivesUsingThisRule = Rule ]

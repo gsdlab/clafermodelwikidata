@@ -1,0 +1,117 @@
+abstract ClaferMooVisualizer
+    deployedAtURL : string
+    xor state
+        `initial
+        `loadingAndProcessing
+        `error
+        `ready
+    views
+        `graph
+        `table
+        `analysis
+
+viz1 : ClaferMooVisualizer
+    [ deployedAtURL = "gsd.uwaterloo.ca:5002" ]
+    [ initial ]
+
+abstract mux initial
+    claferFileURL : string ?
+    claferFileUpload : string ?
+
+viz2 : ClaferMooVisualizer
+    [ deployedAtURL = "gsd.uwaterloo.ca:5002" ]
+    [ initial ]
+    [ no claferFileURL ]
+    [ no claferFileUpload ]
+
+viz3 : ClaferMooVisualizer
+    [ deployedAtURL = "gsd.uwaterloo.ca:5002" ]
+    [ claferFileURL = "server/model.cfr" ]
+
+viz4 : ClaferMooVisualizer
+    [ deployedAtURL = "gsd.uwaterloo.ca:5002" ]
+    [ claferFileUpload = "model.cfr" ]
+
+abstract loadingAndProcessing
+
+abstract xor error
+    xor loading
+        invalidClaferFileURL : string
+        parseError : string
+        compileError : string
+        missingGoals
+    xor processing
+        optimizationError : string
+        timeout
+        outOfMemory
+
+abstract Dimension
+
+abstract Goal
+   dimension -> Dimension
+   xor kind
+      minimize
+      maximize
+
+performance : Dimension
+energy : Dimension
+security : Dimension
+mass : Dimension
+
+maxPerformance : Goal
+    [ dimension = performance ]
+    [ maximize ]
+
+minEnergy : Goal 
+    [ dimension = energy ]
+    [ minimize ]
+
+maxSecurity : Goal
+    [ dimension = security ]
+    [ maximize ]
+
+minMass : Goal 
+    [ dimension = mass ]
+    [ minimize ]
+
+abstract ready
+   goals -> Goal +
+
+r1 : ready 
+    [ goals = maxPerformance, minEnergy, maxSecurity, minMass ]
+
+abstract Product
+
+abstract Bubble
+    x -> integer
+    y -> integer
+    opacity -> integer
+    size -> integer
+    product -> Product
+
+[ all disj b1; b2 : Bubble | b1.product != b2.product ]   // disjoint
+[ # Bubble = # Product ]                                  // cover
+
+products : Product 28
+bubbles : Bubble 28
+
+abstract graph
+    xAxis -> Dimension
+    yAxis -> Dimension
+    opacity -> Dimension
+    size -> Dimension
+    [ xAxis != yAxis && xAxis != opacity && xAxis != size ]
+    [ yAxis != opacity && yAxis != size ]
+    [ opacity != size ]
+    bubble -> Bubble *
+
+g1 : graph 
+    [ xAxis = performance ]
+    [ yAxis = energy ]
+    [ opacity = security ]
+    [ size = mass ]
+    [ bubble = bubbles ]
+
+abstract table
+
+abstract analysis

@@ -1,0 +1,40 @@
+AndroidPhone1
+    Connectivity
+        Bluetooth40
+        GSM
+        WiFi
+        USB
+    Battery
+        LiBattery1450
+
+AndroidPhone2
+    Connectivity
+        Bluetooth21
+        GSM
+        USB
+    Battery
+        LiBattery1150
+
+abstract xor Bluetooth
+    Bluetooth20 ?
+    Bluetooth21 ?
+    Bluetooth40 ?
+
+abstract MobilePhone
+    Connectivity
+        `Bluetooth
+        GSM
+        LTE ?
+            [LiBattery1400]
+        WiFi ?
+        USB ?
+    xor Battery
+        LiBattery1150 ?
+        LiBattery1400 ?
+
+LowEndPhones : MobilePhone
+    [no WiFi]
+
+HighEndPhones : MobilePhone
+    [USB && WiFi]
+    QuadCPU ?

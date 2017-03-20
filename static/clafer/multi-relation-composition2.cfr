@@ -1,0 +1,43 @@
+abstract Bundle
+    contains ->> Item +
+    uniqueCategory -> Category 2..* = contains . category
+    allCategory ->> Category 4..* 
+
+B1 : Bundle
+    [ contains = Bread, Muffin, Milk, Butter ] 
+
+abstract Item
+    category ->> Category
+
+enum Category = Bakery | Dairy
+
+Bread : Item
+    [ category = Bakery ]
+Muffin : Item
+    [ category = Bakery ]
+Butter : Item 
+    [ category = Dairy ]
+Milk : Item
+    [ category = Dairy ]
+
+[alloy|
+fact {
+     compose
+     [ c0_contains,    ~r_c0_contains,    c0_contains_ref
+     , c0_category,    ~r_c0_category,    c0_category_ref
+     , c0_allCategory, ~r_c0_allCategory, c0_allCategory_ref
+     ]
+}
+pred compose[
+  hd1: univ, sleg1: hd1->univ, tleg1: hd1->univ,
+  hd2: univ, sleg2: hd2->univ, tleg2: hd2->univ,
+  res: univ, slegr: res->univ, tlegr: res->univ ]
+{
+  some r1: res->hd1 | some r2: res->hd2 |
+   all a: hd1, b: hd2 |
+    a.tleg1 = b.sleg2 implies { one r: res | r.r1 = a && r.r2 = b } &&
+    #res = #(hd1<:tleg1).~(hd2<:sleg2) &&
+    res<:slegr = r1.(hd1<:sleg1) && res<:tlegr = r2.(hd2<:tleg2)
+}
+|]
+

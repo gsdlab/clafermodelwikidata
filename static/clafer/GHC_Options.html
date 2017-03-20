@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=9">
+<style>.identifier{}
+.keyword{font-weight: bold;}
+.tKeyword{font-style: oblique;}
+.reference{}
+.code { background-color: lightgray; padding: 5px 5px 5px 5px; border: 1px solid darkgray; margin-bottom: 15px;
+        font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace; }
+.standalonecomment { color: green; font-style:italic }
+.inlinecomment { color: green; padding-left:20px; font-style:italic }
+.error{background-color: yellow; color: red }
+.deprecated{color: orange }
+.indent{padding-left:20px}
+a[href$='Lookup failed'] {color: red}
+a[href$='Uid not found'] {color: red}
+a[href$='Ambiguous name'] {color: yellow}
+</style></head>
+<body>
+
+<div>
+<span class="claferDecl" id="c0_CompilationOptions">CompilationOptions</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_with_ghc">with_ghc</span><span class="keyword"> -> </span><a href="#c0_GHC"><span class="reference">GHC</span></a><span class="inlinecomment">// the existing version of GHC used for the build</span>
+  </div>
+  <span class="inlinecomment">// should there be a LLVM version of the existing GHC?</span>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_buildFlavor">buildFlavor</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_quick">quick</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_perf">perf</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_perfLlvm">perfLlvm</span></div>
+  </div>
+  <span class="inlinecomment">// [ llvm ] // should perfLlvm require choosing GHCBackend.llvm?</span>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_INTEGER_LIBRARY">INTEGER_LIBRARY</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_integer_gmp">integer_gmp</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_integer_simple">integer_simple</span></div>
+  </div>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_GHCBackend">GHCBackend</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_asm">asm</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_llvm">llvm</span><span class="keyword"> -> </span><a href="#c0_LLVM"><span class="reference">LLVM</span></a></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">enum</span> GHC = <span class="claferDecl" id="c0_GHC_784">GHC_784</span> | <span class="claferDecl" id="c0_GHC_7101">GHC_7101</span></div>
+
+
+<div>
+<span class="keyword">enum</span> LLVM = <span class="claferDecl" id="c0_LLVM_34">LLVM_34</span> | <span class="claferDecl" id="c0_LLVM_35">LLVM_35</span></div>
+
+</body>
+</html>

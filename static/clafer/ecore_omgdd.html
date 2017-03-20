@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=9">
+<style>.identifier{}
+.keyword{font-weight: bold;}
+.tKeyword{font-style: oblique;}
+.reference{}
+.code { background-color: lightgray; padding: 5px 5px 5px 5px; border: 1px solid darkgray; margin-bottom: 15px;
+        font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace; }
+.standalonecomment { color: green; font-style:italic }
+.inlinecomment { color: green; padding-left:20px; font-style:italic }
+.error{background-color: yellow; color: red }
+.deprecated{color: orange }
+.indent{padding-left:20px}
+a[href$='Lookup failed'] {color: red}
+a[href$='Uid not found'] {color: red}
+a[href$='Ambiguous name'] {color: yellow}
+</style></head>
+<body>
+<div class="standalonecomment">//OMG Diagram Definition metamodels</div>
+<div class="standalonecomment">//DC</div>
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Point">Point</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_x">x</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_y">y</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Dimension">Dimension</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_width">width</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_height">height</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_width"><span class="reference">width</span></a> &gt;= 0 &amp;&amp; <a href="#c0_height"><span class="reference">height</span></a> &gt;= 0 <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Bounds">Bounds</span>
+  <div class="indent">
+  <span class="claferDecl" id="c1_x">x</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_y">y</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_width">width</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_height">height</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c1_width"><span class="reference">width</span></a> &gt; 0 &amp;&amp; <a href="#c1_height"><span class="reference">height</span></a> &gt; 0 <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">enum</span> AlignmentKind = <span class="claferDecl" id="c0_start">start</span> | <span class="claferDecl" id="c0_end">end</span> | <span class="claferDecl" id="c0_center">center</span></div>
+
+
+<div>
+<span class="keyword">enum</span> KnownColor = <span class="claferDecl" id="c0_maroon">maroon</span> | <span class="claferDecl" id="c0_red">red</span> | <span class="claferDecl" id="c0_orange">orange</span> | <span class="claferDecl" id="c0_yellow">yellow</span> | <span class="claferDecl" id="c0_olive">olive</span> | <span class="claferDecl" id="c0_purple">purple</span> | <span class="claferDecl" id="c0_fuchsia">fuchsia</span> | <span class="claferDecl" id="c0_white">white</span> | <span class="claferDecl" id="c0_lime">lime</span> | <span class="claferDecl" id="c0_green">green</span> | <span class="claferDecl" id="c0_navy">navy</span> | <span class="claferDecl" id="c0_blue">blue</span> | <span class="claferDecl" id="c0_aqua">aqua</span> | <span class="claferDecl" id="c0_teal">teal</span> | <span class="claferDecl" id="c0_black">black</span> | <span class="claferDecl" id="c0_silver">silver</span> | <span class="claferDecl" id="c0_gray">gray</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Color">Color</span>
+  <div class="indent">
+  <span class="claferDecl" id="c1_red">red</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_green">green</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_blue">blue</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c1_red"><span class="reference">red</span></a> &gt;= 0 &amp;&amp; <a href="#c1_red"><span class="reference">red</span></a> &lt;= 255 &amp;&amp; <a href="#c1_green"><span class="reference">green</span></a> &gt;= 0 &amp;&amp; <a href="#c1_green"><span class="reference">green</span></a> &lt;= 255 &amp;&amp; <a href="#c1_blue"><span class="reference">blue</span></a> &gt;= 0 &amp;&amp; <a href="#c1_blue"><span class="reference">blue</span></a> &lt;= 255 <span class="keyword">]</span></div>
+</div>
+
+<div class="standalonecomment">//DG</div>
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_RadialGradient">RadialGradient</span><span class="keyword"> : </span><a href="#c0_Gradient"><span class="reference">Gradient</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_centerX">centerX</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_centerY">centerY</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_radius">radius</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_focusX">focusX</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_focusY">focusY</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_focusX"><span class="reference">focusX</span></a> &gt;= 0 &amp;&amp; <a href="#c0_focusX"><span class="reference">focusX</span></a> &lt;= 1 &amp;&amp; <a href="#c0_focusY"><span class="reference">focusY</span></a> &gt;= 0 &amp;&amp; <a href="#c0_focusY"><span class="reference">focusY</span></a> &lt;= 1 <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_radius"><span class="reference">radius</span></a> &gt;= 0 &amp;&amp; <a href="#c0_radius"><span class="reference">radius</span></a> &lt;= 1 <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Gradient">Gradient</span><span class="keyword"> : </span><a href="#c0_Fill"><span class="reference">Fill</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_stop">stop</span><span class="keyword"> : </span><a href="#c0_GradientStop"><span class="reference">GradientStop</span></a> 2..* </div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Fill">Fill</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_canvas">canvas</span><span class="keyword"> -> </span><a href="#c0_Canvas"><span class="reference">Canvas</span></a>
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">parent</span> in <span class="keyword">this</span>.<a href="#c0_fill"><span class="reference">fill</span></a> <span class="keyword">]</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_transform">transform</span><span class="keyword"> : </span><a href="#c0_Transform"><span class="reference">Transform</span></a> *</div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Canvas">Canvas</span><span class="keyword"> : </span><a href="#c0_Group"><span class="reference">Group</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_backgroundFill">backgroundFill</span><span class="keyword"> -> </span><a href="#c0_Fill"><span class="reference">Fill</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_backgroundColor">backgroundColor</span><span class="keyword"> : </span><a href="#c0_Color"><span class="reference">Color</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_marker">marker</span><span class="keyword"> : </span><a href="#c0_Marker"><span class="reference">Marker</span></a> *
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">parent</span> in <span class="keyword">this</span>.<a href="#c1_canvas"><span class="reference">canvas</span></a> <span class="keyword">]</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_fill">fill</span><span class="keyword"> : </span><a href="#c0_Fill"><span class="reference">Fill</span></a> *
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">parent</span> in <span class="keyword">this</span>.<a href="#c0_canvas"><span class="reference">canvas</span></a> <span class="keyword">]</span></div>
+  </div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Group">Group</span><span class="keyword"> : </span><a href="#c0_GraphicalElement"><span class="reference">GraphicalElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_member">member</span><span class="keyword"> : </span><a href="#c0_GraphicalElement"><span class="reference">GraphicalElement</span></a> *
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">parent</span> in <span class="keyword">this</span>.<a href="#c0_group"><span class="reference">group</span></a> <span class="keyword">]</span></div>
+  </div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_GraphicalElement">GraphicalElement</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_group">group</span><span class="keyword"> -> </span><a href="#c0_Group"><span class="reference">Group</span></a> ?
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">parent</span> in <span class="keyword">this</span>.<a href="#c0_member"><span class="reference">member</span></a> <span class="keyword">]</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_localStyle">localStyle</span><span class="keyword"> : </span><a href="#c0_Style"><span class="reference">Style</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_sharedStyle">sharedStyle</span><span class="keyword"> -> </span><a href="#c0_Style"><span class="reference">Style</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_transform">transform</span><span class="keyword"> : </span><a href="#c0_Transform"><span class="reference">Transform</span></a> *</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_clipPath">clipPath</span><span class="keyword"> : </span><a href="#c0_ClipPath"><span class="reference">ClipPath</span></a> ?
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">parent</span> in <span class="keyword">this</span>.<a href="#c0_clippedElement"><span class="reference">clippedElement</span></a> <span class="keyword">]</span></div>
+  </div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Style">Style</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_fillOpacity">fillOpacity</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a> ?
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">this</span> &gt;= 0 &amp;&amp; <span class="keyword">this</span> &lt;= 1 <span class="keyword">]</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_strokeWidth">strokeWidth</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a> ?
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">this</span> &gt;= 0 <span class="keyword">]</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_strokeOpacity">strokeOpacity</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a> ?
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">this</span> &gt;= 0 &amp;&amp; <span class="keyword">this</span> &lt;= 1 <span class="keyword">]</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_strokeDashLength">strokeDashLength</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a> *</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_fontSize">fontSize</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a> ?
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">this</span> &gt;= 0 <span class="keyword">]</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_fontName">fontName</span><span class="keyword"> : </span><a href="#string"><span class="reference">string</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_fontItalic">fontItalic</span> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_fontBold">fontBold</span> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_fontUnderline">fontUnderline</span> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_fontStrikeThrough">fontStrikeThrough</span> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_fill">fill</span><span class="keyword"> -> </span><a href="#c0_Fill"><span class="reference">Fill</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_fillColor">fillColor</span><span class="keyword"> : </span><a href="#c0_Color"><span class="reference">Color</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_strokeColor">strokeColor</span><span class="keyword"> : </span><a href="#c0_Color"><span class="reference">Color</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_fontColor">fontColor</span><span class="keyword"> : </span><a href="#c0_Color"><span class="reference">Color</span></a> ?</div>
+  <div class="indent">
+  <span class="keyword">[</span> # <a href="#c0_strokeDashLength"><span class="reference">strokeDashLength</span></a> - # <a href="#c0_strokeDashLength"><span class="reference">strokeDashLength</span></a> &#47; 2 * 2 = 0 <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Transform">Transform</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_ClipPath">ClipPath</span><span class="keyword"> : </span><a href="#c0_Group"><span class="reference">Group</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_clippedElement">clippedElement</span><span class="keyword"> -> </span><a href="#c0_GraphicalElement"><span class="reference">GraphicalElement</span></a>
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">parent</span> in <span class="keyword">this</span>.<a href="#c0_clipPath"><span class="reference">clipPath</span></a> <span class="keyword">]</span></div>
+  </div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Marker">Marker</span><span class="keyword"> : </span><a href="#c0_Group"><span class="reference">Group</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_size">size</span><span class="keyword"> : </span><a href="#c0_Dimension"><span class="reference">Dimension</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_reference">reference</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_canvas">canvas</span><span class="keyword"> -> </span><a href="#c0_Canvas"><span class="reference">Canvas</span></a>
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">parent</span> in <span class="keyword">this</span>.<a href="#c0_marker"><span class="reference">marker</span></a> <span class="keyword">]</span></div>
+  </div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_GradientStop">GradientStop</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_offset">offset</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_opacity">opacity</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_color">color</span><span class="keyword"> : </span><a href="#c0_Color"><span class="reference">Color</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_offset"><span class="reference">offset</span></a> &gt;= 0 &amp;&amp; <a href="#c0_offset"><span class="reference">offset</span></a> &lt;= 1 <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_opacity"><span class="reference">opacity</span></a> &gt;= 0 &amp;&amp; <a href="#c0_opacity"><span class="reference">opacity</span></a> &lt;= 1 <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Pattern">Pattern</span><span class="keyword"> : </span><a href="#c0_Fill"><span class="reference">Fill</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_bounds">bounds</span><span class="keyword"> : </span><a href="#c0_Bounds"><span class="reference">Bounds</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_tile">tile</span><span class="keyword"> : </span><a href="#c0_GraphicalElement"><span class="reference">GraphicalElement</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_LinearGradient">LinearGradient</span><span class="keyword"> : </span><a href="#c0_Gradient"><span class="reference">Gradient</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_x1">x1</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_x2">x2</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_y1">y1</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_y2">y2</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_x1"><span class="reference">x1</span></a> &gt;= 0 &amp;&amp; <a href="#c0_x1"><span class="reference">x1</span></a> &lt;= 1 &amp;&amp; <a href="#c0_x2"><span class="reference">x2</span></a> &gt;= 0 &amp;&amp; <a href="#c0_x2"><span class="reference">x2</span></a> &lt;= 1 &amp;&amp; <a href="#c0_y1"><span class="reference">y1</span></a> &gt;= 0 &amp;&amp; <a href="#c0_y1"><span class="reference">y1</span></a> &lt;= 1 &amp;&amp; <a href="#c0_y2"><span class="reference">y2</span></a> &gt;= 0 &amp;&amp; <a href="#c0_y2"><span class="reference">y2</span></a> &lt;= 1 <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_MarkedElement">MarkedElement</span><span class="keyword"> : </span><a href="#c0_GraphicalElement"><span class="reference">GraphicalElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_startMarker">startMarker</span><span class="keyword"> -> </span><a href="#c0_Marker"><span class="reference">Marker</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_endMarker">endMarker</span><span class="keyword"> -> </span><a href="#c0_Marker"><span class="reference">Marker</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_midMarker">midMarker</span><span class="keyword"> -> </span><a href="#c0_Marker"><span class="reference">Marker</span></a> ?</div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Rectangle">Rectangle</span><span class="keyword"> : </span><a href="#c0_GraphicalElement"><span class="reference">GraphicalElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_cornerRadius">cornerRadius</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_bounds">bounds</span><span class="keyword"> : </span><a href="#c0_Bounds"><span class="reference">Bounds</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Ellipse">Ellipse</span><span class="keyword"> : </span><a href="#c0_GraphicalElement"><span class="reference">GraphicalElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c1_center">center</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_radii">radii</span><span class="keyword"> : </span><a href="#c0_Dimension"><span class="reference">Dimension</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Text">Text</span><span class="keyword"> : </span><a href="#c0_GraphicalElement"><span class="reference">GraphicalElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_data">data</span><span class="keyword"> : </span><a href="#string"><span class="reference">string</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_alignment">alignment</span><span class="keyword"> -> </span><a href="#c0_AlignmentKind"><span class="reference">AlignmentKind</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c2_bounds">bounds</span><span class="keyword"> : </span><a href="#c0_Bounds"><span class="reference">Bounds</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Line">Line</span><span class="keyword"> : </span><a href="#c0_MarkedElement"><span class="reference">MarkedElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c1_start">start</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_end">end</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Polyline">Polyline</span><span class="keyword"> : </span><a href="#c0_MarkedElement"><span class="reference">MarkedElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_point">point</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a> 2..* </div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Polygon">Polygon</span><span class="keyword"> : </span><a href="#c0_MarkedElement"><span class="reference">MarkedElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c1_point">point</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a> 3..* </div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Path">Path</span><span class="keyword"> : </span><a href="#c0_MarkedElement"><span class="reference">MarkedElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_commands">commands</span><span class="keyword"> : </span><a href="#c0_PathCommand"><span class="reference">PathCommand</span></a> *</div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_PathCommand">PathCommand</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_isRelative">isRelative</span> ?</div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Translate">Translate</span><span class="keyword"> : </span><a href="#c0_Transform"><span class="reference">Transform</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_deltaX">deltaX</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_deltaY">deltaY</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Scale">Scale</span><span class="keyword"> : </span><a href="#c0_Transform"><span class="reference">Transform</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_factorX">factorX</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_factorY">factorY</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_factorX"><span class="reference">factorX</span></a> &gt;= 0 &amp;&amp; <a href="#c0_factorY"><span class="reference">factorY</span></a> &gt;= 0 <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Rotate">Rotate</span><span class="keyword"> : </span><a href="#c0_Transform"><span class="reference">Transform</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_angle">angle</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c2_center">center</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a> ?</div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Skew">Skew</span><span class="keyword"> : </span><a href="#c0_Transform"><span class="reference">Transform</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_angleX">angleX</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_angleY">angleY</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Image">Image</span><span class="keyword"> : </span><a href="#c0_GraphicalElement"><span class="reference">GraphicalElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_source">source</span><span class="keyword"> : </span><a href="#string"><span class="reference">string</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_isAspectRatioPreserved">isAspectRatioPreserved</span> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c3_bounds">bounds</span><span class="keyword"> : </span><a href="#c0_Bounds"><span class="reference">Bounds</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Circle">Circle</span><span class="keyword"> : </span><a href="#c0_GraphicalElement"><span class="reference">GraphicalElement</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c1_radius">radius</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c3_center">center</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c1_radius"><span class="reference">radius</span></a> &gt;= 0 <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Matrix">Matrix</span><span class="keyword"> : </span><a href="#c0_Transform"><span class="reference">Transform</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_a">a</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_b">b</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_c">c</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_d">d</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_e">e</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_f">f</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_MoveTo">MoveTo</span><span class="keyword"> : </span><a href="#c0_PathCommand"><span class="reference">PathCommand</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c2_point">point</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_LineTo">LineTo</span><span class="keyword"> : </span><a href="#c0_PathCommand"><span class="reference">PathCommand</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c3_point">point</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_CubicCurveTo">CubicCurveTo</span><span class="keyword"> : </span><a href="#c0_PathCommand"><span class="reference">PathCommand</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c4_point">point</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_startControl">startControl</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_endControl">endControl</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_QuadraticCurveTo">QuadraticCurveTo</span><span class="keyword"> : </span><a href="#c0_PathCommand"><span class="reference">PathCommand</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c5_point">point</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_control">control</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_EllipticalArcTo">EllipticalArcTo</span><span class="keyword"> : </span><a href="#c0_PathCommand"><span class="reference">PathCommand</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_rotation">rotation</span><span class="keyword"> : </span><a href="#int"><span class="reference">int</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_isLargeArc">isLargeArc</span> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_isSweep">isSweep</span> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c6_point">point</span><span class="keyword"> : </span><a href="#c0_Point"><span class="reference">Point</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_radii">radii</span><span class="keyword"> : </span><a href="#c0_Dimension"><span class="reference">Dimension</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_ClosePath">ClosePath</span><span class="keyword"> : </span><a href="#c0_PathCommand"><span class="reference">PathCommand</span></a></div>
+
+</body>
+</html>

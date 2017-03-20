@@ -1,0 +1,36 @@
+A
+  [ # C > 5 ]
+  B +
+    C +
+    [ # C > 5 ]
+
+abstract E
+abstract F : E
+abstract G : F
+abstract H : E
+
+abstract Person
+  Name -> string
+  xor Gender
+     Male
+     Female
+  Married ?
+  Address
+    Street -> string
+      UnitNo -> integer ?
+  
+JohnDoe : Person
+  [ Name = "John" ]
+  [ Male ]
+  [ Married ]
+  [ Street = "12 Main St." ]
+  [ UnitNo = 3 ]
+
+UnitNo -> integer ?	 
+City -> string		 
+child -> Person *     
+participants -> Person + 
+hand 2			 
+doors 3..5		 
+flavour 2..*	         
+LochnessMonster  0	 

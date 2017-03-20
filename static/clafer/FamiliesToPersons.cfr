@@ -1,0 +1,41 @@
+enum Gender = male | female
+
+abstract Family
+    familyName -> string
+    members -> Member +              
+        [ this.lastName = familyName ]
+        
+abstract Member
+    lastName -> string
+    firstName -> string
+    gender -> Gender
+
+theBrowns : Family
+    [ familyName = "Brown" ]
+    [ members = John ]
+    John : Member
+        [ firstName = "John" ]
+        [ gender = male ]
+
+theSmiths : Family
+    [ familyName = "Smith" ]
+    [ members = Alice, Bob]
+    Alice : Member
+        [ this.firstName = "Alice" ]
+        [ this.gender = female ]
+    Bob : Member
+        [ this.firstName = "Bob" ]
+        [ this.gender = male ]
+
+abstract Person -> Member
+    fName -> string = this.firstName
+    lName -> string = this.lastName
+
+Male : Person 2..*
+    [ this.gender = male ]
+
+Female : Person +
+    [ this.gender = female ]
+
+[ all member : Member | member.gender.dref = male => (one m : Male | m.dref = member) ] 
+[ all member : Member | member.gender.dref = female => (one m : Female | m.dref = member) ] 

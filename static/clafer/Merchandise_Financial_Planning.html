@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=9">
+<style>.identifier{}
+.keyword{font-weight: bold;}
+.tKeyword{font-style: oblique;}
+.reference{}
+.code { background-color: lightgray; padding: 5px 5px 5px 5px; border: 1px solid darkgray; margin-bottom: 15px;
+        font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace; }
+.standalonecomment { color: green; font-style:italic }
+.inlinecomment { color: green; padding-left:20px; font-style:italic }
+.error{background-color: yellow; color: red }
+.deprecated{color: orange }
+.indent{padding-left:20px}
+a[href$='Lookup failed'] {color: red}
+a[href$='Uid not found'] {color: red}
+a[href$='Ambiguous name'] {color: yellow}
+</style></head>
+<body>
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_MFPsystem">MFPsystem</span>
+  <div class="indent">
+  2..3 <span class="claferDecl" id="c0_hierarchies">hierarchies</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_calendar">calendar</span><span class="keyword"> -> </span><a href="#c0_CalendarHierarchy"><span class="reference">CalendarHierarchy</span></a></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_producth">producth</span><span class="keyword"> -> </span><a href="#c0_ProductHierarchy"><span class="reference">ProductHierarchy</span></a></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_location">location</span><span class="keyword"> -> </span><a href="#c0_LocationHierarchy"><span class="reference">LocationHierarchy</span></a></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_hasTheFollowingWorkflows">hasTheFollowingWorkflows</span><span class="keyword"> -> </span><a href="#c0_workflow"><span class="reference">workflow</span></a> +</div>
+</div>
+
+<div class="standalonecomment">//***************** Concrete Clafers *****************</div>
+
+<div>
+<span class="claferDecl" id="c0_Oracle">Oracle</span><span class="keyword"> : </span><a href="#c0_MFPsystem"><span class="reference">MFPsystem</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_calendar"><span class="reference">calendar</span></a> = <a href="#c0_Cal2012"><span class="reference">Cal2012</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_producth"><span class="reference">producth</span></a> = <a href="#c0_Menswear"><span class="reference">Menswear</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_hasTheFollowingWorkflows"><span class="reference">hasTheFollowingWorkflows</span></a> = <a href="#c0_PreSeasonTargetSettingWorkflow"><span class="reference">PreSeasonTargetSettingWorkflow</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_PreSeasonTargetSettingWorkflow"><span class="reference">PreSeasonTargetSettingWorkflow</span></a>, <a href="#c0_InSeasonTargetSettingWorkflow"><span class="reference">InSeasonTargetSettingWorkflow</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Hierarchy">Hierarchy</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_CalendarHierarchy">CalendarHierarchy</span><span class="keyword"> : </span><a href="#c0_Hierarchy"><span class="reference">Hierarchy</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_levels">levels</span><span class="keyword"> -> </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a> +</div>
+  <div class="indent">
+  <span class="keyword">[</span> all l<span class="keyword"> : </span><a href="#c0_levels"><span class="reference">levels</span></a> | <a href="#l"><span class="reference">l</span></a>.<a href="#c0_levelBelongsToThis"><span class="reference">levelBelongsToThis</span></a> = <span class="keyword">this</span> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_ProductHierarchy">ProductHierarchy</span><span class="keyword"> : </span><a href="#c0_Hierarchy"><span class="reference">Hierarchy</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c1_levels">levels</span><span class="keyword"> -> </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a> +</div>
+  <div class="indent">
+  <span class="keyword">[</span> all l<span class="keyword"> : </span><a href="#c1_levels"><span class="reference">levels</span></a> | <a href="#l"><span class="reference">l</span></a>.<a href="#c0_levelBelongsToThis"><span class="reference">levelBelongsToThis</span></a> = <span class="keyword">this</span> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_LocationHierarchy">LocationHierarchy</span><span class="keyword"> : </span><a href="#c0_Hierarchy"><span class="reference">Hierarchy</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c2_levels">levels</span><span class="keyword"> -> </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a> +</div>
+  <div class="indent">
+  <span class="keyword">[</span> all l<span class="keyword"> : </span><a href="#c2_levels"><span class="reference">levels</span></a> | <a href="#l"><span class="reference">l</span></a>.<a href="#c0_levelBelongsToThis"><span class="reference">levelBelongsToThis</span></a> = <span class="keyword">this</span> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_HierarchyLevel">HierarchyLevel</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_levelBelongsToThis">levelBelongsToThis</span><span class="keyword"> -> </span><a href="#c0_Hierarchy"><span class="reference">Hierarchy</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_spreadsToLowerLevel">spreadsToLowerLevel</span><span class="keyword"> -> </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_aggregatesToHigherLevel">aggregatesToHigherLevel</span><span class="keyword"> -> </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a> ?</div>
+  <div class="indent">
+  <span class="keyword">[</span> all disj d1; d2<span class="keyword"> : </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a> | <a href="#d2"><span class="reference">d2</span></a> = <a href="#d1"><span class="reference">d1</span></a>.<a href="#c0_aggregatesToHigherLevel"><span class="reference">aggregatesToHigherLevel</span></a> &lt;=&gt; <a href="#d1"><span class="reference">d1</span></a> = <a href="#d2"><span class="reference">d2</span></a>.<a href="#c0_spreadsToLowerLevel"><span class="reference">spreadsToLowerLevel</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_HierarchyLevelInstance">HierarchyLevelInstance</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_instanceBelongsTo">instanceBelongsTo</span><span class="keyword"> -> </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_instanceAggregatesTo">instanceAggregatesTo</span><span class="keyword"> -> </span><a href="#c0_HierarchyLevelInstance"><span class="reference">HierarchyLevelInstance</span></a> ?</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_instanceSpreadsTo">instanceSpreadsTo</span><span class="keyword"> -> </span><a href="#c0_HierarchyLevelInstance"><span class="reference">HierarchyLevelInstance</span></a> ?</div>
+</div>
+
+
+<div>
+<span class="keyword">[</span> all disj d1; d2<span class="keyword"> : </span><a href="#c0_HierarchyLevelInstance"><span class="reference">HierarchyLevelInstance</span></a> | <a href="#d2"><span class="reference">d2</span></a> = <a href="#d1"><span class="reference">d1</span></a>.<a href="#c0_instanceAggregatesTo"><span class="reference">instanceAggregatesTo</span></a> &lt;=&gt; <a href="#d1"><span class="reference">d1</span></a> = <a href="#d2"><span class="reference">d2</span></a>.<a href="#c0_instanceSpreadsTo"><span class="reference">instanceSpreadsTo</span></a> <span class="keyword">]</span></div>
+
+
+<div>
+<span class="claferDecl" id="c0_Cal2012">Cal2012</span><span class="keyword"> : </span><a href="#c0_CalendarHierarchy"><span class="reference">CalendarHierarchy</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_levels"><span class="reference">levels</span></a> = <a href="#c0_Year"><span class="reference">Year</span></a>, <a href="#c0_Season"><span class="reference">Season</span></a>, <a href="#c0_Month"><span class="reference">Month</span></a>, <a href="#c0_Week"><span class="reference">Week</span></a> <span class="keyword">]</span><div class="standalonecomment">//***************** Concrete Clafers ******************</div>
+  </div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_Menswear">Menswear</span><span class="keyword"> : </span><a href="#c0_ProductHierarchy"><span class="reference">ProductHierarchy</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c1_levels"><span class="reference">levels</span></a> = <a href="#c0_MensCasualWear"><span class="reference">MensCasualWear</span></a>, <a href="#c0_MensSportsWear"><span class="reference">MensSportsWear</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_Year">Year</span><span class="keyword"> : </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_levelBelongsToThis"><span class="reference">levelBelongsToThis</span></a> = <a href="#c0_Cal2012"><span class="reference">Cal2012</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_spreadsToLowerLevel"><span class="reference">spreadsToLowerLevel</span></a> = <a href="#c0_Season"><span class="reference">Season</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_aggregatesToHigherLevel"><span class="reference">aggregatesToHigherLevel</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_Season">Season</span><span class="keyword"> : </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_levelBelongsToThis"><span class="reference">levelBelongsToThis</span></a> = <a href="#c0_Cal2012"><span class="reference">Cal2012</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_spreadsToLowerLevel"><span class="reference">spreadsToLowerLevel</span></a> = <a href="#c0_Month"><span class="reference">Month</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_aggregatesToHigherLevel"><span class="reference">aggregatesToHigherLevel</span></a> = <a href="#c0_Year"><span class="reference">Year</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_Month">Month</span><span class="keyword"> : </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_levelBelongsToThis"><span class="reference">levelBelongsToThis</span></a> = <a href="#c0_Cal2012"><span class="reference">Cal2012</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_spreadsToLowerLevel"><span class="reference">spreadsToLowerLevel</span></a> = <a href="#c0_Week"><span class="reference">Week</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_aggregatesToHigherLevel"><span class="reference">aggregatesToHigherLevel</span></a> = <a href="#c0_Season"><span class="reference">Season</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_Week">Week</span><span class="keyword"> : </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_levelBelongsToThis"><span class="reference">levelBelongsToThis</span></a> = <a href="#c0_Cal2012"><span class="reference">Cal2012</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_spreadsToLowerLevel"><span class="reference">spreadsToLowerLevel</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_aggregatesToHigherLevel"><span class="reference">aggregatesToHigherLevel</span></a> = <a href="#c0_Month"><span class="reference">Month</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_MensCasualWear">MensCasualWear</span><span class="keyword"> : </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_levelBelongsToThis"><span class="reference">levelBelongsToThis</span></a> = <a href="#c0_Menswear"><span class="reference">Menswear</span></a> <span class="keyword">]</span><span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_spreadsToLowerLevel"><span class="reference">spreadsToLowerLevel</span></a> <span class="keyword">]</span><span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_aggregatesToHigherLevel"><span class="reference">aggregatesToHigherLevel</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_MensSportsWear">MensSportsWear</span><span class="keyword"> : </span><a href="#c0_HierarchyLevel"><span class="reference">HierarchyLevel</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_levelBelongsToThis"><span class="reference">levelBelongsToThis</span></a> = <a href="#c0_Menswear"><span class="reference">Menswear</span></a> <span class="keyword">]</span><span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_spreadsToLowerLevel"><span class="reference">spreadsToLowerLevel</span></a> <span class="keyword">]</span><span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_aggregatesToHigherLevel"><span class="reference">aggregatesToHigherLevel</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">enum</span> VersionAbbreviation = <span class="claferDecl" id="c0_Op">Op</span> | <span class="claferDecl" id="c0_Cp">Cp</span> | <span class="claferDecl" id="c0_Wp">Wp</span> | <span class="claferDecl" id="c0_Ly">Ly</span> | <span class="claferDecl" id="c0_Wa">Wa</span> | <span class="claferDecl" id="c0_Tgt">Tgt</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_plan">plan</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_PlanCreatedBy">PlanCreatedBy</span><span class="keyword"> -> </span><a href="#c0_planningRole"><span class="reference">planningRole</span></a> +</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_versionAbbreviation">versionAbbreviation</span><span class="keyword"> -> </span><a href="#c0_VersionAbbreviation"><span class="reference">VersionAbbreviation</span></a></div>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_retailChannels">retailChannels</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_store">store</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_internet">internet</span><div class="standalonecomment">//	planSeenInTheFollowingViews -> view +</div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_catalog">catalog</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_WorkingPlan">WorkingPlan</span><span class="keyword"> : </span><a href="#c0_plan"><span class="reference">plan</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_versionAbbreviation"><span class="reference">versionAbbreviation</span></a> = <a href="#c0_Wp"><span class="reference">Wp</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_seeded">seeded</span> ?
+    <div class="indent">
+    <span class="claferDecl" id="c0_seedingSource">seedingSource</span><span class="keyword"> -> </span><a href="#c0_LastYear"><span class="reference">LastYear</span></a></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_lastSeedingDate">lastSeedingDate</span><span class="keyword"> : </span><a href="#string"><span class="reference">string</span></a></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_seededWithThoseInstances">seededWithThoseInstances</span><span class="keyword"> -> </span><a href="#c0_HierarchyLevelInstance"><span class="reference">HierarchyLevelInstance</span></a> *</div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_OriginalPlan">OriginalPlan</span><span class="keyword"> : </span><a href="#c0_plan"><span class="reference">plan</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_versionAbbreviation"><span class="reference">versionAbbreviation</span></a> = <a href="#c0_Op"><span class="reference">Op</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_CurrentPlan">CurrentPlan</span><span class="keyword"> : </span><a href="#c0_plan"><span class="reference">plan</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_versionAbbreviation"><span class="reference">versionAbbreviation</span></a> = <a href="#c0_Cp"><span class="reference">Cp</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_LastYear">LastYear</span><span class="keyword"> : </span><a href="#c0_plan"><span class="reference">plan</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_versionAbbreviation"><span class="reference">versionAbbreviation</span></a> = <a href="#c0_Ly"><span class="reference">Ly</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_TargetPlan">TargetPlan</span><span class="keyword"> : </span><a href="#c0_plan"><span class="reference">plan</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_versionAbbreviation"><span class="reference">versionAbbreviation</span></a> = <a href="#c0_Tgt"><span class="reference">Tgt</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_composedOf">composedOf</span><span class="keyword"> -> </span><a href="#c0_Target"><span class="reference">Target</span></a> +</div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_WaitingForApproval">WaitingForApproval</span><span class="keyword"> : </span><a href="#c0_plan"><span class="reference">plan</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_versionAbbreviation"><span class="reference">versionAbbreviation</span></a> = <a href="#c0_Wa"><span class="reference">Wa</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_WorkingPlan2012">WorkingPlan2012</span><span class="keyword"> : </span><a href="#c0_WorkingPlan"><span class="reference">WorkingPlan</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_PlanCreatedBy"><span class="reference">PlanCreatedBy</span></a> = <a href="#c0_ExecutiveManager"><span class="reference">ExecutiveManager</span></a>, <a href="#c0_PlanningDirector"><span class="reference">PlanningDirector</span></a>, <a href="#c0_MerchandisePlanner"><span class="reference">MerchandisePlanner</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_seeded"><span class="reference">seeded</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_retailChannels"><span class="reference">retailChannels</span></a>.<a href="#c0_internet"><span class="reference">internet</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_TargetPlan2012">TargetPlan2012</span><span class="keyword"> : </span><a href="#c0_TargetPlan"><span class="reference">TargetPlan</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_PlanCreatedBy"><span class="reference">PlanCreatedBy</span></a> = <a href="#c0_ExecutiveManager"><span class="reference">ExecutiveManager</span></a>, <a href="#c0_PlanningDirector"><span class="reference">PlanningDirector</span></a>, <a href="#c0_MerchandisePlanner"><span class="reference">MerchandisePlanner</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_composedOf"><span class="reference">composedOf</span></a> = <a href="#c0_TopDownSalesTargets2012"><span class="reference">TopDownSalesTargets2012</span></a>, <a href="#c0_MiddleOutMarkdownTargets2012"><span class="reference">MiddleOutMarkdownTargets2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_retailChannels"><span class="reference">retailChannels</span></a>.<a href="#c0_internet"><span class="reference">internet</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_OriginalPlan2012">OriginalPlan2012</span><span class="keyword"> : </span><a href="#c0_OriginalPlan"><span class="reference">OriginalPlan</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_PlanCreatedBy"><span class="reference">PlanCreatedBy</span></a> = <a href="#c0_MerchandisePlanner"><span class="reference">MerchandisePlanner</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_retailChannels"><span class="reference">retailChannels</span></a>.<a href="#c0_store"><span class="reference">store</span></a> <span class="keyword">]</span><div class="standalonecomment">//		  planSeenInTheFollowingViews = 2012PlanningView</div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_metric">metric</span>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_metricName">metricName</span>
+    <div class="indent">
+    <span class="keyword">xor</span> <span class="claferDecl" id="c0_sales">sales</span>
+      <div class="indent">
+      <span class="claferDecl" id="c0_regularSales">regularSales</span><div class="standalonecomment">//		   planSeenInTheFollowingViews =  Targets2012PlanningView</div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_promotionalSales">promotionalSales</span></div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_clearanceSales">clearanceSales</span></div>
+    </div>
+    <div class="indent">
+    <span class="keyword">xor</span> <span class="claferDecl" id="c0_markdown">markdown</span>
+      <div class="indent">
+      <span class="claferDecl" id="c0_regularMarkdown">regularMarkdown</span><div class="standalonecomment">//		   planSeenInTheFollowingViews = Targets2012ReviewView</div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_promotionalMarkdown">promotionalMarkdown</span></div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_permenantMarkdown">permenantMarkdown</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_turn">turn</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_receipts">receipts</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_inventory">inventory</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_grossMargin">grossMargin</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_openToBuy">openToBuy</span></div>
+  </div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_sales2011">sales2011</span><span class="keyword"> : </span><a href="#c0_metric"><span class="reference">metric</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_regularSales"><span class="reference">regularSales</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_markdown2011">markdown2011</span><span class="keyword"> : </span><a href="#c0_metric"><span class="reference">metric</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_promotionalMarkdown"><span class="reference">promotionalMarkdown</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">enum</span> PlanningRoleLevel = <span class="claferDecl" id="c0_TopDown">TopDown</span> | <span class="claferDecl" id="c0_MiddleOut">MiddleOut</span> | <span class="claferDecl" id="c0_BottomUp">BottomUp</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_planningRole">planningRole</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_roleLevel">roleLevel</span><span class="keyword"> -> </span><a href="#c0_PlanningRoleLevel"><span class="reference">PlanningRoleLevel</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_roleCreatedTheFollowingPlans">roleCreatedTheFollowingPlans</span><span class="keyword"> -> </span><a href="#c0_plan"><span class="reference">plan</span></a> +</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_roleCreatedTheFollowingTargets">roleCreatedTheFollowingTargets</span><span class="keyword"> -> </span><a href="#c0_Target"><span class="reference">Target</span></a> *</div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_BottomUp"><span class="reference">BottomUp</span></a> =&gt; <span class="keyword">no</span> <a href="#c0_roleCreatedTheFollowingTargets"><span class="reference">roleCreatedTheFollowingTargets</span></a> <span class="keyword">]</span><div class="standalonecomment">//***************** Concrete Clafers ******************</div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_roleReceivesTheFollowingTargets">roleReceivesTheFollowingTargets</span><span class="keyword"> -> </span><a href="#c0_Target"><span class="reference">Target</span></a> *</div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_TopDown"><span class="reference">TopDown</span></a> =&gt; <span class="keyword">no</span> <a href="#c0_roleReceivesTheFollowingTargets"><span class="reference">roleReceivesTheFollowingTargets</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_RoleSeesTheFollowingViews">RoleSeesTheFollowingViews</span><span class="keyword"> -> </span><a href="#c0_view"><span class="reference">view</span></a> +</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_roleEditsTheFollowingMeasures">roleEditsTheFollowingMeasures</span><span class="keyword"> -> </span><a href="#c0_Measure"><span class="reference">Measure</span></a> *</div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_PlanningDirector">PlanningDirector</span><span class="keyword"> : </span><a href="#c0_planningRole"><span class="reference">planningRole</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_MiddleOut"><span class="reference">MiddleOut</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_roleCreatedTheFollowingPlans"><span class="reference">roleCreatedTheFollowingPlans</span></a> = <a href="#c0_WorkingPlan2012"><span class="reference">WorkingPlan2012</span></a>, <a href="#c0_TargetPlan2012"><span class="reference">TargetPlan2012</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_roleCreatedTheFollowingTargets"><span class="reference">roleCreatedTheFollowingTargets</span></a> = <a href="#c0_MiddleOutMarkdownTargets2012"><span class="reference">MiddleOutMarkdownTargets2012</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_roleReceivesTheFollowingTargets"><span class="reference">roleReceivesTheFollowingTargets</span></a> = <a href="#c0_TopDownSalesTargets2012"><span class="reference">TopDownSalesTargets2012</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_RoleSeesTheFollowingViews"><span class="reference">RoleSeesTheFollowingViews</span></a> = <a href="#c0_Targets2012ApprovalView"><span class="reference">Targets2012ApprovalView</span></a>, <a href="#c0_Targets2012ReviewView"><span class="reference">Targets2012ReviewView</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_ExecutiveManager">ExecutiveManager</span><span class="keyword"> : </span><a href="#c0_planningRole"><span class="reference">planningRole</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_TopDown"><span class="reference">TopDown</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_roleCreatedTheFollowingPlans"><span class="reference">roleCreatedTheFollowingPlans</span></a> = <a href="#c0_WorkingPlan2012"><span class="reference">WorkingPlan2012</span></a>, <a href="#c0_TargetPlan2012"><span class="reference">TargetPlan2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_roleCreatedTheFollowingTargets"><span class="reference">roleCreatedTheFollowingTargets</span></a> = <a href="#c0_TopDownSalesTargets2012"><span class="reference">TopDownSalesTargets2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_roleReceivesTheFollowingTargets"><span class="reference">roleReceivesTheFollowingTargets</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_RoleSeesTheFollowingViews"><span class="reference">RoleSeesTheFollowingViews</span></a> = <a href="#c0_Targets2012PlanningView"><span class="reference">Targets2012PlanningView</span></a>, <a href="#c0_Targets2012ReviewView"><span class="reference">Targets2012ReviewView</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_MerchandisePlanner">MerchandisePlanner</span><span class="keyword"> : </span><a href="#c0_planningRole"><span class="reference">planningRole</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_BottomUp"><span class="reference">BottomUp</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_roleCreatedTheFollowingPlans"><span class="reference">roleCreatedTheFollowingPlans</span></a> = <a href="#c0_WorkingPlan2012"><span class="reference">WorkingPlan2012</span></a>, <a href="#c0_OriginalPlan2012"><span class="reference">OriginalPlan2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_roleCreatedTheFollowingTargets"><span class="reference">roleCreatedTheFollowingTargets</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_roleReceivesTheFollowingTargets"><span class="reference">roleReceivesTheFollowingTargets</span></a> = <a href="#c0_MiddleOutMarkdownTargets2012"><span class="reference">MiddleOutMarkdownTargets2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_RoleSeesTheFollowingViews"><span class="reference">RoleSeesTheFollowingViews</span></a> = <a href="#c0_Targets2012ReviewView"><span class="reference">Targets2012ReviewView</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Target">Target</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_belongsTo">belongsTo</span><span class="keyword"> -> </span><a href="#c0_TargetPlan"><span class="reference">TargetPlan</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_createdBy">createdBy</span><span class="keyword"> -> </span><a href="#c0_planningRole"><span class="reference">planningRole</span></a>
+    <div class="indent">
+    <span class="keyword">[</span>  ! createdBy.<a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_BottomUp"><span class="reference">BottomUp</span></a> <span class="keyword">]</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_publishedTo">publishedTo</span><span class="keyword"> -> </span><a href="#c0_planningRole"><span class="reference">planningRole</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_createdBy"><span class="reference">createdBy</span></a>.<a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_TopDown"><span class="reference">TopDown</span></a> =&gt; <a href="#c0_publishedTo"><span class="reference">publishedTo</span></a>.<a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_MiddleOut"><span class="reference">MiddleOut</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_createdBy"><span class="reference">createdBy</span></a>.<a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_MiddleOut"><span class="reference">MiddleOut</span></a> =&gt; <a href="#c0_publishedTo"><span class="reference">publishedTo</span></a>.<a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_BottomUp"><span class="reference">BottomUp</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_TopDownSalesTargets2012">TopDownSalesTargets2012</span><span class="keyword"> : </span><a href="#c0_Target"><span class="reference">Target</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_belongsTo"><span class="reference">belongsTo</span></a> = <a href="#c0_TargetPlan2012"><span class="reference">TargetPlan2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_createdBy"><span class="reference">createdBy</span></a> = <a href="#c0_ExecutiveManager"><span class="reference">ExecutiveManager</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_publishedTo"><span class="reference">publishedTo</span></a> = <a href="#c0_PlanningDirector"><span class="reference">PlanningDirector</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_MiddleOutMarkdownTargets2012">MiddleOutMarkdownTargets2012</span><span class="keyword"> : </span><a href="#c0_Target"><span class="reference">Target</span></a><span class="inlinecomment">// BottomUp roles can't create Targets</span>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_belongsTo"><span class="reference">belongsTo</span></a> = <a href="#c0_TargetPlan2012"><span class="reference">TargetPlan2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_createdBy"><span class="reference">createdBy</span></a> = <a href="#c0_PlanningDirector"><span class="reference">PlanningDirector</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_publishedTo"><span class="reference">publishedTo</span></a> = <a href="#c0_MerchandisePlanner"><span class="reference">MerchandisePlanner</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_workflow">workflow</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_belongsToThisSystem">belongsToThisSystem</span><span class="keyword"> -> </span><a href="#c0_MFPsystem"><span class="reference">MFPsystem</span></a></div>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_workflowPlanningSeason">workflowPlanningSeason</span><div class="standalonecomment">//**************** Concrete Clafers *******************</div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_preSeasonPlanning">preSeasonPlanning</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_inSeasonPlanning">inSeasonPlanning</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_proceededBy">proceededBy</span><span class="keyword"> -> </span><a href="#c0_workflow"><span class="reference">workflow</span></a> ?</div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_proceededBy"><span class="reference">proceededBy</span></a> != <a href="#c0_workflow"><span class="reference">workflow</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_followedBy">followedBy</span><span class="keyword"> -> </span><a href="#c0_workflow"><span class="reference">workflow</span></a> ?</div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_followedBy"><span class="reference">followedBy</span></a> != <a href="#c0_workflow"><span class="reference">workflow</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> all v<span class="keyword"> : </span><a href="#c0_workflow"><span class="reference">workflow</span></a> | <a href="#v"><span class="reference">v</span></a>.<a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_preSeasonPlanning"><span class="reference">preSeasonPlanning</span></a> =&gt; <span class="keyword">no</span> <a href="#c0_proceededBy"><span class="reference">proceededBy</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> all v<span class="keyword"> : </span><a href="#c0_workflow"><span class="reference">workflow</span></a> | <a href="#v"><span class="reference">v</span></a>.<a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_preSeasonPlanning"><span class="reference">preSeasonPlanning</span></a> =&gt; <a href="#v"><span class="reference">v</span></a>.<a href="#c0_followedBy"><span class="reference">followedBy</span></a>.<a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_inSeasonPlanning"><span class="reference">inSeasonPlanning</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> all v<span class="keyword"> : </span><a href="#c0_workflow"><span class="reference">workflow</span></a> | <a href="#v"><span class="reference">v</span></a>.<a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_inSeasonPlanning"><span class="reference">inSeasonPlanning</span></a> =&gt; <span class="keyword">no</span> <a href="#c0_followedBy"><span class="reference">followedBy</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">[</span> all v<span class="keyword"> : </span><a href="#c0_workflow"><span class="reference">workflow</span></a> | <a href="#v"><span class="reference">v</span></a>.<a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_inSeasonPlanning"><span class="reference">inSeasonPlanning</span></a> =&gt; <a href="#v"><span class="reference">v</span></a>.<a href="#c0_proceededBy"><span class="reference">proceededBy</span></a>.<a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_preSeasonPlanning"><span class="reference">preSeasonPlanning</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_views">views</span><span class="keyword"> -> </span><a href="#c0_view"><span class="reference">view</span></a> +</div>
+</div>
+
+<span class="inlinecomment">//if I want to say can't be proceeded by the same workflow.</span>
+
+<div>
+<span class="claferDecl" id="c0_PreSeasonTargetSettingWorkflow">PreSeasonTargetSettingWorkflow</span><span class="keyword"> : </span><a href="#c0_workflow"><span class="reference">workflow</span></a><span class="inlinecomment">//if I want to say can't be followed by the same workflow instance.</span>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_belongsToThisSystem"><span class="reference">belongsToThisSystem</span></a> = <a href="#c0_Oracle"><span class="reference">Oracle</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_preSeasonPlanning"><span class="reference">preSeasonPlanning</span></a> <span class="keyword">]</span><span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_proceededBy"><span class="reference">proceededBy</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_followedBy"><span class="reference">followedBy</span></a> = <a href="#c0_InSeasonTargetSettingWorkflow"><span class="reference">InSeasonTargetSettingWorkflow</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_views"><span class="reference">views</span></a> = <a href="#c0_Targets2012PlanningView"><span class="reference">Targets2012PlanningView</span></a>, <a href="#c0_Targets2012ApprovalView"><span class="reference">Targets2012ApprovalView</span></a> <span class="keyword">]</span></div>
+</div>
+
+<div class="standalonecomment">// The following two constraints ensure that in-season is proceeded by pre-season and isn't followed by anything.</div>
+
+<div>
+<span class="claferDecl" id="c0_InSeasonTargetSettingWorkflow">InSeasonTargetSettingWorkflow</span><span class="keyword"> : </span><a href="#c0_workflow"><span class="reference">workflow</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_belongsToThisSystem"><span class="reference">belongsToThisSystem</span></a> = <a href="#c0_Oracle"><span class="reference">Oracle</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_inSeasonPlanning"><span class="reference">inSeasonPlanning</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_proceededBy"><span class="reference">proceededBy</span></a> = <a href="#c0_PreSeasonTargetSettingWorkflow"><span class="reference">PreSeasonTargetSettingWorkflow</span></a> <span class="keyword">]</span><span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_followedBy"><span class="reference">followedBy</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_views"><span class="reference">views</span></a> = <a href="#c0_Targets2012ReviewView"><span class="reference">Targets2012ReviewView</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_view">view</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_viewBelongsTo">viewBelongsTo</span><span class="keyword"> -> </span><a href="#c0_workflow"><span class="reference">workflow</span></a></div>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_visibility">visibility</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_specificRole">specificRole</span><span class="keyword"> -> </span><a href="#c0_planningRole"><span class="reference">planningRole</span></a></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_viewBelongsTo"><span class="reference">viewBelongsTo</span></a>.<a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_inSeasonPlanning"><span class="reference">inSeasonPlanning</span></a> =&gt;  ! <a href="#c0_specificRole"><span class="reference">specificRole</span></a>.<a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_TopDown"><span class="reference">TopDown</span></a> <span class="keyword">]</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_allRoles">allRoles</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_roles">roles</span><span class="keyword"> -> </span><a href="#c0_planningRole"><span class="reference">planningRole</span></a> * = <a href="#c0_planningRole"><span class="reference">planningRole</span></a></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_measures">measures</span><span class="keyword"> -> </span><a href="#c0_Measure"><span class="reference">Measure</span></a> +</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_planversion">planversion</span><span class="keyword"> -> </span><a href="#c0_plan"><span class="reference">plan</span></a></div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_viewBelongsTo"><span class="reference">viewBelongsTo</span></a>.<a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_inSeasonPlanning"><span class="reference">inSeasonPlanning</span></a> =&gt;  ! <a href="#c0_planversion"><span class="reference">planversion</span></a> = <a href="#c0_WaitingForApproval"><span class="reference">WaitingForApproval</span></a> &#124;&#124; <a href="#c0_planversion"><span class="reference">planversion</span></a> = <a href="#c0_LastYear"><span class="reference">LastYear</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_viewType">viewType</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_Approval">Approval</span>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_specificRole"><span class="reference">specificRole</span></a>.<a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_MiddleOut"><span class="reference">MiddleOut</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_planversion"><span class="reference">planversion</span></a> = <a href="#c0_WaitingForApproval"><span class="reference">WaitingForApproval</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_viewBelongsTo"><span class="reference">viewBelongsTo</span></a>.<a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_preSeasonPlanning"><span class="reference">preSeasonPlanning</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_Seeding">Seeding</span>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_viewBelongsTo"><span class="reference">viewBelongsTo</span></a>.<a href="#c0_workflowPlanningSeason"><span class="reference">workflowPlanningSeason</span></a>.<a href="#c0_preSeasonPlanning"><span class="reference">preSeasonPlanning</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_specificRole"><span class="reference">specificRole</span></a>.<a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_TopDown"><span class="reference">TopDown</span></a> &#124;&#124; <a href="#c0_specificRole"><span class="reference">specificRole</span></a>.<a href="#c0_roleLevel"><span class="reference">roleLevel</span></a> = <a href="#c0_MiddleOut"><span class="reference">MiddleOut</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_planversion"><span class="reference">planversion</span></a> = <a href="#c0_WorkingPlan"><span class="reference">WorkingPlan</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_Review">Review</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_Planning">Planning</span></div>
+  </div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_Targets2012PlanningView">Targets2012PlanningView</span><span class="keyword"> : </span><a href="#c0_view"><span class="reference">view</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_viewBelongsTo"><span class="reference">viewBelongsTo</span></a> = <a href="#c0_PreSeasonTargetSettingWorkflow"><span class="reference">PreSeasonTargetSettingWorkflow</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_specificRole"><span class="reference">specificRole</span></a> = <a href="#c0_ExecutiveManager"><span class="reference">ExecutiveManager</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_measures"><span class="reference">measures</span></a> = <a href="#c0_LyMarkdown"><span class="reference">LyMarkdown</span></a>, <a href="#c0_TgtSales"><span class="reference">TgtSales</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_planversion"><span class="reference">planversion</span></a> = <a href="#c0_TargetPlan2012"><span class="reference">TargetPlan2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_viewType"><span class="reference">viewType</span></a>.<a href="#c0_Planning"><span class="reference">Planning</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_Targets2012ApprovalView">Targets2012ApprovalView</span><span class="keyword"> : </span><a href="#c0_view"><span class="reference">view</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_viewBelongsTo"><span class="reference">viewBelongsTo</span></a> = <a href="#c0_PreSeasonTargetSettingWorkflow"><span class="reference">PreSeasonTargetSettingWorkflow</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_specificRole"><span class="reference">specificRole</span></a> = <a href="#c0_PlanningDirector"><span class="reference">PlanningDirector</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_measures"><span class="reference">measures</span></a> = <a href="#c0_LyMarkdown"><span class="reference">LyMarkdown</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_planversion"><span class="reference">planversion</span></a> = <a href="#c0_TargetPlan2012"><span class="reference">TargetPlan2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_viewType"><span class="reference">viewType</span></a>.<a href="#c0_Approval"><span class="reference">Approval</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_Targets2012ReviewView">Targets2012ReviewView</span><span class="keyword"> : </span><a href="#c0_view"><span class="reference">view</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_viewBelongsTo"><span class="reference">viewBelongsTo</span></a> = <a href="#c0_InSeasonTargetSettingWorkflow"><span class="reference">InSeasonTargetSettingWorkflow</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_allRoles"><span class="reference">allRoles</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_measures"><span class="reference">measures</span></a> = <a href="#c0_TgtSales"><span class="reference">TgtSales</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_planversion"><span class="reference">planversion</span></a> = <a href="#c0_OriginalPlan2012"><span class="reference">OriginalPlan2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_viewType"><span class="reference">viewType</span></a>.<a href="#c0_Review"><span class="reference">Review</span></a> <span class="keyword">]</span><div class="standalonecomment">//***************** Concrete Clafers ******************</div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Measure">Measure</span>
+  <div class="indent">
+  <span class="claferDecl" id="c1_belongsTo">belongsTo</span><span class="keyword"> -> </span><a href="#c0_view"><span class="reference">view</span></a> +</div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_measureMetric">measureMetric</span><span class="keyword"> -> </span><a href="#c0_metric"><span class="reference">metric</span></a></div>
+  <div class="indent">
+  <span class="keyword">or</span> <span class="claferDecl" id="c0_unitOfMeasure">unitOfMeasure</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_amount">amount</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_percentage">percentage</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_measureBelongsToThisPlan">measureBelongsToThisPlan</span><span class="keyword"> -> </span><a href="#c0_plan"><span class="reference">plan</span></a></div>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_measureType">measureType</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_referenceMeasure">referenceMeasure</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_nonReferenceMeasure">nonReferenceMeasure</span>
+      <div class="indent">
+      <span class="claferDecl" id="c0_editedBy">editedBy</span><span class="keyword"> -> </span><a href="#c0_planningRole"><span class="reference">planningRole</span></a> ?</div>
+    </div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_derivedByAnotherMeasures">derivedByAnotherMeasures</span> ?
+    <div class="indent">
+    <span class="claferDecl" id="c0_derivedByTheseMeasures">derivedByTheseMeasures</span><span class="keyword"> -> </span><a href="#c0_Measure"><span class="reference">Measure</span></a> +</div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_derivedByThisRule">derivedByThisRule</span><span class="keyword"> -> </span><a href="#c0_Rule"><span class="reference">Rule</span></a></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_derivesOtherMeasures">derivesOtherMeasures</span> ?
+    <div class="indent">
+    <span class="claferDecl" id="c0_derivesTheseMeasures">derivesTheseMeasures</span><span class="keyword"> -> </span><a href="#c0_Measure"><span class="reference">Measure</span></a> +<span class="inlinecomment">// A measure belongs to one or more views.</span>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_derivesUsingThisRule">derivesUsingThisRule</span><span class="keyword"> -> </span><a href="#c0_Rule"><span class="reference">Rule</span></a></div>
+  </div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_TgtSales">TgtSales</span><span class="keyword"> : </span><a href="#c0_Measure"><span class="reference">Measure</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c1_belongsTo"><span class="reference">belongsTo</span></a> = <a href="#c0_Targets2012PlanningView"><span class="reference">Targets2012PlanningView</span></a>, <a href="#c0_Targets2012ReviewView"><span class="reference">Targets2012ReviewView</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_measureMetric"><span class="reference">measureMetric</span></a> = <a href="#c0_sales2011"><span class="reference">sales2011</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_amount"><span class="reference">amount</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_measureBelongsToThisPlan"><span class="reference">measureBelongsToThisPlan</span></a> = <a href="#c0_TargetPlan2012"><span class="reference">TargetPlan2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_nonReferenceMeasure"><span class="reference">nonReferenceMeasure</span></a> <span class="keyword">]</span></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_LyMarkdown">LyMarkdown</span><span class="keyword"> : </span><a href="#c0_Measure"><span class="reference">Measure</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c1_belongsTo"><span class="reference">belongsTo</span></a> = <a href="#c0_Targets2012PlanningView"><span class="reference">Targets2012PlanningView</span></a>, <a href="#c0_Targets2012ApprovalView"><span class="reference">Targets2012ApprovalView</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_measureMetric"><span class="reference">measureMetric</span></a> = <a href="#c0_markdown2011"><span class="reference">markdown2011</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_percentage"><span class="reference">percentage</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_measureBelongsToThisPlan"><span class="reference">measureBelongsToThisPlan</span></a> = <a href="#c0_TargetPlan2012"><span class="reference">TargetPlan2012</span></a> <span class="keyword">]</span><span class="keyword">[</span> <a href="#c0_referenceMeasure"><span class="reference">referenceMeasure</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Rule">Rule</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_RelatedMeasure">RelatedMeasure</span><span class="keyword"> -> </span><a href="#c0_Measure"><span class="reference">Measure</span></a> *<div class="standalonecomment">//***************** Concrete Clafers ******************</div>
+    <div class="indent">
+    <span class="keyword">[</span> <span class="keyword">this</span>.<a href="#c0_derivedByAnotherMeasures"><span class="reference">derivedByAnotherMeasures</span></a>.<a href="#c0_derivedByThisRule"><span class="reference">derivedByThisRule</span></a> = Rule &#124;&#124; <span class="keyword">this</span>.<a href="#c0_derivesOtherMeasures"><span class="reference">derivesOtherMeasures</span></a>.<a href="#c0_derivesUsingThisRule"><span class="reference">derivesUsingThisRule</span></a> = Rule <span class="keyword">]</span></div>
+  </div>
+</div>
+
+</body>
+</html>

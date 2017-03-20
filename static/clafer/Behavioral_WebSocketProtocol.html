@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=9">
+<style>.identifier{}
+.keyword{font-weight: bold;}
+.tKeyword{font-style: oblique;}
+.reference{}
+.code { background-color: lightgray; padding: 5px 5px 5px 5px; border: 1px solid darkgray; margin-bottom: 15px;
+        font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace; }
+.standalonecomment { color: green; font-style:italic }
+.inlinecomment { color: green; padding-left:20px; font-style:italic }
+.error{background-color: yellow; color: red }
+.deprecated{color: orange }
+.indent{padding-left:20px}
+a[href$='Lookup failed'] {color: red}
+a[href$='Uid not found'] {color: red}
+a[href$='Ambiguous name'] {color: yellow}
+</style></head>
+<body>
+
+<div>
+<span class="keyword">enum</span> Request = <span class="claferDecl" id="c0_open">open</span> | <span class="claferDecl" id="c0_close">close</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_WebSocket">WebSocket</span>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_states">states</span>
+    <div class="indent">
+    <span class="tKeyword">initial</span> <span class="claferDecl" id="c0_ready">ready</span>
+      <div class="indent">
+      <span class="keyword">[</span> <span class="tKeyword">initially </span><span class="keyword">no</span> <a href="#c0_request"><span class="reference">request</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_request"><span class="reference">request</span></a> = <a href="#c0_open"><span class="reference">open</span></a><span class="tKeyword"> -[</span><a href="#c0_request"><span class="reference">request</span></a>.<a href="#c0_success"><span class="reference">success</span></a><span class="tKeyword">]--&gt; </span><a href="#c0_opened"><span class="reference">opened</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_request"><span class="reference">request</span></a> = <a href="#c0_open"><span class="reference">open</span></a><span class="tKeyword"> -[</span><a href="#c0_request"><span class="reference">request</span></a>.<a href="#c0_failure"><span class="reference">failure</span></a><span class="tKeyword">]--&gt; </span><a href="#c0_failed"><span class="reference">failed</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_opened">opened</span>
+      <div class="indent">
+      <span class="keyword">[</span> <span class="tKeyword">initially </span><span class="keyword">no</span> <a href="#c0_request"><span class="reference">request</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_request"><span class="reference">request</span></a> = <a href="#c0_close"><span class="reference">close</span></a><span class="tKeyword"> -[</span><a href="#c0_request"><span class="reference">request</span></a>.<a href="#c0_success"><span class="reference">success</span></a><span class="tKeyword">]--&gt; </span><a href="#c0_closed"><span class="reference">closed</span></a> <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_request"><span class="reference">request</span></a> = <a href="#c0_close"><span class="reference">close</span></a><span class="tKeyword"> -[</span><a href="#c0_request"><span class="reference">request</span></a>.<a href="#c0_failure"><span class="reference">failure</span></a><span class="tKeyword">]--&gt; </span><a href="#c0_failed"><span class="reference">failed</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_closed">closed</span><span class="tKeyword"> --&gt; </span>closed
+      <div class="indent">
+      <span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_request"><span class="reference">request</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_failed">failed</span><span class="tKeyword"> --&gt; </span>failed
+      <div class="indent">
+      <span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_request"><span class="reference">request</span></a> <span class="keyword">]</span></div>
+    </div>
+  </div>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_request">request</span><span class="keyword"> -> </span><a href="#c0_Request"><span class="reference">Request</span></a> ?
+    <div class="indent">
+    <span class="claferDecl" id="c0_success">success</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_failure">failure</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_webSocketOpenedClosed">webSocketOpenedClosed</span><span class="keyword"> : </span><a href="#c0_WebSocket"><span class="reference">WebSocket</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_ready"><span class="reference">ready</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_request"><span class="reference">request</span></a> = <a href="#c0_open"><span class="reference">open</span></a> &amp;&amp; <a href="#c0_request"><span class="reference">request</span></a>.<a href="#c0_success"><span class="reference">success</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_opened"><span class="reference">opened</span></a><span class="tKeyword"> --&gt;&gt; </span><a href="#c0_request"><span class="reference">request</span></a> = <a href="#c0_close"><span class="reference">close</span></a> &amp;&amp; <a href="#c0_request"><span class="reference">request</span></a>.<a href="#c0_success"><span class="reference">success</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_closed"><span class="reference">closed</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_closed"><span class="reference">closed</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket11">WebSocket11</span>
+  <div class="indent">
+  <span class="claferDecl" id="c1_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c1_ready">ready</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket12">WebSocket12</span>
+  <div class="indent">
+  <span class="claferDecl" id="c2_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c2_ready">ready</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c1_request">request</span><span class="keyword"> -> </span><a href="#c0_open"><span class="reference">open</span></a>
+    <div class="indent">
+    <span class="claferDecl" id="c1_success">success</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket13">WebSocket13</span>
+  <div class="indent">
+  <span class="claferDecl" id="c3_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c1_opened">opened</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket14">WebSocket14</span>
+  <div class="indent">
+  <span class="claferDecl" id="c4_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c2_opened">opened</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c2_request">request</span><span class="keyword"> -> </span><a href="#c0_close"><span class="reference">close</span></a>
+    <div class="indent">
+    <span class="claferDecl" id="c2_success">success</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket15">WebSocket15</span>
+  <div class="indent">
+  <span class="claferDecl" id="c5_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c1_closed">closed</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket16">WebSocket16</span>
+  <div class="indent">
+  <span class="claferDecl" id="c6_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c2_closed">closed</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_webSocketOpenedFailed">webSocketOpenedFailed</span><span class="keyword"> : </span><a href="#c0_WebSocket"><span class="reference">WebSocket</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_ready"><span class="reference">ready</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_request"><span class="reference">request</span></a> = <a href="#c0_open"><span class="reference">open</span></a> &amp;&amp; <a href="#c0_request"><span class="reference">request</span></a>.<a href="#c0_success"><span class="reference">success</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_opened"><span class="reference">opened</span></a><span class="tKeyword"> --&gt;&gt; </span><a href="#c0_request"><span class="reference">request</span></a> = <a href="#c0_close"><span class="reference">close</span></a> &amp;&amp; <a href="#c0_request"><span class="reference">request</span></a>.<a href="#c0_failure"><span class="reference">failure</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_failed"><span class="reference">failed</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_failed"><span class="reference">failed</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket21">WebSocket21</span>
+  <div class="indent">
+  <span class="claferDecl" id="c7_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c3_ready">ready</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket22">WebSocket22</span>
+  <div class="indent">
+  <span class="claferDecl" id="c8_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c4_ready">ready</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c3_request">request</span><span class="keyword"> -> </span><a href="#c0_open"><span class="reference">open</span></a>
+    <div class="indent">
+    <span class="claferDecl" id="c3_success">success</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket23">WebSocket23</span>
+  <div class="indent">
+  <span class="claferDecl" id="c9_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c3_opened">opened</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket24">WebSocket24</span>
+  <div class="indent">
+  <span class="claferDecl" id="c10_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c4_opened">opened</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c4_request">request</span><span class="keyword"> -> </span><a href="#c0_close"><span class="reference">close</span></a>
+    <div class="indent">
+    <span class="claferDecl" id="c1_failure">failure</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket25">WebSocket25</span>
+  <div class="indent">
+  <span class="claferDecl" id="c11_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c1_failed">failed</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket26">WebSocket26</span>
+  <div class="indent">
+  <span class="claferDecl" id="c12_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c2_failed">failed</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_webSocketFailed">webSocketFailed</span><span class="keyword"> : </span><a href="#c0_WebSocket"><span class="reference">WebSocket</span></a>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_ready"><span class="reference">ready</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_request"><span class="reference">request</span></a> = <a href="#c0_open"><span class="reference">open</span></a> &amp;&amp; <a href="#c0_request"><span class="reference">request</span></a>.<a href="#c0_failure"><span class="reference">failure</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_failed"><span class="reference">failed</span></a><span class="tKeyword"> --&gt; </span><a href="#c0_failed"><span class="reference">failed</span></a> <span class="keyword">]</span></div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket31">WebSocket31</span>
+  <div class="indent">
+  <span class="claferDecl" id="c13_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c5_ready">ready</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket32">WebSocket32</span>
+  <div class="indent">
+  <span class="claferDecl" id="c14_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c6_ready">ready</span></div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c5_request">request</span><span class="keyword"> -> </span><a href="#c0_open"><span class="reference">open</span></a>
+    <div class="indent">
+    <span class="claferDecl" id="c2_failure">failure</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket33">WebSocket33</span>
+  <div class="indent">
+  <span class="claferDecl" id="c15_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c3_failed">failed</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="claferDecl" id="c0_WebSocket34">WebSocket34</span>
+  <div class="indent">
+  <span class="claferDecl" id="c16_states">states</span>
+    <div class="indent">
+    <span class="claferDecl" id="c4_failed">failed</span></div>
+  </div>
+</div>
+
+</body>
+</html>

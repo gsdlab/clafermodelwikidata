@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=9">
+<style>.identifier{}
+.keyword{font-weight:bold}
+.reference{}
+.code { background-color: lightgray; padding: 5px 5px 5px 5px; border: 1px solid darkgray; margin-bottom: 15px; 
+        font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace; }
+.standalonecomment { color: green; font-style:italic }
+.inlinecomment { color: green; padding-left:20px; font-style:italic }
+.error{background-color: yellow; color: red }
+.deprecated{color: orange }
+.indent{padding-left:20px}
+a[href$='Lookup failed'] {color: red}
+a[href$='Uid not found'] {color: red}
+a[href$='Ambiguous name'] {color: yellow}
+
+</style></head>
+<body>
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_System">System</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_FeatureModel">FeatureModel</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Architecture">Architecture</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_FunctionalAnalysis">FunctionalAnalysis</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_HardwareArchitecture">HardwareArchitecture</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_DeviceNodeClassification">DeviceNodeClassification</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_CommTopology">CommTopology</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_PowerTopology">PowerTopology</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Deployment">Deployment</span></div>
+
+<div class="standalonecomment">// Some generic "types" of Clafer's. Some types don't have properties but</div>
+<div class="standalonecomment">// are rather used for readability for a user</div>
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Feature">Feature</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_FunctionalAnalysisComponent">FunctionalAnalysisComponent</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_deployedTo">deployedTo</span><span class="keyword"> -> </span><a href="#c0_DeviceNode"><span class="reference">DeviceNode</span></a> 1..3 <span class="inlinecomment">// Most functions are only double redudant at most but lets set the max at triple just in case.</span>
+  </div>
+  <div class="indent">
+  <span class="keyword">xor</span> <span class="claferDecl" id="c0_implementation">implementation</span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_hardware">hardware</span>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_deployedTo"><span class="reference">deployedTo</span></a>.<a href="#c0_type"><span class="reference">type</span></a> in <a href="#c0_EEDeviceNode"><span class="reference">EEDeviceNode</span></a>, <a href="#c0_SmartDeviceNode"><span class="reference">SmartDeviceNode</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_software">software</span>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_deployedTo"><span class="reference">deployedTo</span></a>.<a href="#c0_type"><span class="reference">type</span></a> in <a href="#c0_SmartDeviceNode"><span class="reference">SmartDeviceNode</span></a> <span class="keyword">]</span></div>
+    </div>
+  </div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_AnalysisFunction">AnalysisFunction</span><span class="keyword"> : </span><a href="#c0_FunctionalAnalysisComponent"><span class="reference">FunctionalAnalysisComponent</span></a></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_FunctionalDevice">FunctionalDevice</span><span class="keyword"> : </span><a href="#c0_FunctionalAnalysisComponent"><span class="reference">FunctionalAnalysisComponent</span></a></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_FunctionConnector">FunctionConnector</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_sender">sender</span><span class="keyword"> -> </span><a href="#c0_FunctionalAnalysisComponent"><span class="reference">FunctionalAnalysisComponent</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_receiver">receiver</span><span class="keyword"> -> </span><a href="#c0_FunctionalAnalysisComponent"><span class="reference">FunctionalAnalysisComponent</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">enum</span> DeviceNodeType = <span class="claferDecl" id="c0_SmartDeviceNode">SmartDeviceNode</span> | <span class="claferDecl" id="c0_EEDeviceNode">EEDeviceNode</span> | <span class="claferDecl" id="c0_PowerDeviceNode">PowerDeviceNode</span></div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_DeviceNode">DeviceNode</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_type">type</span><span class="keyword"> -> </span><a href="#c0_DeviceNodeType"><span class="reference">DeviceNodeType</span></a></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_AutoPilot">AutoPilot</span><span class="keyword"> : </span><a href="#c0_System"><span class="reference">System</span></a>
+  <div class="indent">
+  <span class="claferDecl" id="c0_AP_FM">AP_FM</span><span class="keyword"> : </span><a href="#c0_FeatureModel"><span class="reference">FeatureModel</span></a>
+    <div class="indent">
+    <span class="claferDecl" id="c0_ACC">ACC</span><span class="keyword"> : </span><a href="#c0_Feature"><span class="reference">Feature</span></a><span class="inlinecomment">// Adaptive cruise control  </span>
+    </div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_AP_FAA">AP_FAA</span><span class="keyword"> : </span><a href="#c0_FunctionalAnalysis"><span class="reference">FunctionalAnalysis</span></a>
+    <span class="inlinecomment">// Functions  </span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_frontDriverLidar">frontDriverLidar</span><span class="keyword"> : </span><a href="#c0_FunctionalDevice"><span class="reference">FunctionalDevice</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_implementation"><span class="reference">implementation</span></a>.<a href="#c0_hardware"><span class="reference">hardware</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_frontPassengerLidar">frontPassengerLidar</span><span class="keyword"> : </span><a href="#c0_FunctionalDevice"><span class="reference">FunctionalDevice</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_implementation"><span class="reference">implementation</span></a>.<a href="#c0_hardware"><span class="reference">hardware</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_lidarProcessing">lidarProcessing</span><span class="keyword"> : </span><a href="#c0_AnalysisFunction"><span class="reference">AnalysisFunction</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_implementation"><span class="reference">implementation</span></a>.<a href="#c0_software"><span class="reference">software</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_pointCloudClustering">pointCloudClustering</span><span class="keyword"> : </span><a href="#c0_AnalysisFunction"><span class="reference">AnalysisFunction</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_implementation"><span class="reference">implementation</span></a>.<a href="#c0_software"><span class="reference">software</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_frontRadar">frontRadar</span><span class="keyword"> : </span><a href="#c0_FunctionalDevice"><span class="reference">FunctionalDevice</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_implementation"><span class="reference">implementation</span></a>.<a href="#c0_hardware"><span class="reference">hardware</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_dynamicObjectDetection">dynamicObjectDetection</span><span class="keyword"> : </span><a href="#c0_AnalysisFunction"><span class="reference">AnalysisFunction</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_implementation"><span class="reference">implementation</span></a>.<a href="#c0_software"><span class="reference">software</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_trajectoryPlanningAP">trajectoryPlanningAP</span><span class="keyword"> : </span><a href="#c0_AnalysisFunction"><span class="reference">AnalysisFunction</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_implementation"><span class="reference">implementation</span></a>.<a href="#c0_software"><span class="reference">software</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_speedControl">speedControl</span><span class="keyword"> : </span><a href="#c0_AnalysisFunction"><span class="reference">AnalysisFunction</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_implementation"><span class="reference">implementation</span></a>.<a href="#c0_software"><span class="reference">software</span></a> <span class="keyword">]</span></div>
+    </div>
+    <span class="inlinecomment">// Function Connectors  </span>
+    <div class="indent">
+    <span class="claferDecl" id="c0_frontDriverLidarVal">frontDriverLidarVal</span><span class="keyword"> : </span><a href="#c0_FunctionConnector"><span class="reference">FunctionConnector</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_sender"><span class="reference">sender</span></a> = <a href="#c0_frontDriverLidar"><span class="reference">frontDriverLidar</span></a> &amp;&amp; <a href="#c0_receiver"><span class="reference">receiver</span></a> = <a href="#c0_lidarProcessing"><span class="reference">lidarProcessing</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_frontPassengerLidarVal">frontPassengerLidarVal</span><span class="keyword"> : </span><a href="#c0_FunctionConnector"><span class="reference">FunctionConnector</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_sender"><span class="reference">sender</span></a> = <a href="#c0_frontPassengerLidar"><span class="reference">frontPassengerLidar</span></a> &amp;&amp; <a href="#c0_receiver"><span class="reference">receiver</span></a> = <a href="#c0_lidarProcessing"><span class="reference">lidarProcessing</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_compositePointCloud">compositePointCloud</span><span class="keyword"> : </span><a href="#c0_FunctionConnector"><span class="reference">FunctionConnector</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_sender"><span class="reference">sender</span></a> = <a href="#c0_lidarProcessing"><span class="reference">lidarProcessing</span></a> &amp;&amp; <a href="#c0_receiver"><span class="reference">receiver</span></a> = <a href="#c0_pointCloudClustering"><span class="reference">pointCloudClustering</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_frontRadarVal">frontRadarVal</span><span class="keyword"> : </span><a href="#c0_FunctionConnector"><span class="reference">FunctionConnector</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_sender"><span class="reference">sender</span></a> = <a href="#c0_frontRadar"><span class="reference">frontRadar</span></a> &amp;&amp; <a href="#c0_receiver"><span class="reference">receiver</span></a> = <a href="#c0_dynamicObjectDetection"><span class="reference">dynamicObjectDetection</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_pointCloudCusterVal">pointCloudCusterVal</span><span class="keyword"> : </span><a href="#c0_FunctionConnector"><span class="reference">FunctionConnector</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_sender"><span class="reference">sender</span></a> = <a href="#c0_pointCloudClustering"><span class="reference">pointCloudClustering</span></a> &amp;&amp; <a href="#c0_receiver"><span class="reference">receiver</span></a> = <a href="#c0_dynamicObjectDetection"><span class="reference">dynamicObjectDetection</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_dynamicObjects">dynamicObjects</span><span class="keyword"> : </span><a href="#c0_FunctionConnector"><span class="reference">FunctionConnector</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_sender"><span class="reference">sender</span></a> = <a href="#c0_dynamicObjectDetection"><span class="reference">dynamicObjectDetection</span></a> &amp;&amp; <a href="#c0_receiver"><span class="reference">receiver</span></a> = <a href="#c0_trajectoryPlanningAP"><span class="reference">trajectoryPlanningAP</span></a> <span class="keyword">]</span></div>
+    </div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_velocityProfile">velocityProfile</span><span class="keyword"> : </span><a href="#c0_FunctionConnector"><span class="reference">FunctionConnector</span></a>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_sender"><span class="reference">sender</span></a> = <a href="#c0_trajectoryPlanningAP"><span class="reference">trajectoryPlanningAP</span></a> &amp;&amp; <a href="#c0_receiver"><span class="reference">receiver</span></a> = <a href="#c0_speedControl"><span class="reference">speedControl</span></a> <span class="keyword">]</span></div>
+    </div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_AP_HA">AP_HA</span><span class="keyword"> : </span><a href="#c0_HardwareArchitecture"><span class="reference">HardwareArchitecture</span></a>
+    <div class="indent">
+    <span class="claferDecl" id="c0_dn">dn</span><span class="keyword"> -> </span><a href="#c0_AP_DN"><span class="reference">AP_DN</span></a></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_AP_DN">AP_DN</span><span class="keyword"> : </span><a href="#c0_DeviceNodeClassification"><span class="reference">DeviceNodeClassification</span></a>
+      <div class="indent">
+      <span class="claferDecl" id="c0_visionProcessor1">visionProcessor1</span><span class="keyword"> : </span><a href="#c0_DeviceNode"><span class="reference">DeviceNode</span></a> ?
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_type"><span class="reference">type</span></a> = <a href="#c0_SmartDeviceNode"><span class="reference">SmartDeviceNode</span></a> <span class="keyword">]</span></div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_visionProcessor2">visionProcessor2</span><span class="keyword"> : </span><a href="#c0_DeviceNode"><span class="reference">DeviceNode</span></a> ?
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_type"><span class="reference">type</span></a> = <a href="#c0_SmartDeviceNode"><span class="reference">SmartDeviceNode</span></a> <span class="keyword">]</span></div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_algorithmProcessor1">algorithmProcessor1</span><span class="keyword"> : </span><a href="#c0_DeviceNode"><span class="reference">DeviceNode</span></a> ?
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_type"><span class="reference">type</span></a> = <a href="#c0_SmartDeviceNode"><span class="reference">SmartDeviceNode</span></a> <span class="keyword">]</span></div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_algorithmProcessor2">algorithmProcessor2</span><span class="keyword"> : </span><a href="#c0_DeviceNode"><span class="reference">DeviceNode</span></a> ?
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_type"><span class="reference">type</span></a> = <a href="#c0_SmartDeviceNode"><span class="reference">SmartDeviceNode</span></a> <span class="keyword">]</span></div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_frontDriverLidarSensor">frontDriverLidarSensor</span><span class="keyword"> : </span><a href="#c0_DeviceNode"><span class="reference">DeviceNode</span></a> ?
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_type"><span class="reference">type</span></a> = <a href="#c0_EEDeviceNode"><span class="reference">EEDeviceNode</span></a> <span class="keyword">]</span></div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_frontPassengerLidarSensor">frontPassengerLidarSensor</span><span class="keyword"> : </span><a href="#c0_DeviceNode"><span class="reference">DeviceNode</span></a> ?
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_type"><span class="reference">type</span></a> = <a href="#c0_EEDeviceNode"><span class="reference">EEDeviceNode</span></a> <span class="keyword">]</span></div>
+      </div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_frontRadarSensor">frontRadarSensor</span><span class="keyword"> : </span><a href="#c0_DeviceNode"><span class="reference">DeviceNode</span></a> ?
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_type"><span class="reference">type</span></a> = <a href="#c0_EEDeviceNode"><span class="reference">EEDeviceNode</span></a> <span class="keyword">]</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_AP_Dpl">AP_Dpl</span><span class="keyword"> : </span><a href="#c0_Deployment"><span class="reference">Deployment</span></a>
+    <div class="indent">
+    <span class="claferDecl" id="c0_fa">fa</span><span class="keyword"> -> </span><a href="#c0_AP_FAA"><span class="reference">AP_FAA</span></a></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_ha">ha</span><span class="keyword"> -> </span><a href="#c0_AP_HA"><span class="reference">AP_HA</span></a></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_fa"><span class="reference">fa</span></a>.<a href="#c0_frontDriverLidar"><span class="reference">frontDriverLidar</span></a>.<a href="#c0_deployedTo"><span class="reference">deployedTo</span></a> = <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_frontDriverLidarSensor"><span class="reference">frontDriverLidarSensor</span></a> <span class="keyword">]</span></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_fa"><span class="reference">fa</span></a>.<a href="#c0_frontPassengerLidar"><span class="reference">frontPassengerLidar</span></a>.<a href="#c0_deployedTo"><span class="reference">deployedTo</span></a> = <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_frontPassengerLidarSensor"><span class="reference">frontPassengerLidarSensor</span></a> <span class="keyword">]</span></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_fa"><span class="reference">fa</span></a>.<a href="#c0_lidarProcessing"><span class="reference">lidarProcessing</span></a>.<a href="#c0_deployedTo"><span class="reference">deployedTo</span></a> in <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_visionProcessor1"><span class="reference">visionProcessor1</span></a>, <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_visionProcessor2"><span class="reference">visionProcessor2</span></a> <span class="keyword">]</span></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_fa"><span class="reference">fa</span></a>.<a href="#c0_pointCloudClustering"><span class="reference">pointCloudClustering</span></a>.<a href="#c0_deployedTo"><span class="reference">deployedTo</span></a> in <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_algorithmProcessor1"><span class="reference">algorithmProcessor1</span></a>, <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_algorithmProcessor2"><span class="reference">algorithmProcessor2</span></a> <span class="keyword">]</span></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_fa"><span class="reference">fa</span></a>.<a href="#c0_frontRadar"><span class="reference">frontRadar</span></a>.<a href="#c0_deployedTo"><span class="reference">deployedTo</span></a> = <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_frontRadarSensor"><span class="reference">frontRadarSensor</span></a> <span class="keyword">]</span></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_fa"><span class="reference">fa</span></a>.<a href="#c0_dynamicObjectDetection"><span class="reference">dynamicObjectDetection</span></a>.<a href="#c0_deployedTo"><span class="reference">deployedTo</span></a> in <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_algorithmProcessor1"><span class="reference">algorithmProcessor1</span></a>, <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_algorithmProcessor2"><span class="reference">algorithmProcessor2</span></a> <span class="keyword">]</span></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_fa"><span class="reference">fa</span></a>.<a href="#c0_trajectoryPlanningAP"><span class="reference">trajectoryPlanningAP</span></a>.<a href="#c0_deployedTo"><span class="reference">deployedTo</span></a> in <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_algorithmProcessor1"><span class="reference">algorithmProcessor1</span></a>, <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_algorithmProcessor2"><span class="reference">algorithmProcessor2</span></a> <span class="keyword">]</span></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_fa"><span class="reference">fa</span></a>.<a href="#c0_speedControl"><span class="reference">speedControl</span></a>.<a href="#c0_deployedTo"><span class="reference">deployedTo</span></a> in <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_algorithmProcessor1"><span class="reference">algorithmProcessor1</span></a>, <a href="#c0_ha"><span class="reference">ha</span></a>.<a href="#c0_dn"><span class="reference">dn</span></a>.<a href="#c0_algorithmProcessor2"><span class="reference">algorithmProcessor2</span></a> <span class="keyword">]</span></div>
+  </div>
+</div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_AP_DN"><span class="reference">AP_DN</span></a>.<a href="#c0_visionProcessor1"><span class="reference">visionProcessor1</span></a> <span class="keyword">]</span></div>
+
+
+<div>
+<span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_AP_DN"><span class="reference">AP_DN</span></a>.<a href="#c0_algorithmProcessor1"><span class="reference">algorithmProcessor1</span></a> <span class="keyword">]</span></div>
+
+<!-- # FRAGMENT /-->
+
+<div>
+<span class="keyword">[</span> <span class="keyword">no</span> <a href="#c0_AP_DN"><span class="reference">AP_DN</span></a>.<a href="#c0_frontRadarSensor"><span class="reference">frontRadarSensor</span></a> <span class="keyword">]</span></div>
+
+</body>
+</html>

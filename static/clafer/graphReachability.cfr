@@ -1,0 +1,30 @@
+abstract Node
+    abstract Edge ->> Node *
+        weight -> integer
+            [ this > 0 ]
+
+total_weight -> integer = sum Edge.weight
+
+N1 : Node
+    E1 : Edge -> N2 ?
+        [ weight = 1 ]
+    E2 : Edge -> N2 ?
+        [ weight = 2 ]
+    E3 : Edge -> N3 ?
+        [ weight = 5 ]
+
+N2 : Node
+    E4 : Edge -> N3 ?
+        [ weight = 2 ]
+
+N3 : Node
+    E5 : Edge -> N4 ?
+        [ weight = 1 ]
+
+N4 : Node
+
+[alloy|
+fact {
+    c0_N4 in c0_N1.^(r_c0_Edge.c0_Edge_ref)
+}
+|]

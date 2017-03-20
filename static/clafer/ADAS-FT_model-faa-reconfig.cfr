@@ -1,0 +1,127 @@
+abstract System
+abstract FunctionalAnalysis
+abstract HardwareArchitecture
+abstract DeviceNodeClassification
+abstract Deployment
+
+abstract FunctionalAnalysisComponent
+    deployedTo -> DeviceNode 1..2 
+    xor implementation
+        hardware
+            [deployedTo.type in EEDeviceNode, SmartDeviceNode]
+        software
+            [deployedTo.type in SmartDeviceNode]
+    // connectors for which this function is the receiver
+    input -> FunctionConnector *
+        [this.receiver = parent]
+    // connectors for which this function is the sender
+    output -> FunctionConnector *
+        [this.sender = parent]
+    degradation -> integer
+        [this >= 1 && this <= 3]  // level 4 implies that the function is not available
+    resultingDegradation -> integer = max (input.sender.resultingDegradation.dref, degradation.dref)
+abstract AnalysisFunction : FunctionalAnalysisComponent
+abstract FunctionalDevice : FunctionalAnalysisComponent
+abstract FunctionConnector
+    sender -> FunctionalAnalysisComponent
+        [parent in this.output]
+    receiver -> FunctionalAnalysisComponent
+        [parent in this.input]
+
+
+enum DeviceNodeType = SmartDeviceNode | EEDeviceNode | PowerDeviceNode
+
+abstract DeviceNode
+    [ some fac : FunctionalAnalysisComponent | this in fac.deployedTo ]
+    type -> DeviceNodeType
+
+AutoPilot : System
+    AP_FAA : FunctionalAnalysis          
+        frontDriverLidar : FunctionalDevice ?
+            [implementation.hardware]
+            [degradation = 1]
+            // must have an outgoing connector
+            [one output]  
+        frontPassengerLidar : FunctionalDevice ?
+            [implementation.hardware]
+            [degradation = 1]
+            [one output]
+        lidarProcessing : AnalysisFunction ?
+            [implementation.software]
+            [degradation = (if #input = 2 then 1 else 2)]
+            // must have at least one incoming and one outgoing connector
+            [some input && one output] 
+        pointCloudClustering : AnalysisFunction ?
+            [implementation.software]
+            [degradation = 1]
+            [some input && one output]
+        frontRadar : FunctionalDevice ?
+            [implementation.hardware]
+            [degradation = 1]
+            [one output]
+        dynamicObjectDetection : AnalysisFunction ?
+            [implementation.software]
+            [degradation = (if #input = 2 then 1 else if pointCloudCusterVal then 2 else 3)]  
+            [some input && one output]
+        trajectoryPlanningAP : AnalysisFunction ?
+            [implementation.software]
+            [degradation = 1]
+            [some input && one output]
+        speedControl : AnalysisFunction ?
+            [implementation.software]
+            [degradation = 1]
+            [some input]
+
+        // Function Connectors
+
+        frontDriverLidarVal : FunctionConnector ?
+            [sender = frontDriverLidar && receiver = lidarProcessing]
+        frontPassengerLidarVal : FunctionConnector ?
+            [sender = frontPassengerLidar && receiver = lidarProcessing]
+        compositePointCloud : FunctionConnector ?
+            [sender = lidarProcessing && receiver = pointCloudClustering]
+        frontRadarVal : FunctionConnector ?
+            [sender = frontRadar && receiver = dynamicObjectDetection]
+        pointCloudCusterVal : FunctionConnector ?
+            [sender = pointCloudClustering && receiver = dynamicObjectDetection]
+        dynamicObjects : FunctionConnector ?
+            [sender = dynamicObjectDetection && receiver = trajectoryPlanningAP]
+        velocityProfile : FunctionConnector ?
+            [sender = trajectoryPlanningAP && receiver = speedControl]
+
+    AP_HA : HardwareArchitecture
+        dn -> AP_DN
+        AP_DN : DeviceNodeClassification
+            visionProcessor1 : DeviceNode ?
+                [type = SmartDeviceNode]
+            visionProcessor2 : DeviceNode ?
+                [type = SmartDeviceNode]
+            algorithmProcessor1 : DeviceNode ?
+                [type = SmartDeviceNode]
+            algorithmProcessor2 : DeviceNode ?
+                [type = SmartDeviceNode]
+            frontDriverLidarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+            frontPassengerLidarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+            frontRadarSensor : DeviceNode ?
+                [type = EEDeviceNode]
+
+    AP_Dpl : Deployment
+        fa -> AP_FAA
+        ha -> AP_HA
+        [fa.frontDriverLidar.deployedTo = ha.dn.frontDriverLidarSensor]
+        [fa.frontPassengerLidar.deployedTo = ha.dn.frontPassengerLidarSensor]
+        [fa.lidarProcessing.deployedTo in (ha.dn.visionProcessor1, ha.dn.visionProcessor2)]
+        [fa.pointCloudClustering.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.frontRadar.deployedTo = ha.dn.frontRadarSensor]
+        [fa.dynamicObjectDetection.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.trajectoryPlanningAP.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+        [fa.speedControl.deployedTo in (ha.dn.algorithmProcessor1, ha.dn.algorithmProcessor2)]
+
+[no AP_DN.frontRadarSensor]  
+
+// Further more I could ask that I don't want a configuration that leaves the trajectoryPlanningAP function with a degradation of 3.  
+
+
+[AP_FAA.trajectoryPlanningAP.resultingDegradation < 3]

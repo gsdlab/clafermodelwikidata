@@ -1,0 +1,5 @@
+abstract Car
+    ABS ?
+    xor Transmission
+        Automatic
+        Manual

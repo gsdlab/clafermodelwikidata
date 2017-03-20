@@ -1,0 +1,232 @@
+//ER2RE is a metamodel describing a model transformation from an entity-relationship schema to a relational model.
+//Not including methods of classes and constraints related with method invocation.
+
+abstract BaseNamed
+    name : string 
+	//Names have a non-zero length, and consist of letters, digits and the underscore.
+
+abstract BaseValue
+    content : string 
+    dataType -> BaseDataType 
+        [parent in this.value]
+    attrMap -> BaseAttrMap *
+        [parent in this.value]
+    [all self2:BaseValue|(self2!=this) => (this.content.ref != self2.content.ref || this.dataType.ref != self2.dataType.ref)]
+
+abstract BaseAttrMap
+    attribute -> BaseAttribute 
+        [parent in this.attrMap]
+    value -> BaseValue 
+        [parent in this.attrMap]
+    instance -> ErSemInstance ?
+        [parent in this.attrMap]
+    erState -> ErSemErState *
+        [parent in this.attrMap]
+    link -> ErSemLink ?
+        [parent in this.attrMap]
+    relDBState -> RelSemRelDBState *
+        [parent in this.attrMap]
+    tuple -> RelSemTuple ?
+        [parent in this.attrMap]
+    [this.attribute.dataType = this.value.dataType]
+    [all self2:BaseAttrMap|(self2 != this && this.instance && self2.instance) =>((this.attribute.ref = self2.attribute.ref && this.instance.ref = self2.instance.ref)=>(this.erState.ref != self2.erState.ref && this.value.ref != self2.value.ref))]
+    [all self2:BaseAttrMap|(self2 != this && this.link && self2.link) =>((this.attribute.ref = self2.attribute.ref && this.link.ref = self2.link.ref)=>(this.erState.ref != self2.erState.ref && this.value.ref != self2.value.ref))]
+    [all self2:BaseAttrMap|(self2 != this && this.tuple && self2.tuple) =>((this.attribute.ref = self2.attribute.ref && this.tuple.ref = self2.tuple.ref)=>(this.relDBState.ref != self2.relDBState.ref && this.value.ref != self2.value.ref))]
+    [attribute.entity = instance.entity]
+    [attribute.relship = link.relship]
+    [attribute.relSchema = tuple.relSchema]
+    [instance => (erState in instance.erState)]
+    [link => (erState in link.erState)]
+    [tuple => (relDBState in tuple.relDBState)]
+    [#instance + #link + #tuple = 1]
+    [relDBState xor erState]
+
+
+abstract BaseDataType : BaseNamed 
+    attribute -> BaseAttribute *
+        [parent in this.dataType]
+    value -> BaseValue *
+        [parent in this.dataType]
+    [all self2:BaseDataType|self2.name.ref = this.name.ref => self2 = this]
+
+abstract BaseAttribute : BaseNamed 
+    isKey ?
+    dataType -> BaseDataType 
+        [parent in this.attribute]
+    attrMap -> BaseAttrMap *
+        [parent in this.attribute]
+    entity -> ErSynEntity ?
+        [parent in this.attribute]
+    relship -> ErSynRelship ?
+        [parent in this.attribute]
+    relSchema -> RelSynRelSchema ?
+        [parent in this.attribute]
+    [#entity + #relship + #relSchema = 1]
+
+abstract ErSynRelend : BaseNamed 
+    relship -> ErSynRelship 
+        [parent in this.relend]
+    entity -> ErSynEntity 
+        [parent in this.relend]
+    relendMap -> ErSemRelendMap *
+        [parent in this.relend]
+    [this.entity.erSchema = this.relship.erSchema] //In this constraint, "ref" is not needed, since entity and relship have different types.
+
+abstract ErSynErSchema : BaseNamed 
+    entity -> ErSynEntity +
+        [parent in this.erSchema]
+    relship -> ErSynRelship *
+        [parent in this.erSchema]
+    erState -> ErSemErState *
+        [parent in this.erSchema]
+    trans -> Er2RelTrans ?
+        [parent in this.erSchema]
+    [all self2:ErSynErSchema|self2.name.ref = this.name.ref => self2 = this]
+    [all disj e1;e2:entity|e1.name.ref != e2.name.ref]
+    [all disj r1;r2:relship|r1.name.ref != r2.name.ref]
+    [all e:entity|all r:relship| e.name.ref != r.name.ref] //In this constraint, "ref" is needed. But it's easy to be forgotten, since e and r have different types.
+
+abstract ErSynRelship : BaseNamed 
+    erSchema -> ErSynErSchema 
+        [parent in this.relship]
+    relend -> ErSynRelend 2..*
+        [parent in this.relship]
+    attribute -> BaseAttribute *
+        [parent in this.relship]
+    link -> ErSemLink *
+        [parent in this.relship]
+    [all disj r1;r2:relend|r1.name.ref != r2.name.ref]
+    [all disj a1;a2:attribute|a1.name.ref != a2.name.ref]
+    [all r:relend|all a:attribute| r.name.ref != a.name.ref]
+    [no a:attribute|a.isKey]
+
+abstract ErSynEntity : BaseNamed 
+    erSchema -> ErSynErSchema 
+        [parent in this.entity]
+    attribute -> BaseAttribute *
+        [parent in this.entity]
+    relend -> ErSynRelend *
+        [parent in this.entity]
+    instance -> ErSemInstance *
+        [parent in this.entity]
+    [all disj a1;a2:attribute|a1.name.ref != a2.name.ref]
+    
+
+abstract ErSemRelendMap
+    relend -> ErSynRelend 
+        [parent in this.relendMap]
+    link -> ErSemLink 
+        [parent in this.relendMap]
+    erState -> ErSemErState +
+        [parent in this.relendMap]
+    instance -> ErSemInstance 
+        [parent in this.relendMap]
+    [all self2:ErSemRelendMap|(this != self2) => ((this.relend.ref = self2.relend.ref && this.link.ref = self2.link.ref)=>(this.erState.ref != self2.erState.ref && this.instance.ref != self2.instance.ref))]
+    [relend.entity = instance.entity]
+    [relend.relship = link.relship]
+    [erState in instance.erState]
+    [erState in link.erState]
+    [link.erState in instance.erState]
+
+
+abstract ErSemInstance
+    attrMap -> BaseAttrMap *
+        [parent in this.instance]
+    relendMap -> ErSemRelendMap *
+        [parent in this.instance]
+    entity -> ErSynEntity 
+        [parent in this.instance]
+    erState -> ErSemErState +
+        [parent in this.instance]
+    [entity.attribute = attrMap.attribute] 
+    [entity.erSchema = erState.erSchema]
+
+
+  
+abstract ErSemLink
+    erState -> ErSemErState +
+        [parent in this.link]
+    attrMap -> BaseAttrMap *
+        [parent in this.link]
+    relendMap -> ErSemRelendMap 2..*
+        [parent in this.link]
+    relship -> ErSynRelship 
+        [parent in this.link]
+    [relship.attribute = attrMap.attribute]
+    [relship.relend = relendMap.relend]
+    [relship.erSchema = erState.erSchema]
+
+abstract ErSemErState
+    attrMap -> BaseAttrMap *
+        [parent in this.erState]
+    link -> ErSemLink *
+        [parent in this.erState]
+    relendMap -> ErSemRelendMap *
+        [parent in this.erState]
+    instance -> ErSemInstance *
+        [parent in this.erState]
+    erSchema -> ErSynErSchema 
+        [parent in this.erState]
+    trans -> Er2RelTrans ?
+        [parent in this.erState]
+    relDBState -> RelSemRelDBState ?
+        [parent in this.erState]
+
+abstract RelSynRelDBSchema : BaseNamed 
+    relSchema -> RelSynRelSchema +
+        [parent in this.relDBSchema]
+    relDBState -> RelSemRelDBState *
+        [parent in this.relDBSchema]
+    trans -> Er2RelTrans ?
+        [parent in this.relDBSchema]
+    [all self2:RelSynRelDBSchema|self2.name.ref = this.name.ref => self2 = this]
+    [all disj r1;r2:relSchema|r1.name.ref != r2.name.ref]
+    
+
+abstract RelSynRelSchema : BaseNamed 
+    attribute -> BaseAttribute +
+        [parent in this.relSchema]
+    relDBSchema -> RelSynRelDBSchema 
+        [parent in this.relSchema]
+    tuple -> RelSemTuple *
+        [parent in this.relSchema]
+    [all disj a1;a2:attribute|a1.name.ref != a2.name.ref]
+
+abstract RelSemRelDBState
+    tuple -> RelSemTuple *
+        [parent in this.relDBState]
+    attrMap -> BaseAttrMap *
+        [parent in this.relDBState]
+    relDBSchema -> RelSynRelDBSchema 
+        [parent in this.relDBState]
+    trans -> Er2RelTrans ?
+        [parent in this.relDBState]
+    erState -> ErSemErState ?
+        [parent in this.relDBState]
+
+abstract RelSemTuple
+    relDBState -> RelSemRelDBState +
+        [parent in this.tuple]
+    attrMap -> BaseAttrMap +
+        [parent in this.tuple]
+    relSchema -> RelSynRelSchema 
+        [parent in this.tuple]
+    [relSchema.attribute = attrMap.attribute]
+    [relSchema.relDBSchema = relDBState.relDBSchema]
+
+abstract Er2RelTrans
+    erSchema -> ErSynErSchema 
+        [parent in this.trans]
+    relDBSchema -> RelSynRelDBSchema 
+        [parent in this.trans]
+    erState -> ErSemErState *
+        [parent in this.trans]
+    relDBState -> RelSemRelDBState *
+        [parent in this.trans]
+    [all e:erSchema.entity|one rl:relDBSchema.relSchema|((e.name.ref = rl.name.ref)&&(all ea:e.attribute|one ra:rl.attribute|(ea.name.ref = ra.name.ref && ea.dataType.ref = ra.dataType.ref && (ea.isKey <=> ra.isKey))))]
+    [all erSt:erState|one relSt:relDBState|all i:erSt.instance|one t:relSt.tuple|all amEr:i.attrMap|one amRel:t.attrMap|amEr.attribute.name = amRel.attribute.name && amEr.value = amRel.value]
+    [all erSt:erState|one relSt:relDBState|erSt.relDBState = relSt]
+    [all relSt:relDBState|one erSt:erState|relSt.erState = erSt]
+    [erState => (erState.erSchema = erSchema)]
+    [relDBState => (relDBState.relDBSchema = relDBSchema)]
+

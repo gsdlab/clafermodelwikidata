@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=9">
+<style>.identifier{}
+.keyword{font-weight: bold;}
+.tKeyword{font-style: oblique;}
+.reference{}
+.code { background-color: lightgray; padding: 5px 5px 5px 5px; border: 1px solid darkgray; margin-bottom: 15px;
+        font-family: Pragmata, Menlo, 'DejaVu LGC Sans Mono', 'DejaVu Sans Mono', Consolas, 'Everson Mono', 'Lucida Console', 'Andale Mono', 'Nimbus Mono L', 'Liberation Mono', FreeMono, 'Osaka Monospaced', Courier, 'New Courier', monospace; }
+.standalonecomment { color: green; font-style:italic }
+.inlinecomment { color: green; padding-left:20px; font-style:italic }
+.error{background-color: yellow; color: red }
+.deprecated{color: orange }
+.indent{padding-left:20px}
+a[href$='Lookup failed'] {color: red}
+a[href$='Uid not found'] {color: red}
+a[href$='Ambiguous name'] {color: yellow}
+</style></head>
+<body>
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Feature">Feature</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_cost">cost</span><span class="keyword"> -> </span><a href="#integer"><span class="reference">integer</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_performance">performance</span><span class="keyword"> -> </span><a href="#integer"><span class="reference">integer</span></a></div>
+</div>
+
+
+<div>
+<span class="keyword">abstract</span> <span class="claferDecl" id="c0_Computer">Computer</span>
+  <div class="indent">
+  <span class="claferDecl" id="c0_CPU">CPU</span><span class="keyword"> : </span><a href="#c0_Feature"><span class="reference">Feature</span></a>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_cost"><span class="reference">cost</span></a> = 2 <span class="keyword">]</span></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_performance"><span class="reference">performance</span></a> = 0 <span class="keyword">]</span></div>
+    <div class="indent">
+    <span class="claferDecl" id="c0_IntegratedGPU">IntegratedGPU</span><span class="keyword"> : </span><a href="#c0_Feature"><span class="reference">Feature</span></a> ?
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_cost"><span class="reference">cost</span></a> = 1 <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="keyword">[</span> <a href="#c0_performance"><span class="reference">performance</span></a> = 1 <span class="keyword">]</span></div>
+      <div class="indent">
+      <span class="claferDecl" id="c0_SharedMemory">SharedMemory</span><span class="keyword"> : </span><a href="#c0_Feature"><span class="reference">Feature</span></a> ?
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_cost"><span class="reference">cost</span></a> = 0 <span class="keyword">]</span></div>
+        <div class="indent">
+        <span class="keyword">[</span> <a href="#c0_performance"><span class="reference">performance</span></a> = 0 <span class="keyword">]</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_DiscreteGPU">DiscreteGPU</span><span class="keyword"> : </span><a href="#c0_Feature"><span class="reference">Feature</span></a> ?
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_cost"><span class="reference">cost</span></a> = 2 <span class="keyword">]</span></div>
+    <div class="indent">
+    <span class="keyword">[</span> <a href="#c0_performance"><span class="reference">performance</span></a> = 2 <span class="keyword">]</span></div>
+  </div>
+  <div class="indent">
+  <span class="keyword">[</span> <a href="#c0_IntegratedGPU"><span class="reference">IntegratedGPU</span></a> &#124;&#124; <a href="#c0_DiscreteGPU"><span class="reference">DiscreteGPU</span></a> <span class="keyword">]</span></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_total_cost">total_cost</span><span class="keyword"> -> </span><a href="#integer"><span class="reference">integer</span></a> = <span class="keyword">sum </span><a href="#c0_Feature"><span class="reference">Feature</span></a>.<a href="#c0_cost"><span class="reference">cost</span></a></div>
+  <div class="indent">
+  <span class="claferDecl" id="c0_total_performance">total_performance</span><span class="keyword"> -> </span><a href="#integer"><span class="reference">integer</span></a> = <span class="keyword">sum </span><a href="#c0_Feature"><span class="reference">Feature</span></a>.<a href="#c0_performance"><span class="reference">performance</span></a></div>
+</div>
+
+
+<div>
+<span class="claferDecl" id="c0_OptimalComputer">OptimalComputer</span><span class="keyword"> : </span><a href="#c0_Computer"><span class="reference">Computer</span></a></div>
+
+
+<div>
+&lt;&lt;<span class="keyword">minimize </span><a href="#c0_OptimalComputer"><span class="reference">OptimalComputer</span></a>.<a href="#c0_total_cost"><span class="reference">total_cost</span></a>&gt;&gt;</div>
+
+
+<div>
+&lt;&lt;<span class="keyword">maximize </span><a href="#c0_OptimalComputer"><span class="reference">OptimalComputer</span></a>.<a href="#c0_total_performance"><span class="reference">total_performance</span></a>&gt;&gt;</div>
+
+</body>
+</html>

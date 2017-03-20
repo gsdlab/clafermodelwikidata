@@ -1,0 +1,9 @@
+abstract Feature
+    cost: integer
+    mass: integer
+
+abstract ComfortFeature : Feature
+    comfort: integer
+
+abstract FuelFeature : ComfortFeature
+    fuel: integer

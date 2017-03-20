@@ -1,0 +1,64 @@
+abstract IMeasurable
+	price -> integer
+	footprint -> integer
+	reliability -> integer
+
+// Scaled down by dividing numbers by 2048 and rounding.
+
+abstract BerkeleyDbC
+	HAVE_STATISTICS : IMeasurable  ?
+		[ footprint = 139  ]
+		[ price = 0 ]
+		[ reliability = 0]
+	HAVE_CRYPTO : IMeasurable  ?
+		[ footprint = 19 ]
+		[ price = 300 ]
+		[ this.reliability = 0]
+	HAVE_INDEXES : IMeasurable
+		[ footprint = 0 ]
+		[ price = 0 ]
+		[ reliability = 0]
+		xor HAVE_BTREE	    
+		    BTREE_FAST : IMeasurable
+			[ footprint = 1800 ]
+			[ price = 0]
+			[ reliability = 0]
+		    BTREE_SMALL : IMeasurable 
+			[ footprint = 340 ]
+			[ price = 0 ]
+			[ reliability = 0]
+		HAVE_HASH : IMeasurable  ?
+			[ footprint = 56]
+			[ price = 125 ]
+			[ reliability = 0]
+		HAVE_QUEUE : IMeasurable  ?
+			[ footprint = 28]
+			[ price = 50 ]
+			[ reliability = 0]
+	HAVE_REPLICATION : IMeasurable  ?
+		[ footprint = 89 ]
+		[ price = 200]
+		[ reliability = 1]
+	HAVE_VERIFY : IMeasurable  ?
+		[ footprint = 50]
+		[ price = 100]
+		[ reliability = 1]
+	DIAGNOSTIC : IMeasurable  ?
+		[ footprint = 191 ]
+		[ price = 0 ]
+		[ reliability = 1]
+	HAVE_SEQUENCE : IMeasurable  ?
+		[ footprint = 20]
+		[ price = 50 ]
+		[ reliability = 0]
+	total_footprint -> integer = sum IMeasurable.footprint
+	total_price -> integer = sum IMeasurable.price
+	total_reliability -> integer = sum IMeasurable.reliability
+
+simpleConfig : BerkeleyDbC 
+
+<< minimize simpleConfig.total_footprint >>
+
+<< minimize simpleConfig.total_price >>
+
+<< maximize simpleConfig.total_reliability >>

@@ -1,0 +1,134 @@
+ClaferMooVisualizer : ClaferWebTool
+    server
+        or backends
+            ClaferMoo
+            ChocoSingle
+        cache
+        examples
+        processManagement
+            polling
+            timeouts
+            errorHandling
+            cancellation
+    client
+        jquery
+            windowsEngine
+            forms
+        hottracking
+        help_pages
+        automaticViewSizing // from IDE
+        views
+            bubbleFrontGraph
+            variantComparer
+                removeVariant
+            featureAndQualityMatrix
+                expandCollapse
+                sorting
+                    byId
+                    byQuality
+                filtering 
+            objectives
+            claferSourceView
+            input         
+                examples
+        icons
+
+ClaferConfigurator : ClaferWebTool
+    server
+        backends
+            ClaferIG
+        processManagement
+            interactive
+            timeouts
+            errorHandling
+    client
+        jquery
+            windowsEngine
+            forms
+        help_pages
+        views
+            featureAndQualityMatrix
+                expandCollapse
+                filtering
+                removeVariant    // from visualizer's variantComparer
+            input
+            control
+            output
+            constraints
+        icons
+
+ClaferIDE : ClaferWebTool
+    server
+        backends
+            ClaferIG
+        examples
+        processManagement
+            interactive
+            polling
+            timeouts
+            errorHandling
+            cancellation
+    client
+        jquery
+            windowsEngine
+            forms
+        help_pages
+        automaticViewSizing
+        views
+            claferSourceView
+            input  
+                examples  
+                claferTextEditor     
+            control
+            output
+        icons
+
+abstract ClaferWebTool
+    server
+        or backends
+            ClaferIG
+            ClaferMoo
+            ChocoSingle
+        cache ?
+        examples ?
+        processManagement
+            interactive ?
+            polling ?
+            timeouts
+            errorHandling
+            cancellation ?
+    client
+        jquery
+            windowsEngine
+            forms
+        hottracking ?
+            [ bubbleFrontGraph ]
+            [ featureAndQualityMatrix ]
+        help_pages
+        automaticViewSizing ?
+        or views
+            bubbleFrontGraph
+            variantComparer
+                removeVariant
+            featureAndQualityMatrix
+                expandCollapse
+                sorting ?
+                    byId
+                    byQuality
+                       [ ClaferMoo || ChocoSingle ]
+                filtering 
+                removeVariant ?
+            objectives
+               [ ClaferMoo || ChocoSingle ]
+            claferSourceView 
+            input
+                examples ?
+                   [ server.examples ]
+                claferTextEditor ?
+            control
+               [ ClaferIG ]
+            output
+               [ ClaferIG ]
+            constraints
+               [ ClaferIG ]
+        icons
