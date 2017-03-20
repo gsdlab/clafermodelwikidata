@@ -151,3 +151,50 @@ WinCtrWithChime : WinController ?
     [ chime --> no chime ]
     [ no chime && movingUpX --> (movingUpX => chime) ]
 ```
+
+## Variability in Behavior Using Strategy Pattern
+
+We first define an abstract chiming strategy:
+chiming can be `audible` but only if `active` (expressed by nesting).
+
+```clafer
+abstract ChimingStrategy
+    active : State ?
+        audible : State ?
+```
+
+Concrete strategies:
+
+```clafer
+NoChiming : ChimingStrategy
+    [ not audible ]
+```
+
+```clafer
+Continuous : ChimingStrategy
+    [ active => audible ]
+```
+
+```clafer
+Intermittent : ChimingStrategy
+    [ audible --> not audible ]
+    [ not audible --> (active => audible) ]
+```
+
+Now we can parameterize the controller with a chiming strategy.
+Chiming should be active when moving up in express mode.
+The chime should be emitted only when the chiming is audible.
+
+```clafer
+WinControllerStrategies : WinController ?
+    chime : Port ?
+    strategy -> ChimingStrategy
+    [ strategy.active <=> movingUpX ]
+    [ strategy.active.audible <=> chime ]
+```
+
+We can choose the chiming strategy using the following constraint:
+
+```clafer
+[ WinControllerStrategies.strategy = Intermittent ]
+```
