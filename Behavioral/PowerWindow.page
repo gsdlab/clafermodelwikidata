@@ -102,3 +102,30 @@ abstract WinController : Component
             [ req=stop     --> stopped  ]
             [ req=down     --> movingDown ]
 ```
+
+## Variability in structural models
+
+### Linking the feature with the optional component (structural variability)
+
+The component `pinchDetector` is only required if we support the feature `pinchProtection`.
+
+```clafer
+[ pinchProtection <=> pinchDetector ]
+```
+
+### Disabling `objectDetected` port
+
+Without the feature `pinchProtection`, the port `objectDetected` should be inactive. 
+Having the feature will allow receiving the signal `objectDetected`.
+
+```clafer
+[ no pinchProtection => no WinController.objectDetected ]
+```
+
+### Alphabet variability
+
+The user request `expressUp` is only available when the feature `express` is present. 
+
+```clafer
+[ express <=> expressUp ]
+```
