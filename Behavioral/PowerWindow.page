@@ -2,24 +2,21 @@
 title: Behavioral Modeling - Power Window
 ...
 
-
 This example demonstrates modeling both structure and behavior with variability. 
 
-# Modeling variability and structures with variability
-
-## Feature modeling
+# Feature modeling
 
 We model features as final, that is, we do not allow dynamic reconfiguration.
 Feature configuration from the first snapshot remains unchanged for the entire trace.
 
-### Metamodel
+## Metamodel
 
 ```clafer
 abstract final Feature
 abstract final FeatureModel
 ```
 
-### Model 
+## Model 
 
 The optional feature `express` indicates the functionality of automatically closing the window.
 The feature `pinchProtection` indicates the functionality of obstacle detection and stopping the window closure.
@@ -31,9 +28,9 @@ WinFeatures : FeatureModel
         pinchProtection : Feature ?
 ```
 
-## Component and statemachine modeling
+# Component and statemachine modeling
 
-### Metamodel
+## Metamodel
 
 Simple component modeling.
 
@@ -50,7 +47,7 @@ abstract State
 abstract StateMachine
 ```
 
-### Model 
+## Model 
 
 Commands received by the window motor.
 
@@ -78,7 +75,7 @@ stop : UserRequest
 down : UserRequest
 ```
 
-#### Alphabet variability
+### Alphabet variability
 
 The user request `expressUp` is only available when the feature `express` is present. 
 
@@ -132,7 +129,7 @@ abstract WinController : Component
             [ req=down     --> movingDown ]
 ```
 
-#### Linking the feature with the optional component (structural variability)
+### Linking the feature with the optional component (structural variability)
 
 The component `pinchDetector` is only required if we support the feature `pinchProtection`.
 
@@ -140,7 +137,7 @@ The component `pinchDetector` is only required if we support the feature `pinchP
 [ pinchProtection <=> pinchDetector ]
 ```
 
-#### Disabling `objectDetected` port
+### Disabling `objectDetected` port
 
 Without the feature `pinchProtection`, the port `objectDetected` should be inactive. 
 Having the feature will allow receiving the signal `objectDetected`.
@@ -149,11 +146,11 @@ Having the feature will allow receiving the signal `objectDetected`.
 [ no pinchProtection => no WinController.objectDetected ]
 ```
 
-## Variability in behavior using inheritance
+# Variability in behavior using inheritance
 
 Two kinds of window controllers:
  
-### With continuous chime 
+## With continuous chime 
 
 ```clafer
 WinCtrWithContChime : WinController ?
@@ -161,7 +158,7 @@ WinCtrWithContChime : WinController ?
     [ movingUpX <=> chime ]
 ```
 
-### With intermittent chime
+## With intermittent chime
 
 ```clafer
 WinCtrWithChime : WinController ?
@@ -171,7 +168,7 @@ WinCtrWithChime : WinController ?
     [ no chime && movingUpX --> (movingUpX => chime) ]
 ```
 
-## Variability in behavior using strategy pattern
+# Variability in behavior using strategy pattern
 
 We first define an abstract chiming strategy:
 chiming can be `audible` but only if `active` (expressed by nesting).
@@ -218,28 +215,28 @@ We can choose the chiming strategy using the following constraint:
 [ WinControllerStrategies.strategy = Intermittent ]
 ```
 
-## Scenarios and properties
+# Scenarios and properties
 
-### An example positive scenario
+## An example positive scenario
 
 ```clafer
 assert [ initially closed && req=down --> movingDown -->>
          req=expressUp --> movingUpX --> objectDetected --> stopped ]
 ```
 
-### It must be possible to go from closed to open via partiallyOpen state
+## It must be possible to go from closed to open via partiallyOpen state
 
 ```clafer
 assert [ sometime closed -->> partlyOpen -->> open ]
 ```
 
-### It must be impossible for the user to request opening and the window remains closed
+## It must be impossible for the user to request opening and the window remains closed
 
 ```clafer
 assert [ never req = down --> closed ]
 ```
 
-### It must be impossible for the window to be `closed` and continue sending `motorUp` command
+## It must be impossible for the window to be `closed` and continue sending `motorUp` command
 
 It is a safety property to prevent burning the motor.
 
@@ -247,7 +244,7 @@ It is a safety property to prevent burning the motor.
 assert [ never closed && cmd=motorUp ]
 ```
 
-### The window must never continue `movingUp` after an object was detected
+## The window must never continue `movingUp` after an object was detected
 
 It is a safety property to prevent injury.
 
