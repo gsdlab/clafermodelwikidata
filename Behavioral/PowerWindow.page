@@ -33,6 +33,10 @@ WinFeatures : FeatureModel
 ## Metamodel
 
 Simple component modeling.
+Nesting the `Port` under `Component` ensures that all ports are always children of components.
+The components are final because we do not allow dynamic reconfiguration; 
+however, the ports are not final: 
+a port instance can appear to point to a value, disappear, and a new instance can appear to point to a different value.
 
 ```clafer
 abstract final Component
@@ -41,10 +45,11 @@ abstract final Command
 ```
 
 Inside the components, we will embed statemachines modeling their behavior.
+The states are not final because we want to allow state changes.
 
 ```clafer
 abstract State
-abstract StateMachine
+abstract final StateMachine
 ```
 
 ## Model 
@@ -57,7 +62,8 @@ motorStop : Command
 motorDown : Command
 ```
 
-Window motor
+Window motor. 
+The port `cmd` is mandatory, meaning that the motor must always be given a command.
 
 ```clafer
 WinMotor : Component
@@ -77,13 +83,22 @@ down : UserRequest
 
 ### Alphabet variability
 
-The user request `expressUp` is only available when the feature `express` is present. 
+The user request `expressUp` is only available when the feature `express` is present (alphabet variability). 
 
 ```clafer
 [ express <=> expressUp ]
 ```
 
 Window controller with an optional component `pinchDetector`. 
+The component `pinchDetector` is only required if the feature `pinchProtection` is present.
+
+```clafer
+[ pinchProtection <=> pinchDetector ]
+```
+
+Instances of the ports `endOfTravel` and `objectDetected` appear when the corresponding binary signal is received.
+On the other hand, no instance of the port `req` indicates no user request, whereas an instance of `cmd` points to a specific user request.
+Finally, we allow at most one of `req`, `endOfTravel`, and `objectDetected` in order to remove non-determinism.
 
 ```clafer
 abstract WinController : Component
@@ -129,13 +144,11 @@ abstract WinController : Component
             [ req=down     --> movingDown ]
 ```
 
-### Linking the feature with the optional component (structural variability)
+We model state actions by fixing the motor command. 
+E.g., in state `movingDown`, motor command is fixed to `motorDown`.
 
-The component `pinchDetector` is only required if we support the feature `pinchProtection`.
-
-```clafer
-[ pinchProtection <=> pinchDetector ]
-```
+State transitions are modeled using the "next transitions": `-->`.
+In the state `movingUpX` we demonstrate a "guarded next transition": `-[objectDetected]->`.
 
 ### Disabling `objectDetected` port
 
