@@ -6,6 +6,14 @@ title: Behavioral Modeling - WebSocket Protocol
 
 > Note: this is a contrived example, not the actual protocol.
 
+First, we'd like to express the states of the websocket and the transitions among them. 
+When a websocket is created it starts in the state `ready`, which we model as the `initial` state.
+Upon entering each state initially, the websocket is not accepting any requests. 
+Furthermore, in the states `closed` and `failed`, the websocket is not accepting any requests permanently. 
+
+The request, if exists, points to either `open` or `close`. 
+The children of the request indicate `success` or `failure` of the request. 
+
 ```clafer
 enum Request = open | close
 
@@ -30,6 +38,12 @@ abstract WebSocket
 
 ## Example scenarios
 
+The example scenarios serve as test cases, whereby we can state the intended behavior of the websocket.
+In each case, the constraint must be consistent with the behavior specified above; however, it can be underspecified.
+For example, the socket can remain in the state `opened` for an arbitrary number of snapshots until the request to close is received.
+We express that using the transition `-->>`.
+In the other cases, state changes must occur in the next snapshot as required by `-->`. 
+
 ### Web socket successfully opened and closed
 
 ```clafer
@@ -37,7 +51,11 @@ webSocketOpenedClosed : WebSocket
     [ ready --> request=open && request.success --> opened -->> request=close && request.success --> closed --> closed ]
 ```
 
+We call such a temporal constraint a *trace specification*. 
+
 #### Trace 1
+
+Since, the trace specification and the behavior of the websocket are consistent, a trace generator can produce the following trace.
 
 <table>
 <tr>
