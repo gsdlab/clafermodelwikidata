@@ -198,3 +198,40 @@ We can choose the chiming strategy using the following constraint:
 ```clafer
 [ WinControllerStrategies.strategy = Intermittent ]
 ```
+
+## Scenarios and Properties
+
+### An example positive scenario
+
+```clafer
+assert [ initially closed && req=down --> movingDown -->>
+         req=expressUp --> movingUpX --> objectDetected --> stopped ]
+```
+
+### It must be possible to go from closed to open via partiallyOpen state
+
+```clafer
+assert [ sometime closed -->> partlyOpen -->> open ]
+```
+
+### It must be impossible for the user to request opening and the window remains closed
+
+```clafer
+assert [ never req = down --> closed ]
+```
+
+### It must be impossible for the window to be `closed` and continue sending `motorUp` command
+
+It is a safety property to prevent burning the motor.
+
+```clafer
+assert [ never closed && cmd=motorUp ]
+```
+
+### The window must never continue `movingUp` after an object was detected
+
+It is a safety property to prevent injury.
+
+```clafer
+assert [ never objectDetected --> movingUp ]
+```
