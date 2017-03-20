@@ -179,6 +179,7 @@ In this setting, a static Clafer model describes the possible states of the syst
 whereas, the temporal aspects specify how the states can change.
 
 * [Simplified Web Socket Protocol](Behavioral/WebSocketProtocol)
+* [Power Window](Behavioral/PowerWindow)
 
 ## Demo spaces
 
