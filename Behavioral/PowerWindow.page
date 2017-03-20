@@ -6,12 +6,54 @@ title: Behavioral Modeling - Power Window
 
 ## Feature modeling
 
+### Metamodel
+
 ```clafer
 abstract final Feature
 abstract final FeatureModel
+```
 
+### Model 
+
+```clafer
 WinFeatures : FeatureModel
     manualUpDown : Feature
     express : Feature ?
         pinchProtection : Feature ?
+```
+
+## Structural modeling
+
+### Metamodel
+
+```clafer
+abstract final Component
+    abstract Port
+abstract final Command
+abstract State
+abstract StateMachine
+```
+
+### Model 
+
+Commands and requests.
+
+```clafer
+motorUp : Command
+motorStop : Command
+motorDown : Command
+
+abstract final UserRequest
+up : UserRequest
+expressUp : UserRequest ?
+stop : UserRequest
+down : UserRequest
+```
+
+Window motor
+
+```clafer
+WinMotor : Component
+    // cmd : Port -> Command
+    cmd -> Command
 ```
