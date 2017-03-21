@@ -229,6 +229,8 @@ We can choose the chiming strategy using the following constraint:
 
 # Scenarios and properties
 
+For each case, we define a concrete WinController and state the assertion. 
+
 ## An example positive scenario
 
 ```clafer
