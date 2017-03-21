@@ -3,7 +3,7 @@ title: Behavioral Modeling - Power Window
 categories: behavioral
 ...
 
-This example demonstrates modeling both structure and behavior with variability. 
+This example demonstrates modeling both structure and behaviour with variability. 
 
 # Feature modeling
 
@@ -20,7 +20,7 @@ abstract final FeatureModel
 ## Model 
 
 The optional feature `express` indicates the functionality of automatically closing the window.
-The feature `pinchProtection` indicates the functionality of obstacle detection and stopping the window closure.
+The feature `pinchProtection` indicates the functionality of detecting obstacles and stopping the window.
 
 ```clafer
 WinFeatures : FeatureModel
@@ -67,7 +67,7 @@ Window motor.
 The port `cmd` is mandatory, meaning that the motor must always be given a command.
 
 ```clafer
-WinMotor : Component
+abstract WinMotor : Component
     cmd : Port -> Command
 ```
 
@@ -82,28 +82,26 @@ stop : UserRequest
 down : UserRequest
 ```
 
-### Alphabet variability
-
 The user request `expressUp` is only available when the feature `express` is present (alphabet variability). 
 
 ```clafer
 [ express <=> expressUp ]
 ```
 
-Window controller with an optional component `pinchDetector`. 
-The component `pinchDetector` is only required if the feature `pinchProtection` is present.
+The component `pinchDetector` of the `WinController` is only required if the feature `pinchProtection` is present.
 
 ```clafer
 [ pinchProtection <=> pinchDetector ]
 ```
 
 Instances of the ports `endOfTravel` and `objectDetected` appear when the corresponding binary signal is received.
-On the other hand, no instance of the port `req` indicates no user request, whereas an instance of `cmd` points to a specific user request.
+On the other hand, instances of the port `req` point to a specific user request. 
+No instance of the port `req` indicates no user request.
 Finally, we allow at most one of `req`, `endOfTravel`, and `objectDetected` in order to remove non-determinism.
 
 ```clafer
 abstract WinController : Component
-    final motor -> WinMotor
+    motor : WinMotor
     pinchDetector : Component ?
 
     req : Port -> UserRequest ?
@@ -148,8 +146,8 @@ abstract WinController : Component
 We model state actions by fixing the motor command. 
 E.g., in state `movingDown`, motor command is fixed to `motorDown`.
 
-State transitions are modeled using the "next transitions": `-->`.
-In the state `movingUpX` we demonstrate a "guarded next transition": `-[objectDetected]->`.
+State transitions are modeled using "next transitions": `-->`.
+In the state `movingUpX` we demonstrate "guarded next transition": `-[objectDetected]->`.
 
 ### Disabling `objectDetected` port
 
@@ -157,7 +155,7 @@ Without the feature `pinchProtection`, the port `objectDetected` should be inact
 Having the feature will allow receiving the signal `objectDetected`.
 
 ```clafer
-[ no pinchProtection => no WinController.objectDetected ]
+[ no pinchProtection => no objectDetected ]
 ```
 
 # Variability in behavior using inheritance
@@ -182,7 +180,7 @@ WinCtrWithChime : WinController ?
     [ no chime && movingUpX --> (movingUpX => chime) ]
 ```
 
-# Variability in behavior using strategy pattern
+# Variability in behaviour using strategy pattern
 
 We first define an abstract chiming strategy:
 chiming can be `audible` but only if `active` (expressed by nesting).
@@ -211,7 +209,7 @@ Intermittent : ChimingStrategy
     [ not audible --> (active => audible) ]
 ```
 
-Now we can parameterize the controller with a chiming strategy.
+Now we can parametrize the controller with a chiming strategy.
 Chiming should be active when moving up in express mode.
 The chime should be emitted only when the chiming is audible.
 
@@ -234,20 +232,23 @@ We can choose the chiming strategy using the following constraint:
 ## An example positive scenario
 
 ```clafer
-assert [ initially closed && req=down --> movingDown -->>
-         req=expressUp --> movingUpX --> objectDetected --> stopped ]
+wc1 : WinController
+assert [ initially wc1.WinStates.stopped.closed && wc1.req=down --> wc1.WinStates.movingDown -->>
+         wc1.req=expressUp --> wc1.WinStates.movingUp.movingUpX --> wc1.objectDetected --> wc1.WinStates.stopped ]
 ```
 
 ## It must be possible to go from closed to open via partiallyOpen state
 
 ```clafer
-assert [ sometime closed -->> partlyOpen -->> open ]
+wc2 : WinController
+assert [ sometime wc2.WinStates.stopped.closed -->> wc2.WinStates.stopped.partlyOpen -->> wc2.WinStates.stopped.open ]
 ```
 
 ## It must be impossible for the user to request opening and the window remains closed
 
 ```clafer
-assert [ never req = down --> closed ]
+wc3 : WinController
+assert [ never wc3.req = down --> wc3.WinStates.stopped.closed ]
 ```
 
 ## It must be impossible for the window to be `closed` and continue sending `motorUp` command
@@ -255,7 +256,8 @@ assert [ never req = down --> closed ]
 It is a safety property to prevent burning the motor.
 
 ```clafer
-assert [ never closed && cmd=motorUp ]
+wc4 : WinController
+assert [ never wc4.WinStates.stopped.closed && wc4.motor.cmd=motorUp ]
 ```
 
 ## The window must never continue `movingUp` after an object was detected
@@ -263,5 +265,6 @@ assert [ never closed && cmd=motorUp ]
 It is a safety property to prevent injury.
 
 ```clafer
-assert [ never objectDetected --> movingUp ]
+wc5 : WinController
+assert [ never wc5.objectDetected --> wc5.WinStates.movingUp ]
 ```
