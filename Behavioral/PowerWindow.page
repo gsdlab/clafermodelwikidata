@@ -109,6 +109,10 @@ abstract WinController : Component
     objectDetected : Port ?
 
     [ lone (req, endOfTravel, objectDetected )]
+    [ always req=stop between req=down and req=up]
+    [ always req=stop between req=up and req=down]
+    [ always req=up between req=stop and req=expressUp ]
+    [ always req=expressUp => next no req]
 
     final xor WinStates : StateMachine
         xor movingUp : State
