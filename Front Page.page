@@ -1,1 +1,297 @@
-ZSRpF6 https://goldentabs.com/
+---
+title: Welcome to Clafer 0.5.0 Model Wiki!
+...
+
+# Introduction
+
+This is a public instance of the [ClaferWiki](https://github.com/gsdlab/claferwiki#readme) to serve as a model repository. We are publishing example models that showcase [Clafer](http://clafer.org) as a lightweight structural modeling language. For installation, visit [Software](http://www.clafer.org/p/software.html).
+
+Each wiki page contains a single Clafer model. The model can be split into model fragments and interwoven with rich-text contents (*literate modeling*). The model is compiled using the Clafer compiler and rendered as HTML, which provides syntax and error highlighting and hyperlinking, and as a Graph, which provides a different view on the model that emphasizes inheritance and references. Double click on the graph shows/hides references. 
+
+## Release announcements and changes
+
+  | 0.5.0 (current development version: behavioral clafer). See [Behavioral Modeling](#behavioral-modeling) for examples.
+
+  | [0.4.5](http://www.clafer.org/2017/03/clafer-claferig-claferwiki-045-released.html)
+  | [0.4.4](http://www.clafer.org/2016/09/clafer-tools-044-released.html)
+  | [0.4.3](http://www.clafer.org/2015/12/clafer-tools-043-released.html)
+  | [0.4.2](http://www.clafer.org/2015/10/clafer-tools-042-released.html)
+  | [0.4.1 (compiler)](http://www.clafer.org/2015/09/clafer-claferig-claferwiki.html) [0.4.1 (web tools)](http://www.clafer.org/2015/09/clafer-web-tools-041-released.html) | [0.4.0](http://www.clafer.org/2015/07/clafer-claferig-claferwiki-040-released.html)
+
+  | [0.3.10](http://www.clafer.org/2015/04/clafer-claferig-claferwiki-chocosolver.html) 
+  | [0.3.9](http://www.clafer.org/2015/03/clafer-claferig-claferwiki-chocosolver.html) 
+  | [0.3.8](http://www.clafer.org/2015/01/clafer-claferig-and-claferwiki-038.html) 
+  | [0.3.7](http://www.clafer.org/2014/10/clafer-claferig-and-claferwiki-037.html) 
+  | [0.3.6.1](http://www.clafer.org/2014/07/clafer-compiler-and-ig-036-released.html) 
+  | [0.3.5](http://www.clafer.org/2014/01/clafer-tools-035-released.html)
+  | [0.3.4](http://www.clafer.org/2013/09/clafer-tools-034-released.html) 
+  | [0.3.3](http://www.clafer.org/2013/08/clafer-tools-033-released.html)
+  | [0.3.2](http://www.clafer.org/2013/04/clafer-tools-032-released.html)
+  | [0.3.1](http://www.clafer.org/2012/10/clafer-tools-031-released.html)
+  | [0.3.0](http://www.clafer.org/2012/07/clafer-tools-03-released.html) |
+
+# Learning Clafer
+
+[Clafer Cheat Sheet]()
+
+## Domain concept modeling using Clafer
+
+This tutorial presents basics of Clafer using few examples, introduces Clafer a bit more precisely (but not formally), and finishes with a modeling exercise with two alternative reference solutions. 
+
+Contents:
+
+1. [Introduction](/Tutorial/Intro)
+2. [Clafer a bit more precisely](/Tutorial/ClaferMorePrecisely)
+3. [Exercise - Modeling a Concept](/Tutorial/Exercise - Modeling a Concept)
+4. [Exercise - Example Reference Solution](/Tutorial/Exercise - Example Reference Solution)
+5. [Exercise - Alternative Ways of Modeling](/Tutorial/Exercise - Alternative Ways of Modeling)
+
+## Guidelines for feature modeling using Clafer
+
+[Feature Modeling using Clafer]()
+
+[Inheritance of Group Cardinality](http://www.clafer.org/2015/06/inheritance-of-group-cardinality.html)
+
+## "Train Station Layout" domain modeling tutorial
+
+See [announcement on clafer.org](http://www.clafer.org/2015/08/by-micha-antkiewicz-on-aug-24-2015-as.html).
+
+Go to [Interactive Tutorial](http://t3-necsis.cs.uwaterloo.ca:8099/)
+
+## "Traffic Lights" domain modeling tutorial
+
+See [announcement on clafer.org](http://www.clafer.org/2014/09/tutorial-on-domain-modeling-using-clafer.html).
+
+[Interactive Tutorial](http://t3-necsis.cs.uwaterloo.ca:8098/)
+
+## Modeling directed graph reachability
+
+See [announcement on clafer.org](http://www.clafer.org/2015/09/example-reachability-in-directed-graphs.html).
+
+## Micro-level and macro-level modeling patterns
+
+Some methodological advice on modeling in Clafer from Alexandr Murashkin's MMath Thesis (University of Waterloo, 2014) ["Automotive Electronic/Electric Architecture Modeling, Design Exploration and Optimization using Clafer"](https://uwspace.uwaterloo.ca/handle/10012/8780).
+
+* [Chapter 4: Micro-Level Modeling Patterns and Advices](https://uwspace.uwaterloo.ca/bitstream/handle/10012/8780/Murashkin_Alexandr.pdf?sequence=5#chapter.4)
+* [Chapter 5: Macro-Level Modeling Patterns](https://uwspace.uwaterloo.ca/bitstream/handle/10012/8780/Murashkin_Alexandr.pdf?sequence=5#chapter.5)
+
+## Selected posts and presentations from [clafer.org](http://clafer.org)
+
+* 2015-07-29 [Clafer 0.4.0 PowerPoint slide show](http://gsd.uwaterloo.ca/clafer-tools-bin/2015.07.27-Antkiewicz-Clafer-0.4.0.ppsx)
+* 2015-07-28 [Accessing Clafer Models Programmatically](http://www.clafer.org/2014/08/accessing-clafer-models-programmatically.html)
+* 2015-06-03 [Inheritance of Group Cardinality](http://www.clafer.org/2015/06/inheritance-of-group-cardinality.html)
+* 2015-01-20 [Explaining Clafer Semantics by Example](http://www.clafer.org/2015/01/explaining-clafer-semantics-by-example.html)
+* 2014-01-16 [Example-Driven Modeling Using Clafer paper & presentation](http://www.clafer.org/2013/10/example-driven-modeling-using-clafer.html)
+ 
+# Clafer usage scenarios
+
+Clafer can be used in a number of scenarios:
+
+## Product-line architecture modeling
+
+Modeling features of products in a product line and their realization as components.
+
+* ["Automotive Electronic/Electric Architecture Modeling, Design Exploration and Optimization using Clafer"](https://uwspace.uwaterloo.ca/handle/10012/8780) - using EAST-ADL (Alexandr Murashkin's MMath Thesis)
+* [Telematics Product-Line Architecture](Telematics/PLA) 
+* [ClaferTools Case Study](ClaferToolsPLE/Intro)
+
+## Multi-objective optimization of product lines
+
+Modeling features of products in a product line with their quality attributes.
+Multi-objective optimization discovers which products are optimal given the optimization goals such as "minimize total mass" and "maximize total performance". 
+
+* [Multi-Objective Optimization](MOO/Introduction)
+
+## Data center resource allocation problems
+
+Modeling and multi-objectively optimizing resource allocations. Models created by Alexandr Murashkin. 
+
+* Allocate services with the given requirements on machines. Maximize the number of free machines.
+
+[ISAP Optimization]()
+
+* Like ISAP but customized to handle time-varied requirements
+
+[TSAP Optimization]()
+
+## Variability modeling
+
+* [eCos CDL sample model](eCos/model)
+
+* [the Linux Kernel KConfig sample model](Linux/model)
+
+## Domain modeling
+
+Feature-based modeling of domain concepts and business rules.
+
+* [Business Motivation Model](BMM/model)
+
+* Oracle's [Merchandise Financial Planning]() domain model
+
+* [Scotiabank Mortgages]()
+
+* [Electronic Stability Control](ESC/FMCSA571.126-model)
+
+* [Example-Driven Modeling Using Clafer](EDM/Intro)
+
+## Model transformation
+
+An example `FamiliesToPersons` inspired by [ATL/Tutorials - Create a simple ATL transformation](http://wiki.eclipse.org/ATL/Tutorials_-_Create_a_simple_ATL_transformation). 
+We let the reader appreciate the simplicity, conciseness, and declarative nature of this transformation in Clafer.
+
+* [FamiliesToPersons]()
+
+## Meta-modeling
+
+* [UML Class Diagram](umlcd/model)
+
+### Ecore metamodels from Juan
+
+* [ER 2 RE Metamodel](ecore/er2mof). [(ecore source)](http://www.cs.colostate.edu/remodd/v1/content/er-2-re-metamodel-ecore-format-ocl-well-formedness-rules)
+* [CPFSTool Metamodel](ecore/cpfs). [(ecore source)](http://www.cs.colostate.edu/remodd/v1/content/cpfstool-metamodel-ecore-format-ocl-well-formedness-rules)
+* [OMG Diagram Definition metamodels](ecore/omgdd). [(ecore source)](http://www.cs.colostate.edu/remodd/v1/content/omg-diagram-definition-metamodels-ocl-well-formedness-rules)
+* [Declarative Workflow Metamodel](ecore/workflow). [(ecore source)](http://www.cs.colostate.edu/remodd/v1/content/declarative-workflow-metamodel-ecore-format-ocl-well-formedness-rules)
+* [RBAC metamodel](ecore/RBAC). [(ecore source)](http://www.cs.colostate.edu/remodd/v1/content/rbac-metamodel-ecore-format-ocl-well-formedness-rules)
+
+## OCL benchmark
+
+* [B1](oclBench/b1)
+* [B3](oclBench/b3)
+* [B1(after applying extensions)](oclBench/b1_ext)
+* [B3(after applying extensions)](oclBench/b3_ext)
+* [Proposed extensions](oclBench/extensions)
+
+## Other cool examples
+
+Clafer is a general-purpose structural modeling language but it's strengths make it particularly useful in modeling scenarios whereby *containment hierarchies* and *model evolution* are very important. 
+
+Below are some other examples:
+
+* [Compilation options for GHC](GHC/Options)
+* [Models of Clafer tools](ClaferTools/Overview)
+* [Graph reachability](graphReachability)
+* [Multi-relation composition](multi-relation-composition)
+
+## Behavioral modeling
+
+As of version 0.5.0, Clafer can be used for specifying how the structures evolve over time. 
+In this setting, a static Clafer model describes the possible states of the system,
+whereas, the temporal aspects specify how the states can change.
+
+* [Simplified Web Socket Protocol](Behavioral/WebSocketProtocol)
+* [Power Window](Behavioral/PowerWindow)
+
+## Demo spaces
+
+Here are pages for the different tool demos:
+
+* [Clafer Tools Demo](ClaferToolsDemo/Intro)
+* [ACC Demo](ACCDemo/Intro)
+* [EDM Poster](EDMPoster/Intro)
+* [NECSIS Workshop Demo (June 2013)](NECSIS-Workshop/Intro)
+* [ADAS Fault Tolerant Demo](ADAS-FT/Intro)
+
+# ClaferWiki-specific help
+
+Below is the Clafer-specific markup that can be used in the wiki pages. On the right is the screenshot of the [ClaferWiki-Specific Help]() page which demonstrates the usage of the markup shown on the left.
+
+<table>
+<tr>
+<td>
+**Add a Clafer code fragment as follows:**
+
+``````
+```clafer
+abstract A
+  c -> C *
+A1 : A
+  [ #c = 2 ]
+abstract B : A
+abstract C
+```
+``````
+
+Top-level clafers can be placed into separate code fragments but they cannot be split in the middle. That is all children of a top-level clafer must belong to the same code fragment.
+
+**or in the full code block notation**
+
+``````
+```{.clafer}
+C1 : C
+C2 : C
+```
+``````
+
+**Add the `Analyze with ClaferMooViz` button**
+
+``````
+```{.clafer .mooviz}
+<anything here is ignored>
+```
+``````
+
+**Add a graph in the simplified notation:**
+
+``````
+```{.clafer .graph}
+<anything here is ignored>
+```
+``````
+
+Double click on the graph in the simplified notation to show/hide references. By default, the graph only shows inheritance relationships allowing for quick inspection of the inheritance hierarchy which is not directly visible in Clafer's textual notation. 
+
+**Add a graph in the CVL notation:**
+
+``````
+```{.clafer .cvlGraph}
+<anything here is ignored>
+```
+``````
+
+**Add statistics:**
+
+``````
+```{.clafer .stats}
+<anything here is ignored>
+```
+``````
+
+**Add download links for a complete model file (`.cfr`) and a self-contained HTML rendering of the model file (`.html`):**
+
+``````
+```{.clafer .links}
+<anything here is ignored>
+```
+``````
+
+**Add summary, which includes 1) a graph in the simplified notation, 2) module statistics, and 3) the download links:**
+
+``````
+```{.clafer .summary}
+<anything here is ignored>
+```
+``````
+
+</td>
+<td>
+<figure>
+![Screenshot of the ClaferWiki-Specific Help Demonstration page](/ClaferWikiSpecificHelpDemonstration.png)
+</figure>
+</td>
+</tr>
+</table>
+
+Use the `Preview` button to compile the model and see parsing and compilation errors, if any. At most one error is reported for each code block. If a parsing error is reported, compilation is not executed and therefore no compilation errors are reported. 
+
+Use the `Save` button to commit your edits to the Git repository. 
+
+
+# Gitit Wiki general help
+
+For instructions on how to make a link to another wiki page, see [the
+Help page](Help#wiki-links). To create a new wiki page, just create a
+link to it and follow the link.
+
+Help is always available through the "Help" link in the sidebar.
+More details on installing and configurating gitit are available
+in the [Gitit User's Guide](http://gitit.net/README).
