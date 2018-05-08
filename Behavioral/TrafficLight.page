@@ -4,4 +4,65 @@ categories: behavioral
 ...
 
 This example demonstrates modeling of a simple Traffic Light state machine.
+Based on slide no. 3 from [lecture presentation](http://www.cs.mcgill.ca/~adenau/teaching/cs304/lecture16.pdf).
 
+# The most simple example
+
+* no concurrency, 
+* no forks, 
+* deterministic, 
+* no events, 
+* no time.
+
+## Abstract types for state machine modeling
+
+```clafer
+abstract State
+abstract StateMachine
+```
+
+## Simple traffic Light model with transitions only
+
+```clafer
+abstract TrafficLight_1
+    final xor TLStates_1 : StateMachine
+        initial xor on : State  -->> off
+            initial xor normal : State -->> flashing
+                initial green : State --> yellow
+                yellow : State --> red
+                red : State --> green
+            xor flashing : State -->> normal
+                initial yellow_on : State --> yellow_off
+                yellow_off : State --> yellow_on
+        off : State -->> on
+```
+
+## Scenarios and Properties
+
+```clafer
+t1 :TrafficLight_1
+
+//assert [ always t1.TLStates_1.on -->> t1.TLStates_1.flashing -->> t1.TLStates_1.yellow_on -->> t1.TLStates_1.yellow_off -->> t1.TLStates_1.yellow_on]
+
+assert [ always t1.TLStates_1.on -->> t1.TLStates_1.on.flashing ]
+assert [ always t1.TLStates_1.on.flashing -->> t1.TLStates_1.on.flashing.yellow_on ]
+assert [ always t1.TLStates_1.on.flashing.yellow_on -->> t1.TLStates_1.on.flashing.yellow_off ]
+assert [ always t1.TLStates_1.on.flashing.yellow_off -->> t1.TLStates_1.on.flashing.yellow_on ]
+```
+
+```clafer
+t2 :TrafficLight_1
+    [ on --> flashing --> yellow_on --> yellow_off --> yellow_on]
+```
+The constraint desugars to 
+```
+    [ on && X flashing && X yellow_on && X yellow_off && X yellow_on]
+```
+
+```clafer
+t3 :TrafficLight_1
+
+assert [ always t3.TLStates_1.on -->> t3.TLStates_1.on.flashing.yellow_off ]
+assert [ always t3.TLStates_1.on.flashing.yellow_off -->> t3.TLStates_1.on.flashing.yellow_on ]
+assert [ always t3.TLStates_1.on.flashing.yellow_on -->> t3.TLStates_1.on.flashing.yellow_off ]
+```
