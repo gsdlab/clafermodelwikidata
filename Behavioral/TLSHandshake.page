@@ -15,3 +15,45 @@ TLSFeatures : FeatureModel
     annonymousMode : Feature ?
     clientAuthentication : Feature ?
 ```
+
+```clafer
+abstract final Domain
+
+enum ProtocolVersion = SSL2_0 | SSL3_0 | TLS1_0 | TLS1_1 | TLS1_2
+
+enum HandshakeStatus = initiated | completed | failed 
+
+abstract Port
+
+abstract final Message
+```
+
+## Server side messages
+
+```clafer
+serverHelloRequestMessage : Message
+serverHelloMessage : Message
+serverCertificateMessage : Message
+serverKeyExchangeMessage : Message
+serverCertificateRequestMessage : Message
+serverHelloDoneMessage : Message
+serverChangeCipherSpecMessage : Message
+serverFinishedMessage : Message
+protocolMismatch : Message
+```
+
+## Client side messages
+
+```clafer
+clientHelloMessage : Message
+clientCertificateMessage : Message
+clientKeyExchangeMessage : Message
+certificateVerifyMessage : Message
+clientChangeCipherSpecMessage : Message
+clientFinishedMessage : Message
+```
+
+## Application data
+```clafer
+applicationDataMessage : Message
+```
