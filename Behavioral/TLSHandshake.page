@@ -1,0 +1,17 @@
+---
+title: TLS Handshake Model
+categories: behavioral
+...
+
+This example demonstrates modeling TLS Handshake Protocol.
+
+# Feature modeling
+
+```clafer
+abstract final Feature
+abstract final FeatureModel
+
+TLSFeatures : FeatureModel
+    annonymousMode : Feature ?
+    clientAuthentication : Feature ?
+```
