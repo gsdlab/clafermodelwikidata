@@ -10,7 +10,7 @@ Each wiki page contains a single Clafer model. The model can be split into model
 
 ## Release announcements and changes
 
-  | 0.5.0 (current development version: behavioral clafer). See [Behavioral Modeling](#behavioral-modeling) for examples.
+  | 0.5.0 (Behavioral clafer). See [Behavioral Modeling](#behavioral-modeling) for examples.
 
   | [0.4.5](http://www.clafer.org/2017/03/clafer-claferig-claferwiki-045-released.html)
   | [0.4.4](http://www.clafer.org/2016/09/clafer-tools-044-released.html)
@@ -180,6 +180,7 @@ whereas, the temporal aspects specify how the states can change.
 
 * [Simplified Web Socket Protocol](Behavioral/WebSocketProtocol)
 * [Power Window](Behavioral/PowerWindow)
+* [TLS Handshake](Behavioral/TLSHandshake)
 
 ## Demo spaces
 
