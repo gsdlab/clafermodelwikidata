@@ -57,3 +57,26 @@ clientFinishedMessage : Message
 ```clafer
 applicationDataMessage : Message
 ```
+
+## Nodes
+
+```clafer
+abstract final Node : Domain
+	send : Port -> Message
+	receive : Port -> Message
+	protocolversion -> ProtocolVersion +
+	certificate ?
+		signing ?
+
+
+abstract final Server : Node
+
+abstract final Client : Node
+```
+
+##  connecting messages 
+
+```clafer
+[Server.send = Client.receive]
+[Server.receive = Client.send]
+```
