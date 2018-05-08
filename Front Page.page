@@ -178,8 +178,9 @@ As of version 0.5.0, Clafer can be used for specifying how the structures evolve
 In this setting, a static Clafer model describes the possible states of the system,
 whereas, the temporal aspects specify how the states can change.
 
-* [Simplified Web Socket Protocol](Behavioral/WebSocketProtocol)
+* [Traffic Light](Behavioral/TrafficLight)
 * [Power Window](Behavioral/PowerWindow)
+* [Simplified Web Socket Protocol](Behavioral/WebSocketProtocol)
 * [TLS Handshake](Behavioral/TLSHandshake)
 
 ## Demo spaces
