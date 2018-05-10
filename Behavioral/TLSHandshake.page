@@ -5,6 +5,9 @@ categories: behavioral
 
 This example demonstrates modeling TLS Handshake Protocol.
 
+```{.clafer .links}
+```
+
 # Feature modeling
 
 ```clafer
