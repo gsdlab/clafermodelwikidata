@@ -5,6 +5,9 @@ categories: behavioral
 
 This example demonstrates modeling both structure and behaviour with variability. 
 
+```{.clafer .links}
+```
+
 # Feature modeling
 
 We model features as final, that is, we do not allow dynamic reconfiguration.
