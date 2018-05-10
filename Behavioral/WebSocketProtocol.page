@@ -7,6 +7,9 @@ categories: behavioral
 
 > Note: this is a contrived example, not the actual protocol.
 
+```{.clafer .links}
+```
+
 First, we'd like to express the states of the websocket and the transitions among them. 
 When a websocket is created it starts in the state `ready`, which we model as the `initial` state.
 Upon entering each state initially, the websocket is not accepting any requests. 
