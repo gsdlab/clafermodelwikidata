@@ -6,6 +6,9 @@ categories: behavioral
 This example demonstrates modeling of a simple Traffic Light state machine.
 Based on slide no. 3 from [lecture presentation](http://www.cs.mcgill.ca/~adenau/teaching/cs304/lecture16.pdf).
 
+```{.clafer .links}
+```
+
 # The most simple example
 
 * no concurrency, 
