@@ -12,7 +12,7 @@ categories: dogfooding
 
 The visualizer can be in one of four states: 
 
-* `initial`, when empty GUI is loaded and it is ready to open a file,
+* `init`, when empty GUI is loaded and it is ready to open a file,
 * `loadingAndProcessing`, when a file is being loaded, compiled, and optimized, 
 * `error`, when the processing resulted in an error, and
 * `ready`, when the GUI has been populated with optimization results and the users perform their tasks.
@@ -21,9 +21,9 @@ The visualizer also provides three main views: `graph`, `table`, and `analysis`,
 
 ```clafer
 abstract ClaferMooVisualizer
-    deployedAtURL : string
+    deployedAtURL -> string
     xor state
-        `initial
+        `init
         `loadingAndProcessing
         `error
         `ready
@@ -33,24 +33,24 @@ abstract ClaferMooVisualizer
         `analysis
 ```
 
-For example, our [public instance of the visualizer](http://gsd.uwaterloo.ca:5002) could be described as follows after it's loaded:
+For example, our [public instance of the visualizer](http://t3-necsis.cs.uwaterloo.ca:8092) could be described as follows after it's loaded:
 
 ```clafer
 viz1 : ClaferMooVisualizer
-    [ deployedAtURL = "gsd.uwaterloo.ca:5002" ]
-    [ initial ]
+    [ deployedAtURL = "t3-necsis.cs.uwaterloo.ca:8092" ]
+    [ init ]
 ```
 
 We model each abstract state individually. 
 
-## The state `initial`
+## The state `init`
 
 In this state, the visualizer is ready to either open a file from a provided `claferFileURL` or upload from the provided upload dialog.
 
 ```clafer
-abstract mux initial
-    claferFileURL : string ?
-    claferFileUpload : string ?
+abstract mux init
+    claferFileURL -> string ?
+    claferFileUpload -> string ?
 ```
 
 There are three possibilities here: 
@@ -59,17 +59,17 @@ There are three possibilities here:
 
 ```clafer
 viz2 : ClaferMooVisualizer
-    [ deployedAtURL = "gsd.uwaterloo.ca:5002" ]
-    [ initial ]
+    [ deployedAtURL = "t3-necsis.cs.uwaterloo.ca:8092" ]
+    [ init ]
     [ no claferFileURL ]
     [ no claferFileUpload ]
 ```
 
-2) the visualizer is opened with a `claferFileURL`, e.g., entering this URL `http://gsd.uwaterloo.ca:5002/?claferFileURL=server/model.cfr` will first load the visualizer in this state:
+2) the visualizer is opened with a `claferFileURL`, e.g., entering this URL `http://t3-necsis.cs.uwaterloo.ca:8092/?claferFileURL=server/model.cfr` will first load the visualizer in this state:
 
 ```clafer
 viz3 : ClaferMooVisualizer
-    [ deployedAtURL = "gsd.uwaterloo.ca:5002" ]
+    [ deployedAtURL = "t3-necsis.cs.uwaterloo.ca:8092" ]
     [ claferFileURL = "server/model.cfr" ]
 ```
 
@@ -77,7 +77,7 @@ viz3 : ClaferMooVisualizer
 
 ```clafer
 viz4 : ClaferMooVisualizer
-    [ deployedAtURL = "gsd.uwaterloo.ca:5002" ]
+    [ deployedAtURL = "t3-necsis.cs.uwaterloo.ca:8092" ]
     [ claferFileUpload = "model.cfr" ]
 ```
 
@@ -98,12 +98,12 @@ There are a few possible errors that can occur during loading and processing.
 ```clafer
 abstract xor error
     xor loading
-        invalidClaferFileURL : string
-        parseError : string
-        compileError : string
+        invalidClaferFileURL -> string
+        parseError -> string
+        compileError -> string
         missingGoals
     xor processing
-        optimizationError : string
+        optimizationError -> string
         timeout
         outOfMemory
 ```
@@ -118,13 +118,13 @@ The optimization problem contains a number of quality `Dimension`s and optimizat
 abstract Dimension
 
 abstract Goal
-   dimension -> Dimension
-   xor kind
-      minimize
-      maximize
+    dimension -> Dimension
+    xor kind
+        minimizee
+        maximizee
 ```
 
-For example, the [Android4](gsd.uwaterloo.ca:5001/MOO/Android4) optimization problem has four quality dimensions:
+For example, the [Android4](t3-necsis.cs.uwaterloo.ca:8091/MOO/Android4) optimization problem has four quality dimensions:
 
 ```clafer
 performance : Dimension
@@ -138,19 +138,19 @@ and four optimization goals:
 ```clafer
 maxPerformance : Goal
     [ dimension = performance ]
-    [ maximize ]
+    [ maximizee ]
 
 minEnergy : Goal 
     [ dimension = energy ]
-    [ minimize ]
+    [ minimizee ]
 
 maxSecurity : Goal
     [ dimension = security ]
-    [ maximize ]
+    [ maximizee ]
 
 minMass : Goal 
     [ dimension = mass ]
-    [ minimize ]
+    [ minimizee ]
 ```
 
 there maybe more than four dimensions and goals.
@@ -235,6 +235,9 @@ abstract table
 
 ```clafer
 abstract analysis
+```
+
+```{.clafer .summary}
 ```
 
 
