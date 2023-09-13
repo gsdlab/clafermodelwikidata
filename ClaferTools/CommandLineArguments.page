@@ -1,1 +1,137 @@
-http://imrdsoacha.gov.co/silvitra-120mg-qrms
+---
+title: Clafer Compiler Command Line Arguments
+categories: dogfooding
+...
+
+> Back to [Clafer Tools](/ClaferTools/Overview)
+
+The following model describes the command line arguments of the Clafer compiler and dependencies among them.
+
+Some clafers for argument modeling. These types are needed to distinguish arguments and their values from any other clafers used for grouping etc.:
+
+```clafer
+abstract Argument
+
+abstract IntegerArgument ->> integer
+
+abstract StringArgument ->> string
+
+abstract Value
+
+abstract DefaultValue
+```
+
+Actual model of the dependencies among the arguments as implemented in Clafer v0.4.2.
+
+```clafer
+abstract xor ClaferArgs
+   functional
+      xor mode : Argument
+         alloy : DefaultValue
+            alloy_mapping : Argument ?
+         json : Value
+         desugaredClafer : Value
+         html : Value
+            [ keep_unused ]
+            self_contained : Argument ?
+            add_graph : Argument ?
+            add_comments : Argument ?
+            show_references : Argument ?
+         graph : Value
+            [ keep_unused ]
+            show_references : Argument ?
+         cvlGraph : Value
+            [ flatten_inheritance ]
+            [ keep_unused ]
+         choco : Value
+      console_output : Argument ?
+      flatten_inheritance : Argument ?
+      timeout_analysis : IntegerArgument ?
+      mux layout ?
+         no_layout : Argument
+         new_layout : Argument
+      check_duplicates : Argument ?
+      skip_resolver : Argument ?
+      keep_unused : Argument ?
+      no_stats : Argument ?
+      validate : Argument ?
+         [ no html ]
+         [ no graph ]
+         [ no cvlGraph ]
+         tooldir : StringArgument := "."
+      xor scope_strategy : Argument
+         none : Value
+         simple : DefaultValue
+      check_afm : Argument ?
+      meta_data : Argument ?
+   help : Argument
+   version : Argument
+   numeric_version : Argument
+```
+
+Here are a few examples of using the arguments for different kinds of outputs:
+
+1. produce Alloy code (default mode)
+
+```clafer
+ca1 : ClaferArgs
+   [ alloy ]
+```
+
+Command line: `clafer <input cfr file>`.
+
+2. produce default Alloy code and validate the output with the Alloy compiler, which will produce parse and type errors that may indicate bugs in the Clafer compiler. 
+
+```clafer
+ca2 : ClaferArgs
+   [ alloy ]
+   [ validate ]
+   [ tooldir = "~/clafer-tools-0.4.2/tools" ]
+```
+
+Command line: `clafer --validate -tooldir="~/clafer-tools-0.4.2/tools" <input cfr file>`.
+
+3. produce Alloy 4.2 compliant code but keep uninstantiated abstract clafers and flatten the inheritance for performance in reasoning
+
+```clafer
+ca3 : ClaferArgs
+   [ alloy ]
+   [ keep_unused ]
+   [ flatten_inheritance ]
+```
+
+Command line: `clafer -m=alloy --keep-unused --flatten-inheritance <input cfr file>`.
+
+4. produce html rendering of the model for inclusion in the wiki page. This is used by the ClaferWiki.
+
+```clafer
+ca4 : ClaferArgs
+   [ html ]
+```
+
+the option `keep_unused` is also used.
+
+Command line: `clafer -m=html <input cfr file>`.
+
+5. produce a complete html rendering which includes CSS and inserts graph and statistics in place of the `#GRAPH` and `#STATS` compiler directives.
+
+```clafer
+ca5 : ClaferArgs
+   [ html ]
+   [ self_contained ]
+   [ add_graph ]
+   [ add_comments ]
+```
+
+Command line: `clafer -m=html --self-contained --add-graph --add-comments <input cfr file>`.
+
+6. produce a graph description in DOT (GraphViz) language for a rendering of the model in the Common Variability Language (CVL) notation for variability abstraction.
+
+```clafer
+ca6 : ClaferArgs
+   [ cvlGraph ]
+```
+
+Options `flatten_inheritance` and `keep_unused` are also used by default in this mode.
+
+Command line: `clafer -m=cvlGraph <input cfr file>`.
