@@ -1,22 +1,25 @@
 ---
-title: Welcome to Clafer 0.5.0 Model Wiki!
+title: Welcome to Clafer 0.5.1 Model Wiki!
 ...
 
 # Introduction
 
-This is a public instance of the [ClaferWiki](https://github.com/gsdlab/claferwiki#readme) to serve as a model repository. We are publishing example models that showcase [Clafer](http://clafer.org) as a lightweight structural modeling language. For installation, visit [Software](http://www.clafer.org/p/software.html).
+This is a public instance of the [ClaferWiki](https://github.com/gsdlab/claferwiki#readme) to serve as a model repository. We are publishing example models that showcase [Clafer](http://clafer.org) as a lightweight structural modeling language. Since version 0.5.0, Clafer also includes [behavior modeling capabilities but without any reasoning support](https://www.clafer.org/2019/01/by-micha-antkiewicz-jan-6-2019-our-new.html).
+For installation, visit [Software](http://www.clafer.org/p/software.html).
 
-Each wiki page contains a single Clafer model. The model can be split into model fragments and interwoven with rich-text contents (*literate modeling*). The model is compiled using the Clafer compiler and rendered as HTML, which provides syntax and error highlighting and hyperlinking, and as a Graph, which provides a different view on the model that emphasizes inheritance and references. Double click on the graph shows/hides references. 
+Each wiki page contains a single Clafer model. The model can be split into model fragments and interwoven with rich-text contents (i.e., *literate modeling*). The model is compiled using the Clafer compiler and rendered as HTML, which provides syntax and error highlighting and hyperlinking, and as a Graph, which provides a different view on the model that emphasizes inheritance and references. Double click on the graph shows/hides references. 
 
 ## Release announcements and changes
 
-  | 0.5.0 (Behavioral clafer). See [Behavioral Modeling](#behavioral-modeling) for examples.
+  | [0.5.1](https://www.clafer.org/2023/09/clafer-compiler-ig-and-wiki-051-released.html)
+  | [0.5.0 Behavioral Clafer](https://www.clafer.org/2019/01/by-micha-antkiewicz-jan-6-2019-our-new.html) (see [Behavioral Modeling](#behavioral-modeling) for examples)
 
   | [0.4.5](http://www.clafer.org/2017/03/clafer-claferig-claferwiki-045-released.html)
   | [0.4.4](http://www.clafer.org/2016/09/clafer-tools-044-released.html)
   | [0.4.3](http://www.clafer.org/2015/12/clafer-tools-043-released.html)
   | [0.4.2](http://www.clafer.org/2015/10/clafer-tools-042-released.html)
-  | [0.4.1 (compiler)](http://www.clafer.org/2015/09/clafer-claferig-claferwiki.html) [0.4.1 (web tools)](http://www.clafer.org/2015/09/clafer-web-tools-041-released.html) | [0.4.0](http://www.clafer.org/2015/07/clafer-claferig-claferwiki-040-released.html)
+  | [0.4.1 (compiler)](http://www.clafer.org/2015/09/clafer-claferig-claferwiki.html) [0.4.1 (web tools)](http://www.clafer.org/2015/09/clafer-web-tools-041-released.html) 
+  | [0.4.0](http://www.clafer.org/2015/07/clafer-claferig-claferwiki-040-released.html)
 
   | [0.3.10](http://www.clafer.org/2015/04/clafer-claferig-claferwiki-chocosolver.html) 
   | [0.3.9](http://www.clafer.org/2015/03/clafer-claferig-claferwiki-chocosolver.html) 
