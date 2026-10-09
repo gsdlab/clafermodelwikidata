@@ -3,7 +3,7 @@ title: Exercise - Modeling a Concept "Book"
 toc: false
 ...
 
-The goal of the exercise is to reconstruct the model of a concrete concept: `book`. Please write down the model based on the domain description below and compare it with the reference solution provided in the last section. The instructions below are designed for "top-down" or "abstraction-first" analysis, which is suitable when the concept is well understood. An example of a "concrete-to-abstract" analysis, which is most suitable for concepts discovery from examples, can be found at: 
+The goal of the exercise is to reconstruct the model of a concrete concept: `book`. Please write down the model based on the domain description below and compare it with the reference solution provided in the last section. The instructions below are designed for "top-down" or "abstraction-first" analysis, which is suitable when the concept is well understood. An example of a "concrete-to-abstract" analysis, which is most suitable for concepts discovery from examples, can be found at:
 [Concrete-to-abstract modeling with Clafer example](http://gsd.uwaterloo.ca/node/356).
 
 Idea/a concept/a topic
@@ -58,7 +58,7 @@ Acknowledgements
 
 I would like to thank Maria Attarian, Marko Novakovic, Leonardo Passos, Jeniffer Janik, and Thiago Tonelli Bartolomei for submitting their results of the exercise and providing excellent feedback. We also thank all who provided constructive feedback.
 
-Please email comments/questions/critique/corrections/suggestions to the author at [mantkiew@gsd.uwaterloo.ca](mailto:mantkiew@gsd.uwaterloo.ca). Constructive feedback is much appreciated!
+Please email comments/questions/critique/corrections/suggestions to the author at [michal.antkiewicz@uwaterloo.ca](mailto:michal.antkiewicz@uwaterloo.ca). Constructive feedback is much appreciated!
 
 --------------------
 

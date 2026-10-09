@@ -7,10 +7,11 @@ title: Welcome to Clafer 0.5.1 Model Wiki!
 This is a public instance of the [ClaferWiki](https://github.com/gsdlab/claferwiki#readme) to serve as a model repository. We are publishing example models that showcase [Clafer](http://clafer.org) as a lightweight structural modeling language. Since version 0.5.0, Clafer also includes [behavior modeling capabilities but without any reasoning support](https://www.clafer.org/2019/01/by-micha-antkiewicz-jan-6-2019-our-new.html).
 For installation, visit [Software](http://www.clafer.org/p/software.html).
 
-Each wiki page contains a single Clafer model. The model can be split into model fragments and interwoven with rich-text contents (i.e., *literate modeling*). The model is compiled using the Clafer compiler and rendered as HTML, which provides syntax and error highlighting and hyperlinking, and as a Graph, which provides a different view on the model that emphasizes inheritance and references. Double click on the graph shows/hides references. 
+Each wiki page contains a single Clafer model. The model can be split into model fragments and interwoven with rich-text contents (i.e., *literate modeling*). The model is compiled using the Clafer compiler and rendered as HTML, which provides syntax and error highlighting and hyperlinking, and as a Graph, which provides a different view on the model that emphasizes inheritance and references. Double click on the graph shows/hides references.
 
 ## Release announcements and changes
 
+  | [0.5.2]
   | [0.5.1](https://www.clafer.org/2023/09/clafer-compiler-ig-and-wiki-051-released.html)
   | [0.5.0 Behavioral Clafer](https://www.clafer.org/2019/01/by-micha-antkiewicz-jan-6-2019-our-new.html) (see [Behavioral Modeling](#behavioral-modeling) for examples)
 
@@ -18,16 +19,16 @@ Each wiki page contains a single Clafer model. The model can be split into model
   | [0.4.4](http://www.clafer.org/2016/09/clafer-tools-044-released.html)
   | [0.4.3](http://www.clafer.org/2015/12/clafer-tools-043-released.html)
   | [0.4.2](http://www.clafer.org/2015/10/clafer-tools-042-released.html)
-  | [0.4.1 (compiler)](http://www.clafer.org/2015/09/clafer-claferig-claferwiki.html) [0.4.1 (web tools)](http://www.clafer.org/2015/09/clafer-web-tools-041-released.html) 
+  | [0.4.1 (compiler)](http://www.clafer.org/2015/09/clafer-claferig-claferwiki.html) [0.4.1 (web tools)](http://www.clafer.org/2015/09/clafer-web-tools-041-released.html)
   | [0.4.0](http://www.clafer.org/2015/07/clafer-claferig-claferwiki-040-released.html)
 
-  | [0.3.10](http://www.clafer.org/2015/04/clafer-claferig-claferwiki-chocosolver.html) 
-  | [0.3.9](http://www.clafer.org/2015/03/clafer-claferig-claferwiki-chocosolver.html) 
-  | [0.3.8](http://www.clafer.org/2015/01/clafer-claferig-and-claferwiki-038.html) 
-  | [0.3.7](http://www.clafer.org/2014/10/clafer-claferig-and-claferwiki-037.html) 
-  | [0.3.6.1](http://www.clafer.org/2014/07/clafer-compiler-and-ig-036-released.html) 
+  | [0.3.10](http://www.clafer.org/2015/04/clafer-claferig-claferwiki-chocosolver.html)
+  | [0.3.9](http://www.clafer.org/2015/03/clafer-claferig-claferwiki-chocosolver.html)
+  | [0.3.8](http://www.clafer.org/2015/01/clafer-claferig-and-claferwiki-038.html)
+  | [0.3.7](http://www.clafer.org/2014/10/clafer-claferig-and-claferwiki-037.html)
+  | [0.3.6.1](http://www.clafer.org/2014/07/clafer-compiler-and-ig-036-released.html)
   | [0.3.5](http://www.clafer.org/2014/01/clafer-tools-035-released.html)
-  | [0.3.4](http://www.clafer.org/2013/09/clafer-tools-034-released.html) 
+  | [0.3.4](http://www.clafer.org/2013/09/clafer-tools-034-released.html)
   | [0.3.3](http://www.clafer.org/2013/08/clafer-tools-033-released.html)
   | [0.3.2](http://www.clafer.org/2013/04/clafer-tools-032-released.html)
   | [0.3.1](http://www.clafer.org/2012/10/clafer-tools-031-released.html)
@@ -39,7 +40,7 @@ Each wiki page contains a single Clafer model. The model can be split into model
 
 ## Domain concept modeling using Clafer
 
-This tutorial presents basics of Clafer using few examples, introduces Clafer a bit more precisely (but not formally), and finishes with a modeling exercise with two alternative reference solutions. 
+This tutorial presents basics of Clafer using few examples, introduces Clafer a bit more precisely (but not formally), and finishes with a modeling exercise with two alternative reference solutions.
 
 Contents:
 
@@ -85,7 +86,7 @@ Some methodological advice on modeling in Clafer from Alexandr Murashkin's MMath
 * 2015-06-03 [Inheritance of Group Cardinality](http://www.clafer.org/2015/06/inheritance-of-group-cardinality.html)
 * 2015-01-20 [Explaining Clafer Semantics by Example](http://www.clafer.org/2015/01/explaining-clafer-semantics-by-example.html)
 * 2014-01-16 [Example-Driven Modeling Using Clafer paper & presentation](http://www.clafer.org/2013/10/example-driven-modeling-using-clafer.html)
- 
+
 # Clafer usage scenarios
 
 Clafer can be used in a number of scenarios:
@@ -95,19 +96,19 @@ Clafer can be used in a number of scenarios:
 Modeling features of products in a product line and their realization as components.
 
 * ["Automotive Electronic/Electric Architecture Modeling, Design Exploration and Optimization using Clafer"](https://uwspace.uwaterloo.ca/handle/10012/8780) - using EAST-ADL (Alexandr Murashkin's MMath Thesis)
-* [Telematics Product-Line Architecture](Telematics/PLA) 
+* [Telematics Product-Line Architecture](Telematics/PLA)
 * [ClaferTools Case Study](ClaferToolsPLE/Intro)
 
 ## Multi-objective optimization of product lines
 
 Modeling features of products in a product line with their quality attributes.
-Multi-objective optimization discovers which products are optimal given the optimization goals such as "minimize total mass" and "maximize total performance". 
+Multi-objective optimization discovers which products are optimal given the optimization goals such as "minimize total mass" and "maximize total performance".
 
 * [Multi-Objective Optimization](MOO/Introduction)
 
 ## Data center resource allocation problems
 
-Modeling and multi-objectively optimizing resource allocations. Models created by Alexandr Murashkin. 
+Modeling and multi-objectively optimizing resource allocations. Models created by Alexandr Murashkin.
 
 * Allocate services with the given requirements on machines. Maximize the number of free machines.
 
@@ -139,7 +140,7 @@ Feature-based modeling of domain concepts and business rules.
 
 ## Model transformation
 
-An example `FamiliesToPersons` inspired by [ATL/Tutorials - Create a simple ATL transformation](http://wiki.eclipse.org/ATL/Tutorials_-_Create_a_simple_ATL_transformation). 
+An example `FamiliesToPersons` inspired by [ATL/Tutorials - Create a simple ATL transformation](http://wiki.eclipse.org/ATL/Tutorials_-_Create_a_simple_ATL_transformation).
 We let the reader appreciate the simplicity, conciseness, and declarative nature of this transformation in Clafer.
 
 * [FamiliesToPersons]()
@@ -166,7 +167,7 @@ We let the reader appreciate the simplicity, conciseness, and declarative nature
 
 ## Other cool examples
 
-Clafer is a general-purpose structural modeling language but it's strengths make it particularly useful in modeling scenarios whereby *containment hierarchies* and *model evolution* are very important. 
+Clafer is a general-purpose structural modeling language but it's strengths make it particularly useful in modeling scenarios whereby *containment hierarchies* and *model evolution* are very important.
 
 Below are some other examples:
 
@@ -177,7 +178,7 @@ Below are some other examples:
 
 ## Behavioral modeling
 
-As of version 0.5.0, Clafer can be used for specifying how the structures evolve over time. 
+As of version 0.5.0, Clafer can be used for specifying how the structures evolve over time.
 In this setting, a static Clafer model describes the possible states of the system,
 whereas, the temporal aspects specify how the states can change.
 
@@ -243,7 +244,7 @@ C2 : C
 ```
 ``````
 
-Double click on the graph in the simplified notation to show/hide references. By default, the graph only shows inheritance relationships allowing for quick inspection of the inheritance hierarchy which is not directly visible in Clafer's textual notation. 
+Double click on the graph in the simplified notation to show/hide references. By default, the graph only shows inheritance relationships allowing for quick inspection of the inheritance hierarchy which is not directly visible in Clafer's textual notation.
 
 **Add a graph in the CVL notation:**
 
@@ -286,9 +287,9 @@ Double click on the graph in the simplified notation to show/hide references. By
 </tr>
 </table>
 
-Use the `Preview` button to compile the model and see parsing and compilation errors, if any. At most one error is reported for each code block. If a parsing error is reported, compilation is not executed and therefore no compilation errors are reported. 
+Use the `Preview` button to compile the model and see parsing and compilation errors, if any. At most one error is reported for each code block. If a parsing error is reported, compilation is not executed and therefore no compilation errors are reported.
 
-Use the `Save` button to commit your edits to the Git repository. 
+Use the `Save` button to commit your edits to the Git repository.
 
 
 # Gitit Wiki general help

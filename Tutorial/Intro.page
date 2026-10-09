@@ -4,11 +4,11 @@ title: Domain Concept Modeling Using Clafer - Tutorial v9.4
 
 A Tutorial By Michał Antkiewicz<br>
 Version 9.4, Sep 19, 2014<br>
-[http://gsd.uwaterloo.ca/mantkiew](http://gsd.uwaterloo.ca/mantkiew)
+[https://uwaterloo.ca/wise-lab/profiles/michal-antkiewicz](https://uwaterloo.ca/wise-lab/profiles/michal-antkiewicz)
 
 
-Please email comments/questions/critique/corrections/suggestions to the author at [mantkiew@gsd.uwaterloo.ca](mantkiew@gsd.uwaterloo.ca). 
-Constructive feedback is much appreciated! 
+Please email comments/questions/critique/corrections/suggestions to the author at [michal.antkiewicz@uwaterloo.ca](michal.antkiewicz@uwaterloo.ca).
+Constructive feedback is much appreciated!
 
 Why concept modeling?
 =====================
@@ -17,7 +17,7 @@ During software development, you need to model your domain concepts to precisely
 
 Some methods, such as [Domain-Driven Design](http://domaindrivendesign.org/), explicitly recommend growing the so called Ubiquitous Language which contains definitions of all important domain concepts, such as business entities, rules, processes, scenarios, objectives, etc. In this tutorial, we show how domain concepts can be easily, naturally, concisely, and precisely modeled using [Clafer](http://clafer.org) – a modeling language under development in [Generative Software Development Lab](http://gsd.uwaterloo.ca) @ University of Waterloo, Canada and [MODELS group](http://www.itu.dk/research/models/wiki/index.php/Process_and_System_Models_Group) at [IT University of Copenhagen](http://www.itu.dk/).
 
-Standard metaphors used in writing 
+Standard metaphors used in writing
 ==================================
 
 In many organizations, people use word processing software for communication. Among most popular are Microsoft Word (documents) and PowerPoint (slides). When creating both documents and slides, people use some standard ways of structuring content, such as, using section headers, subsections, lists, tables, indentation, hyperlinks, etc.
@@ -32,11 +32,11 @@ Concept modeling using Clafer leverages these natural metaphors used in structur
 
 Additionally, people often use forms and examples:
 
-* Forms to represent general structure and attributes of all concepts of the given kind, 
+* Forms to represent general structure and attributes of all concepts of the given kind,
 * Examples to represent particular details about a concrete concept instance.
 
-For example, a form to collect data about a person would include fields such as `name`, `surname`, `date of birth`, `gender`, `marital status`, and `address`. 
-A form filled with data about some person would represent that concrete person (example). 
+For example, a form to collect data about a person would include fields such as `name`, `surname`, `date of birth`, `gender`, `marital status`, and `address`.
+A form filled with data about some person would represent that concrete person (example).
 So, the forms are abstract (they apply to any person but none in particular) and examples are concrete (they represent concrete person or a set of persons).
 
 > One definition of abstract is: “disassociated from any specific instance <an abstract entity>”
@@ -60,13 +60,13 @@ Concept modeling allows for precisely specifying the kinds of data and the rules
 A not so standard metaphor: Inheritance
 =======================================
 
-All children inherit genes from their biological parents. 
-In conceptual modeling, concepts can also be defined to inherit points from other concepts. 
+All children inherit genes from their biological parents.
+In conceptual modeling, concepts can also be defined to inherit points from other concepts.
 
-For example, a concept Student could be defined to inherit all properties of a Person concept because the Student is a Person. 
-The “is a” relationship indicates the inheritance. 
+For example, a concept Student could be defined to inherit all properties of a Person concept because the Student is a Person.
+The “is a” relationship indicates the inheritance.
 
-Additionally, the substitution principle states that because Student is a Person, the Student can participate in all situations a Person can participate. 
+Additionally, the substitution principle states that because Student is a Person, the Student can participate in all situations a Person can participate.
 
 For example, if a line to the store consists of Persons, then it can also consist of Students because Students are also Persons.
 
@@ -75,10 +75,10 @@ Clafer by Example
 
 In this tutorial, we use [Clafer](http://clafer.org) (CLAss FEature Relationship) – a lightweight structural modeling language developed at [Generative Software Development Lab](http://gsd.uwaterloo.ca) at [University of Waterloo](http://uwaterloo.ca) and [MODELS group](http://www.itu.dk/research/models/wiki/index.php/Process_and_System_Models_Group) at [IT University of Copenhagen](http://www.itu.dk/).
 .
-All examples are expressed in Clafer version 0.3.6.1, which is the most recent release. 
+All examples are expressed in Clafer version 0.3.6.1, which is the most recent release.
 See [Clafer Tools 0.3.6.1 Released](http://www.clafer.org/2014/07/clafer-compiler-and-ig-036-released.html).
 
-A model of a person from previous section expressed using Clafer could look as follows: 
+A model of a person from previous section expressed using Clafer could look as follows:
 
 <table>
 <tr>
@@ -127,7 +127,7 @@ points about a `Person` related to address are grouped below<br>
 </td>
 </tr>
 </table>
-  
+
 
 > **Note:** Names of clafers do not have to start with a capital letter; however, they have to be continuous strings of non-white-space characters beginning with a letter (no spaces are allowed).
 
@@ -167,15 +167,15 @@ e.g., `Street`<br>
 </tr>
 </table>
 
-> **Note:** Currently, Clafer does not have a notation for expressing instance data directly. Instead, we write instance specifications, which can be underspecified (details can be left out) and which must be evaluated (and perhaps completed) to produce concrete instance data. The experimental [Clafer 0.4.0](http://gsd.uwaterloo.ca/clafer-tools-binary-distributions) supports redefinition, which allows for writing concrete clafers without constraints but by redefining cardinality and supertypes of clafers.
+> **Note:** Currently, Clafer does not have a notation for expressing instance data directly. Instead, we write instance specifications, which can be underspecified (details can be left out) and which must be evaluated (and perhaps completed) to produce concrete instance data. [Clafer 0.5.2](http://wiselab.uwaterloo.ca/clafer-tools-binary-distributions) supports redefinition, which allows for writing concrete clafers without constraints but by redefining cardinality and supertypes of clafers.
 
 > **Note:** The square brackets `[` and `]` are used to assert certain facts and impose certain restrictions ( `[ ]` indicate constraints). They can be used in both forms (abstractions) and in examples (instance  specifications). Here, we use them to fix certain facts about the example, i.e., that `JohnDoe` is a `Male` and that his `Name` is `"John"`. These facts can never change (they are hard constraints). For example, additionally asserting that `JohnDoe` is a `Female`, will cause a violation of the `xor` group constraint of `MaritalStatus`.
 
-`JohnDoe` satisfies all requirements of being a person set by the concept definition `Person`. 
-Possible violations of the definition would include: 
-1) not having a name (name is mandatory), 
-2) not being a `Male` nor a `Female` (`Gender` is an `or` group), 
-3) being both `NeverMarried` and `Married` at the same time (`MaritalStatus` is an `xor` group), and 
+`JohnDoe` satisfies all requirements of being a person set by the concept definition `Person`.
+Possible violations of the definition would include:
+1) not having a name (name is mandatory),
+2) not being a `Male` nor a `Female` (`Gender` is an `or` group),
+3) being both `NeverMarried` and `Married` at the same time (`MaritalStatus` is an `xor` group), and
 4) having a `UnitNo` without having a `Street` (cannot have a property without the parent property).
 
 > **Note:** There is no need to specify that `JohnDoe` has `Gender` and `MaritalStatus`. Simply specifying that he is a `Male` implies that he also has `Gender`. In case of name ambiguity, `Male` could be qualified as `[ Gender.Male ]`.
@@ -184,7 +184,7 @@ Possible violations of the definition would include:
 
 > **Note:** Clafer Instance Generator (ClaferIG) is a tool that generates instance data for instance specifications. We currently have three instance generators: Alloy-based (ClaferIG), Choco3-based (ClaferChocoIG), and Z3-based (ClaferSMT). The latter two are also multi-objective optimizers, that is they can produce instances that are Pareto-optimal given a set of objectives. Every Pareto-optimal instance represents a certain tradeoff among the objectives. Visit [Variability Management, Multi-Objective Optimization and Decision-Making in Software Product Line Engineering](http://t3-necsis.cs.uwaterloo.ca:8099/) for more information.
 
-We could define a concept of `Student` by inheriting from `Person` and by adding additional points related only to students. 
+We could define a concept of `Student` by inheriting from `Person` and by adding additional points related only to students.
 We could define the concept of a waiting line as follows.
 
 <table>
@@ -197,7 +197,7 @@ abstract Student : Person
 ```
 
 ```clafer
-abstract  WaitingLine 
+abstract  WaitingLine
   participants -> Person *
 ```
 
@@ -352,7 +352,7 @@ The graph presents an inheritance hierarchy of our model.
 
 Double clicking on the graph shows/hides references among clafers.
 
-The source code can be downloaded using the link `[.cfr]` below the module statistics. 
+The source code can be downloaded using the link `[.cfr]` below the module statistics.
 Run the model using Clafer Instance Generator to see what the instance data looks like.
 
 You can work with the model from this page in ClaferIDE:
