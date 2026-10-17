@@ -10,10 +10,10 @@ categories: dogfooding
 
 # The tool `ClaferMooVisualizer`
 
-The visualizer can be in one of four states: 
+The visualizer can be in one of four states:
 
 * `init`, when empty GUI is loaded and it is ready to open a file,
-* `loadingAndProcessing`, when a file is being loaded, compiled, and optimized, 
+* `loadingAndProcessing`, when a file is being loaded, compiled, and optimized,
 * `error`, when the processing resulted in an error, and
 * `ready`, when the GUI has been populated with optimization results and the users perform their tasks.
 
@@ -33,15 +33,15 @@ abstract ClaferMooVisualizer
         `analysis
 ```
 
-For example, our [public instance of the visualizer](http://t3-necsis.cs.uwaterloo.ca:8092) could be described as follows after it's loaded:
+For example, our [public instance of the visualizer](https://wiselab.uwaterloo.ca:8092) could be described as follows after it's loaded:
 
 ```clafer
 viz1 : ClaferMooVisualizer
-    [ deployedAtURL = "t3-necsis.cs.uwaterloo.ca:8092" ]
+    [ deployedAtURL = "wiselab.uwaterloo.ca:8092" ]
     [ init ]
 ```
 
-We model each abstract state individually. 
+We model each abstract state individually.
 
 ## The state `init`
 
@@ -53,23 +53,23 @@ abstract mux init
     claferFileUpload -> string ?
 ```
 
-There are three possibilities here: 
+There are three possibilities here:
 
 1) the empty visualizer is opened
 
 ```clafer
 viz2 : ClaferMooVisualizer
-    [ deployedAtURL = "t3-necsis.cs.uwaterloo.ca:8092" ]
+    [ deployedAtURL = "wiselab.uwaterloo.ca:8092" ]
     [ init ]
     [ no claferFileURL ]
     [ no claferFileUpload ]
 ```
 
-2) the visualizer is opened with a `claferFileURL`, e.g., entering this URL `http://t3-necsis.cs.uwaterloo.ca:8092/?claferFileURL=server/model.cfr` will first load the visualizer in this state:
+2) the visualizer is opened with a `claferFileURL`, e.g., entering this URL `https://wiselab.uwaterloo.ca:8092/?claferFileURL=server/model.cfr` will first load the visualizer in this state:
 
 ```clafer
 viz3 : ClaferMooVisualizer
-    [ deployedAtURL = "t3-necsis.cs.uwaterloo.ca:8092" ]
+    [ deployedAtURL = "wiselab.uwaterloo.ca:8092" ]
     [ claferFileURL = "server/model.cfr" ]
 ```
 
@@ -77,7 +77,7 @@ viz3 : ClaferMooVisualizer
 
 ```clafer
 viz4 : ClaferMooVisualizer
-    [ deployedAtURL = "t3-necsis.cs.uwaterloo.ca:8092" ]
+    [ deployedAtURL = "wiselab.uwaterloo.ca:8092" ]
     [ claferFileUpload = "model.cfr" ]
 ```
 
@@ -93,7 +93,7 @@ abstract loadingAndProcessing
 
 ## The state `error`
 
-There are a few possible errors that can occur during loading and processing. 
+There are a few possible errors that can occur during loading and processing.
 
 ```clafer
 abstract xor error
@@ -124,7 +124,7 @@ abstract Goal
         maximizee
 ```
 
-For example, the [Android4](t3-necsis.cs.uwaterloo.ca:8091/MOO/Android4) optimization problem has four quality dimensions:
+For example, the [Android4](https://wiselab.uwaterloo.ca/modelwiki/MOO/Android4) optimization problem has four quality dimensions:
 
 ```clafer
 performance : Dimension
@@ -140,7 +140,7 @@ maxPerformance : Goal
     [ dimension = performance ]
     [ maximizee ]
 
-minEnergy : Goal 
+minEnergy : Goal
     [ dimension = energy ]
     [ minimizee ]
 
@@ -148,7 +148,7 @@ maxSecurity : Goal
     [ dimension = security ]
     [ maximizee ]
 
-minMass : Goal 
+minMass : Goal
     [ dimension = mass ]
     [ minimizee ]
 ```
@@ -165,7 +165,7 @@ abstract ready
 For example, the visualizer's state `ready` would look as follows:
 
 ```clafer
-r1 : ready 
+r1 : ready
     [ goals = maxPerformance, minEnergy, maxSecurity, minMass ]
 ```
 
@@ -212,7 +212,7 @@ abstract graph
 For example, the graph view will be loaded by default with the following assignment of dimensions:
 
 ```clafer
-g1 : graph 
+g1 : graph
     [ xAxis = performance ]
     [ yAxis = energy ]
     [ opacity = security ]
@@ -220,7 +220,7 @@ g1 : graph
     [ bubble = bubbles ]
 ```
 
-the users can change which dimension will be displayed by which means. 
+the users can change which dimension will be displayed by which means.
 This is particularly important in case there are more than four dimensions - the users can pick the four dimensions they want to visualize.
 
 TODO: assignment of `x`, `y`, `opacity`, and `size` values to bubbles from products.

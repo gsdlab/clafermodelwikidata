@@ -6,20 +6,20 @@ title: Guidelines for feature modeling using Clafer
 
 The subset of Clafer most relevant to feature modeling is presented in these two resources:
 
-* Feature modeling using Clafer tutorial 
+* Feature modeling using Clafer tutorial
 
 >The tutorial [Attributed Feature Models in Clafer](https://github.com/gsdlab/clafer/raw/master/doc/tutorial/attributed/doc.pdf) explains how to read and encode attributed feature models in Clafer. It also presents Clafer constructions that go beyond feature modeling but which are useful for encoding variability models.
 
 * Feature modeling with quality and multi-objective optimization using Clafer
 
-> An [interactive assignment](http://t3-necsis.cs.uwaterloo.ca:8099/) designed to introduce the concepts of *variability management*, *multi-objective optimization*, and *computational decision-making* in product line engineering. The assignment introduces basic feature modeling, modularizing feature models, modeling with quality attributes (e.g., `cost`, `performance`), and defining and solving multiple objective problems (e.g., minimize cost while maximizing performance and security). The assignment uses on-line tools: ClaferIDE and Clafer Multi-Objective Optimizer and Visualizer.
+> An [interactive assignment](https://wiselab.uwaterloo.ca/railwaywiki/) designed to introduce the concepts of *variability management*, *multi-objective optimization*, and *computational decision-making* in product line engineering. The assignment introduces basic feature modeling, modularizing feature models, modeling with quality attributes (e.g., `cost`, `performance`), and defining and solving multiple objective problems (e.g., minimize cost while maximizing performance and security). The assignment uses on-line tools: ClaferIDE and Clafer Multi-Objective Optimizer and Visualizer.
 
 # Working with Clafer models
 
-Clafer is a textual language and in order to be used effectively, it requires a powerful text editor. 
-Specifically, since a model in Clafer is a tree and the nesting is expressed through indentation, the editor should support 
+Clafer is a textual language and in order to be used effectively, it requires a powerful text editor.
+Specifically, since a model in Clafer is a tree and the nesting is expressed through indentation, the editor should support
 
-* **block indentation** to be able to indent a few lines of clafers for nesting, 
+* **block indentation** to be able to indent a few lines of clafers for nesting,
 * **indentation level visualization** to be able to see the nesting depth of clafers, and
 * **name completion** to be able to easily refer to the names of already defined clafers in other parts of the model.
 
@@ -61,12 +61,12 @@ We recommend using the Choco-based instance generator for most purposes since it
 
 ### ClaferIDE
 
-For editing, compiling, and instantiating full Clafer models, we provide [ClaferIDE](http://t3-necsis.cs.uwaterloo.ca:8094/). The tool provides an editor with syntax highlighting and good indentation support. The tool also integrates the compiler and the Alloy-based and Choco3-based instance generators. 
+For editing, compiling, and instantiating full Clafer models, we provide [ClaferIDE](https://wiselab.uwaterloo.ca:8094/). The tool provides an editor with syntax highlighting and good indentation support. The tool also integrates the compiler and the Alloy-based and Choco3-based instance generators.
 
 ### ClaferConfigurator
 
-For exploring multiple valid configurations of a feature model we provide [ClaferConfigurator](http://t3-necsis.cs.uwaterloo.ca:8093/).
+For exploring multiple valid configurations of a feature model we provide [ClaferConfigurator](https://wiselab.uwaterloo.ca:8093/).
 
 ### ClaferMooVisualizer
 
-For visualizing and exploring optimal configurations of a feature model with quality attributes and optimization objectives we provide [ClaferMooVisualizer](http://t3-necsis.cs.uwaterloo.ca:8092/).
+For visualizing and exploring optimal configurations of a feature model with quality attributes and optimization objectives we provide [ClaferMooVisualizer](https://wiselab.uwaterloo.ca:8092/).
