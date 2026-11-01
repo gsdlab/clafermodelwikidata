@@ -122,7 +122,7 @@ Useful shorthands are
 <int literal>..*
 ```
 
-Children of clafers with default group cardinality `0..*` are mandatory by defult.
+Children of clafers with default group cardinality `0..*` are mandatory by default.
 Children of clafers with any other group cardinality given by keyword or interval are optional by default.
 
 Reference clafers can be given values using an initializer:
