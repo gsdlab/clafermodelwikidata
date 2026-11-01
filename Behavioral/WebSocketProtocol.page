@@ -44,6 +44,8 @@ abstract WebSocket
 
 The example scenarios serve as test cases, whereby we can state the intended behavior of the websocket.
 In each case, the constraint must be consistent with the behavior specified above; however, it can be underspecified.
+A chain of transitions is a sequence, read from left to right, and `initially` anchors it to the start of the trace.
+Without `initially`, the chain would have to hold in every state of the trace, which contradicts the behavior above.
 For example, the socket can remain in the state `opened` for an arbitrary number of snapshots until the request to close is received.
 We express that using the transition `-->>`.
 In the other cases, state changes must occur in the next snapshot as required by `-->`. 
@@ -52,7 +54,7 @@ In the other cases, state changes must occur in the next snapshot as required by
 
 ```clafer
 webSocketOpenedClosed : WebSocket
-    [ ready --> request=open && request.success --> opened -->> request=close && request.success --> closed --> closed ]
+    [ initially (ready --> request=open && request.success --> opened -->> request=close && request.success --> closed --> closed) ]
 ```
 
 We call such a temporal constraint a *trace specification*. 
@@ -60,51 +62,45 @@ We call such a temporal constraint a *trace specification*.
 #### Trace 1
 
 Since, the trace specification and the behavior of the websocket are consistent, a trace generator can produce the following trace.
+After the last state, the trace loops back to that state: the websocket remains `closed` forever.
 
 <table>
 <tr>
 <td valign="top">
-```clafer
-WebSocket11
+```
+webSocketOpenedClosed
   states
     ready
 ```
 </td>
 <td valign="top">
-```clafer
-WebSocket12
+```
+webSocketOpenedClosed
+  request -> open
+    success
   states
     ready
-  request->open
-    success
 ```
 </td>
 <td valign="top">
-```clafer
-WebSocket13
+```
+webSocketOpenedClosed
   states
     opened
 ```
 </td>
 <td valign="top">
-```clafer
-WebSocket14
+```
+webSocketOpenedClosed
+  request -> close
+    success
   states
     opened
-  request->close
-    success
 ```
 </td>
 <td valign="top">
-```clafer
-WebSocket15
-  states
-    closed
 ```
-</td>
-<td valign="top">
-```clafer
-WebSocket16
+webSocketOpenedClosed
   states
     closed
 ```
@@ -113,9 +109,13 @@ WebSocket16
 
 ### Web socket successfully opened but failed to be closed
 
-```clafer
+All the Clafer code on a page forms one model, and all its concrete clafers exist at the same time.
+Therefore, this scenario and the next one are not part of the model of this page.
+To try one, open the model in the IDE and use it to replace the scenario above.
+
+```
 webSocketOpenedFailed : WebSocket
-    [ ready --> request=open && request.success --> opened -->> request=close && request.failure --> failed --> failed ]
+    [ initially (ready --> request=open && request.success --> opened -->> request=close && request.failure --> failed --> failed) ]
 ```
 
 #### Trace 2
@@ -123,47 +123,40 @@ webSocketOpenedFailed : WebSocket
 <table>
 <tr>
 <td valign="top">
-```clafer
-WebSocket21
+```
+webSocketOpenedFailed
   states
     ready
 ```
 </td>
 <td valign="top">
-```clafer
-WebSocket22
-  states
-    ready
-  request->open
+```
+webSocketOpenedFailed
+  request -> open
     success
+  states
+    ready
 ```
 </td>
 <td valign="top">
-```clafer
-WebSocket23
+```
+webSocketOpenedFailed
   states
     opened
 ```
 </td>
 <td valign="top">
-```clafer
-WebSocket24
-  states
-    opened
-  request->close
+```
+webSocketOpenedFailed
+  request -> close
     failure
-```
-</td>
-<td valign="top">
-```clafer
-WebSocket25
   states
-    failed
+    opened
 ```
 </td>
 <td valign="top">
-```clafer
-WebSocket26
+```
+webSocketOpenedFailed
   states
     failed
 ```
@@ -172,9 +165,9 @@ WebSocket26
 
 ### Web socket failed to be opened
 
-```clafer
+```
 webSocketFailed : WebSocket
-    [ ready --> request=open && request.failure --> failed --> failed ]
+    [ initially (ready --> request=open && request.failure --> failed --> failed) ]
 ```
 
 #### Trace 3
@@ -182,31 +175,24 @@ webSocketFailed : WebSocket
 <table>
 <tr>
 <td valign="top">
-```clafer
-WebSocket31
+```
+webSocketFailed
   states
     ready
 ```
 </td>
 <td valign="top">
-```clafer
-WebSocket32
-  states
-    ready
-  request->open
+```
+webSocketFailed
+  request -> open
     failure
-```
-</td>
-<td valign="top">
-```clafer
-WebSocket33
   states
-    failed
+    ready
 ```
 </td>
 <td valign="top">
-```clafer
-WebSocket34
+```
+webSocketFailed
   states
     failed
 ```

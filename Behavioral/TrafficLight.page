@@ -4,68 +4,92 @@ categories: behavioral
 ...
 
 This example demonstrates modeling of a simple Traffic Light state machine.
-Based on slide no. 3 from [lecture presentation](http://www.cs.mcgill.ca/~adenau/teaching/cs304/lecture16.pdf).
+Based on slide no. 3 from [lecture presentation](http://www.cs.mcgill.ca/~adenau/teaching/cs304/lecture16.pdf)
 
 ```{.clafer .links}
 ```
 
 # The most simple example
 
-* no concurrency, 
-* no forks, 
-* deterministic, 
-* no events, 
+* no concurrency,
+* no forks,
+* deterministic,
+* no events,
 * no time.
 
-## Abstract types for state machine modeling
+## Traffic light model with transitions only
 
 ```clafer
-abstract State
-abstract StateMachine
+abstract xor TrafficLight_1
+    initial xor on -->> off
+        initial xor normal
+            initial green --> yellow
+            yellow --> red
+            red --> green
+        xor flashing -->> normal
+            initial yellow_on --> yellow_off
+            yellow_off --> yellow_on
+    off --> on
 ```
 
-## Simple traffic Light model with transitions only
+The constructs mean the following:
+
+* `on -->> off`: `on` lasts any number of steps, but must eventually become `off`.
+* `off --> on`: `off` lasts exactly one step.
+* `initial xor normal`: every time `on` starts, it starts in `normal`, and `initial green` makes it start in `green`. Re-entering `on` starts it again.
+* `normal` has no transition, because we do not want to force flashing: `normal` may stay or switch to `flashing` at any step.
+* `flashing -->> normal`: `flashing` lasts at least one step and must eventually end.
+* `green --> yellow` and the others: the strict cycles inside a state.
+
+## Scenarios
+
+A scenario is a concrete traffic light with a constraint on its trace.
+A chain of transitions is a sequence, read from left to right, and `initially` anchors it to the start of the trace.
+Without `initially`, the chain would have to hold in every state of the trace.
+
+The scenario below is active on this page: the normal cycle, then flashing, then off.
 
 ```clafer
-abstract TrafficLight_1
-    final xor TLStates_1 : StateMachine
-        initial xor on : State  -->> off
-            initial xor normal : State -->> flashing
-                initial green : State --> yellow
-                yellow : State --> red
-                red : State --> green
-            xor flashing : State -->> normal
-                initial yellow_on : State --> yellow_off
-                yellow_off : State --> yellow_on
-        off : State -->> on
+tl : TrafficLight_1
+    [ initially (green --> yellow --> red --> green --> yellow_on --> yellow_off --> off) ]
 ```
 
-## Scenarios and Properties
+It desugars to
 
-```clafer
-t1 :TrafficLight_1
-
-//assert [ always t1.TLStates_1.on -->> t1.TLStates_1.flashing -->> t1.TLStates_1.yellow_on -->> t1.TLStates_1.yellow_off -->> t1.TLStates_1.yellow_on]
-
-assert [ always t1.TLStates_1.on -->> t1.TLStates_1.on.flashing ]
-assert [ always t1.TLStates_1.on.flashing -->> t1.TLStates_1.on.flashing.yellow_on ]
-assert [ always t1.TLStates_1.on.flashing.yellow_on -->> t1.TLStates_1.on.flashing.yellow_off ]
-assert [ always t1.TLStates_1.on.flashing.yellow_off -->> t1.TLStates_1.on.flashing.yellow_on ]
+```
+    [ initially (green && X (yellow && X (red && X (green && X (yellow_on && X (yellow_off && X off)))))) ]
 ```
 
-```clafer
-t2 :TrafficLight_1
-    [ on --> flashing --> yellow_on --> yellow_off --> yellow_on]
+All the Clafer code on a page forms one model, and all its concrete clafers exist at the same time.
+Therefore, the other scenarios are not part of the model of this page.
+To try one, open the model in the IDE and use it to replace the scenario above.
+
+On, eventually flashing, and the flashing cycle:
+
 ```
-The constraint desugars to 
-```
-    [ on && X flashing && X yellow_on && X yellow_off && X yellow_on]
+t1 : TrafficLight_1
+    [ initially (on -->> flashing -->> yellow_on -->> yellow_off -->> yellow_on) ]
 ```
 
-```clafer
-t3 :TrafficLight_1
+On, then flashing at the next step:
 
-assert [ always t3.TLStates_1.on -->> t3.TLStates_1.on.flashing.yellow_off ]
-assert [ always t3.TLStates_1.on.flashing.yellow_off -->> t3.TLStates_1.on.flashing.yellow_on ]
-assert [ always t3.TLStates_1.on.flashing.yellow_on -->> t3.TLStates_1.on.flashing.yellow_off ]
+```
+t2 : TrafficLight_1
+    [ initially (on --> yellow_on --> yellow_off --> yellow_on) ]
+```
+
+It desugars to
+
+```
+    [ initially (on => X (yellow_on && X (yellow_off && X yellow_on))) ]
+```
+
+Observe, that the state after `on` is `yellow_on`, and not `flashing` followed by `yellow_on`.
+`flashing` starts in `yellow_on`, so `on --> flashing --> yellow_on` would require `yellow_on` twice in a row, which `yellow_on --> yellow_off` forbids.
+
+On until `yellow_off`, then the flashing cycle step by step:
+
+```
+t3 : TrafficLight_1
+    [ initially (on -->> yellow_off --> yellow_on --> yellow_off) ]
 ```
