@@ -1,5 +1,5 @@
 ---
-title: Welcome to Clafer 0.5.1 Model Wiki!
+title: Welcome to Clafer 0.5.6 Model Wiki!
 ...
 
 # Introduction
@@ -10,8 +10,11 @@ For installation, visit [Software](http://www.clafer.org/p/software.html).
 Each wiki page contains a single Clafer model. The model can be split into model fragments and interwoven with rich-text contents (i.e., *literate modeling*). The model is compiled using the Clafer compiler and rendered as HTML, which provides syntax and error highlighting and hyperlinking, and as a Graph, which provides a different view on the model that emphasizes inheritance and references. Double click on the graph shows/hides references.
 
 ## Release announcements and changes
-
-  | [0.5.2]
+  | [0.5.6](https://www.clafer.org/2026/10/clafer-tools-and-web-tools-056-released-temporal.html)
+  | [0.5.5](https://www.clafer.org/2026/10/clafer-tools-and-web-tools-055-released-decimals.html)
+  | [0.5.4](https://www.clafer.org/2026/10/clafer-tools-and-web-tools-054-released.html)
+  | [0.5.3](https://www.clafer.org/2026/10/clafer-tools-and-web-tools-053-released.html)
+  | [0.5.2](https://www.clafer.org/2026/10/clafer-compiler-ig-wiki-chocosolver-and.html)
   | [0.5.1](https://www.clafer.org/2023/09/clafer-compiler-ig-and-wiki-051-released.html)
   | [0.5.0 Behavioral Clafer](https://www.clafer.org/2019/01/by-micha-antkiewicz-jan-6-2019-our-new.html) (see [Behavioral Modeling](#behavioral-modeling) for examples)
 
