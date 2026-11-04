@@ -3,7 +3,27 @@ title: TLS Handshake Model
 categories: behavioral
 ...
 
-This example demonstrates modeling TLS Handshake Protocol.
+This example demonstrates modeling the TLS 1.2 handshake protocol (RFC 5246, section 7.3) between a client and a server, as a product line: anonymous mode and client authentication are features, fixed in each trace.
+
+```
+Client                                   Server
+ClientHello                  -------->
+                                         ServerHello
+                                         Certificate*
+                                         ServerKeyExchange*
+                                         CertificateRequest*
+                             <--------   ServerHelloDone
+Certificate*
+ClientKeyExchange
+CertificateVerify*
+[ChangeCipherSpec]
+Finished                     -------->
+                                         [ChangeCipherSpec]
+                             <--------   Finished
+Application Data             <------->   Application Data
+```
+
+The server answers with a protocol_version alert when the client and the server have no version in common, and a fatal alert ends the connection.
 
 ```{.clafer .links}
 ```
@@ -17,6 +37,8 @@ abstract final FeatureModel
 TLSFeatures : FeatureModel
     annonymousMode : Feature ?
     clientAuthentication : Feature ?
+    // the server requests a client certificate only from a known server (no anonymous mode)
+    [ clientAuthentication => no annonymousMode ]
 ```
 
 ```clafer
@@ -24,7 +46,7 @@ abstract final Domain
 
 enum ProtocolVersion = SSL2_0 | SSL3_0 | TLS1_0 | TLS1_1 | TLS1_2
 
-enum HandshakeStatus = initiated | completed | failed 
+enum HandshakeStatus = initiated | completed | failed
 
 abstract Port
 
@@ -57,6 +79,7 @@ clientFinishedMessage : Message
 ```
 
 ## Application data
+
 ```clafer
 applicationDataMessage : Message
 ```
@@ -65,11 +88,11 @@ applicationDataMessage : Message
 
 ```clafer
 abstract final Node : Domain
-	send : Port -> Message
-	receive : Port -> Message
-	protocolversion -> ProtocolVersion +
-	certificate ?
-		signing ?
+    send : Port -> Message
+    receive : Port -> Message
+    protocolversion -> ProtocolVersion +
+    certificate ?
+        signing ?
 
 
 abstract final Server : Node
@@ -77,7 +100,7 @@ abstract final Server : Node
 abstract final Client : Node
 ```
 
-##  connecting messages 
+## Connecting messages
 
 ```clafer
 [Server.send = Client.receive]
@@ -97,87 +120,111 @@ aClient : Client
 
 ## The main protocol
 
+A phase of the channel is left only from its last states. A transition that leaves a phase is a constraint of the channel: as a transition of a state nested in the phase, it would lapse when the phase is left, which is when it should take effect.
+
 ```clafer
 Protocol : Domain
     final client -> aClient
     final server -> OurServer
     handshakeStatus -> HandshakeStatus
 
-	xor channel
-		
-		initial clientHello --> serverResponse
-			[handshakeStatus = initiated]
-			[client.send = clientHelloMessage]
+    // The phases of the connection. A phase is left only from its last states, and a
+    // transition that leaves a phase is a constraint of the channel: as a transition of a state
+    // nested in the phase, it would lapse when the phase is left, which is when it should take
+    // effect. The transitions within a phase hold while the phase lasts.
+    xor channel
+        initial clientHello --> (serverResponse || fatalError)
+            [ handshakeStatus = initiated ]
+            [ client.send = clientHelloMessage ]
 
+        xor serverResponse
+            [ handshakeStatus = initiated ]
+            [ initially (serverHello || mismatch) ]
 
-		xor serverResponse 
-			[handshakeStatus =  initiated]
+            // no version in common: a protocol_version alert
+            mismatch
+                [ no (client.protocolversion ** server.protocolversion) ]
+                [ server.send = protocolMismatch ]
 
-			[initially (serverHello || mismatch)]
+            // the server picks a version that both support
+            serverHello
+                [ some (client.protocolversion ** server.protocolversion) ]
+                [ server.send = serverHelloMessage ]
+            // a known server sends its certificate; an anonymous one its key exchange
+            [ serverHello -[ no annonymousMode ]-> serverCertificate ]
+            [ serverHello -[ annonymousMode ]-> serverKeyExchange ]
 
-			mismatch --> fatalError
-				[client.protocolversion.dref not in server.protocolversion.dref]
-				[server.send = protocolMismatch]
-	
-			serverHello --> (serverCertificate || serverKeyExchange || certificateRequest || serverHelloDone)
-				[client.protocolversion.dref in server.protocolversion.dref]
-				[server.send = serverHelloMessage]
+            serverCertificate
+                [ no annonymousMode ]
+                [ server.send = serverCertificateMessage ]
+            [ serverCertificate -[ clientAuthentication ]-> (serverKeyExchange || certificateRequest) ]
+            [ serverCertificate -[ no clientAuthentication ]-> (serverKeyExchange || serverHelloDone) ]
 
-			[serverHello -[not annonymousMode]-> serverCertificate]
-			
+            serverKeyExchange
+                [ server.send = serverKeyExchangeMessage ]
+            [ serverKeyExchange -[ clientAuthentication ]-> certificateRequest ]
+            [ serverKeyExchange -[ no clientAuthentication ]-> serverHelloDone ]
 
-			serverCertificate --> (serverKeyExchange || certificateRequest || serverHelloDone)
-				[server.send = serverCertificateMessage]
-            
-            serverKeyExchange -->  certificateRequest || serverHelloDone
-				[server.send = serverKeyExchangeMessage]
-
-
+            // features: client authentication
             certificateRequest --> serverHelloDone
-            	[no annonymousMode && clientAuthentication]
-            	[server.send = serverCertificateRequestMessage]
+                [ clientAuthentication ]
+                [ server.send = serverCertificateRequestMessage ]
 
-            serverHelloDone --> clientResponse
-                [server.send = serverHelloDoneMessage]
+            serverHelloDone
+                [ server.send = serverHelloDoneMessage ]
 
+        [ serverResponse -[ !(serverResponse.mismatch || serverResponse.serverHelloDone) ]-> serverResponse ]
+        [ serverResponse.mismatch --> fatalError ]
+        [ serverResponse.serverHelloDone --> clientResponse ]
 
-		xor clientResponse 
-			[handshakeStatus = initiated]	
-			[initially (clientCertificate || clientKeyExchange) ]
+        xor clientResponse
+            [ handshakeStatus = initiated ]
+            // the client sends its certificate when the server requests it
+            [ initially (clientAuthentication => clientCertificate) ]
+            [ initially (no clientAuthentication => clientKeyExchange) ]
 
-			clientCertificate --> clientKeyExchange
-				[no annonymousMode && clientAuthentication]
-				[client.send = clientCertificateMessage]
+            clientCertificate --> clientKeyExchange
+                [ clientAuthentication ]
+                [ client.send = clientCertificateMessage ]
 
-			clientKeyExchange --> (certificateVerify || clientChangeCipherSpec)
-				[client.send = clientKeyExchangeMessage]
-				
+            // a client with a certificate that can sign proves that it has the private key
+            clientKeyExchange
+                [ client.send = clientKeyExchangeMessage ]
+            [ clientKeyExchange -[ clientAuthentication && some client.certificate.signing ]-> certificateVerify ]
+            [ clientKeyExchange -[ !(clientAuthentication && some client.certificate.signing) ]-> clientChangeCipherSpec ]
 
-			certificateVerify --> clientChangeCipherSpec
-				[client.certificate.signing]
-				[client.send = certificateVerifyMessage]
+            certificateVerify --> clientChangeCipherSpec
+                [ client.certificate.signing ]
+                [ client.send = certificateVerifyMessage ]
 
+            clientChangeCipherSpec --> clientFinished
+                [ client.send = clientChangeCipherSpecMessage ]
 
-			clientChangeCipherSpec --> clientFinished
-				[client.send = clientChangeCipherSpecMessage]
+            clientFinished
+                [ client.send = clientFinishedMessage ]
 
-			clientFinished --> serverFinish
-				[client.send = clientFinishedMessage]
+        [ clientResponse -[ no clientResponse.clientFinished ]-> clientResponse ]
+        [ clientResponse.clientFinished --> serverFinish ]
 
+        xor serverFinish
+            initial serverChangeCipherSpec --> serverFinished
+                [ handshakeStatus = initiated ]
+                [ server.send = serverChangeCipherSpecMessage ]
 
-		xor serverFinish --> serverFinished
-			[handshakeStatus = initiated]
-			initial serverChangeCipherSpec
-				[server.send = serverChangeCipherSpecMessage]
+            // both Finished messages complete the handshake
+            serverFinished
+                [ server.send = serverFinishedMessage ]
+                [ handshakeStatus = completed ]
 
-			serverFinished --> dataTransfer
-				[server.send = serverFinishedMessage]
-				[handshakeStatus = completed]
+        [ serverFinish -[ no serverFinish.serverFinished ]-> serverFinish ]
+        [ serverFinish.serverFinished --> dataTransfer ]
 
-		dataTransfer -->> (handshakeStatus = initiated)
-			[handshakeStatus = completed]
-			[client.send = applicationDataMessage]
+        // the application data flows until a new handshake (renegotiation)
+        dataTransfer -->> clientHello
+            [ handshakeStatus = completed ]
+            [ client.send = applicationDataMessage ]
 
-		fatalError
-			[handshakeStatus = failed]
+        // a fatal alert ends the connection
+        fatalError --> fatalError
+            [ handshakeStatus = failed ]
 ```
