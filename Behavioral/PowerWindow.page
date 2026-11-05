@@ -91,16 +91,17 @@ The user request `expressUp` is only available when the feature `express` is pre
 [ express <=> expressUp ]
 ```
 
-The component `pinchDetector` of the `WinController` is only required if the feature `pinchProtection` is present.
+The component `pinchDetector` of each `WinController` is only required if the feature `pinchProtection` is present.
 
 ```clafer
-[ pinchProtection <=> pinchDetector ]
+[ all c : WinController | pinchProtection <=> c.pinchDetector ]
 ```
 
 Instances of the ports `endOfTravel` and `objectDetected` appear when the corresponding binary signal is received.
 On the other hand, instances of the port `req` point to a specific user request. 
 No instance of the port `req` indicates no user request.
 Finally, we allow at most one of `req`, `endOfTravel`, and `objectDetected` in order to remove non-determinism.
+After an `expressUp`, the user does not need to hold the button: the window keeps moving up on its own.
 
 ```clafer
 abstract WinController : Component
@@ -112,49 +113,57 @@ abstract WinController : Component
     objectDetected : Port ?
 
     [ lone (req, endOfTravel, objectDetected )]
-    [ always req=stop between req=down and req=up]
-    [ always req=stop between req=up and req=down]
-    [ always req=up between req=stop and req=expressUp ]
     [ always req=expressUp => next no req]
 
     final xor WinStates : StateMachine
         xor movingUp : State
             [ motor.cmd = motorUp ]
             [ req=down     --> movingDown ]
-            [ endOfTravel  --> closed     ]
-            [ req=up       --> movingUp ]
+            [ endOfTravel  --> stopped.closed ]
+            [ basic && req=stop --> stopped.partlyOpen ]
+            [ movingUpX -[objectDetected]-> stopped.partlyOpen ]
+            [ !(req=down || endOfTravel || basic && req=stop || movingUpX && objectDetected) --> movingUp ]
             initial basic : State
-                [ req=stop      --> stopped   ]
                 [ req=expressUp --> movingUpX ]
+                [ !(req=expressUp) --> basic ]
             movingUpX : State
-                [ this -[objectDetected]-> stopped ]
+                [ this --> movingUpX ]
 
         initial xor stopped : State
             [ motor.cmd = motorStop ]
+            [ closed && req=down --> movingDown ]
+            [ partlyOpen && req=up --> movingUp ]
+            [ partlyOpen && req=down --> movingDown ]
+            [ open && req=up --> movingUp ]
+            [ !(closed && req=down || partlyOpen && (req=up || req=down) || open && req=up) --> stopped ]
             closed : State
-                [ req=down --> movingDown ]
-                [ (req=up || req=stop) --> closed ]
+                [ this --> closed ]
             partlyOpen : State
-                [ req=up   --> movingUp   ]
-                [ req=down --> movingDown ]
-                [ req=stop --> partlyOpen ]
+                [ this --> partlyOpen ]
             open : State
-                [ req=up   --> movingUp ]
-                [ (req=down || req=stop) --> open ]
+                [ this --> open ]
 
         movingDown : State
             [ motor.cmd = motorDown ]
             [ req=up       --> movingUp ]
-            [ endOfTravel  --> open     ]
-            [ req=stop     --> stopped  ]
-            [ req=down     --> movingDown ]
+            [ endOfTravel  --> stopped.open ]
+            [ req=stop     --> stopped.partlyOpen ]
+            [ !(req=up || endOfTravel || req=stop) --> movingDown ]
 ```
 
-We model state actions by fixing the motor command. 
+We model state actions by fixing the motor command.
 E.g., in state `movingDown`, motor command is fixed to `motorDown`.
 
 State transitions are modeled using "next transitions": `-->`.
-In the state `movingUpX` we demonstrate "guarded next transition": `-[objectDetected]->`.
+In the state `movingUp` we demonstrate "guarded next transition": `movingUpX -[objectDetected]-> stopped.partlyOpen`.
+
+A transition lasts as long as the parent of the state it is in.
+A transition that leaves its parent state is therefore a constraint of that parent: e.g., `closed && req=down --> movingDown` is a constraint of `stopped`, not of `closed`.
+Written in `closed`, it would lapse together with `stopped`, and it would only force the window to leave `stopped`, to any state.
+
+A transition only says what happens when its trigger occurs; it does not keep the state from changing otherwise.
+Therefore, each state also says that it lasts when none of its triggers occurs, e.g., `!(req=up || endOfTravel || req=stop) --> movingDown`.
+The substates last as long as their parent: `this --> closed` lapses when the window leaves `stopped`.
 
 ### Disabling `objectDetected` port
 
@@ -162,17 +171,19 @@ Without the feature `pinchProtection`, the port `objectDetected` should be inact
 Having the feature will allow receiving the signal `objectDetected`.
 
 ```clafer
-[ no pinchProtection => no objectDetected ]
+[ all c : WinController | no pinchProtection => no c.objectDetected ]
 ```
 
 # Variability in behavior using inheritance
 
-Two kinds of window controllers:
+Two kinds of window controllers.
+They are abstract: a concrete controller is one of them, e.g., `wc : WinCtrWithChime` instead of `wc : WinController` below.
+A model with several concrete controllers is solved for all of them together, which takes much longer.
  
 ## With continuous chime 
 
 ```clafer
-WinCtrWithContChime : WinController ?
+abstract WinCtrWithContChime : WinController
     chime : Port ?
     [ movingUpX <=> chime ]
 ```
@@ -180,7 +191,7 @@ WinCtrWithContChime : WinController ?
 ## With intermittent chime
 
 ```clafer
-WinCtrWithChime : WinController ?
+abstract WinCtrWithChime : WinController
     chime : Port ?
     [ no movingUpX => no chime ]
     [ chime --> no chime ]
@@ -221,43 +232,56 @@ Chiming should be active when moving up in express mode.
 The chime should be emitted only when the chiming is audible.
 
 ```clafer
-WinControllerStrategies : WinController ?
+abstract WinControllerStrategies : WinController
     chime : Port ?
     strategy -> ChimingStrategy
     [ strategy.active <=> movingUpX ]
     [ strategy.active.audible <=> chime ]
 ```
 
-We can choose the chiming strategy using the following constraint:
+A concrete controller chooses its chiming strategy with a constraint, e.g.:
 
-```clafer
-[ WinControllerStrategies.strategy = Intermittent ]
+```
+wc : WinControllerStrategies
+    [ strategy = Intermittent ]
 ```
 
 # Scenarios and properties
 
-For each case, we define a concrete WinController and state the assertion. 
-
-## An example positive scenario
-
-```clafer
-wc1 : WinController
-assert [ initially wc1.WinStates.stopped.closed && wc1.req=down --> wc1.WinStates.movingDown -->>
-         wc1.req=expressUp --> wc1.WinStates.movingUp.movingUpX --> wc1.objectDetected --> wc1.WinStates.stopped ]
-```
-
-## It must be possible to go from closed to open via partiallyOpen state
+We define a concrete window controller `wc`.
+A property is an assertion: it must hold in every trace of `wc`, and the command `check` looks for a counterexample within the scopes and the maximum trace length.
+A scenario is a constraint on the trace of `wc`, anchored to the start of the trace with `initially`: it is possible when the model has a trace with it.
 
 ```clafer
-wc2 : WinController
-assert [ sometime wc2.WinStates.stopped.closed -->> wc2.WinStates.stopped.partlyOpen -->> wc2.WinStates.stopped.open ]
+wc : WinController
 ```
+
+## Checking the properties
+
+A counterexample is found quickly, but a property that holds must be checked on every trace up to the maximum trace length, which takes long.
+The window reaches each of its states within two steps from the start, and each property below is about a state and the next one.
+Therefore, check them with a shorter trace: the command `tl 4` and then `check`.
+The times of `check` in claferIG for each property, one after another:
+
+| Property | `tl 3` | `tl 4` | `tl 5` | `tl 10` (default) |
+|----------|--------|--------|--------|-------------------|
+| The request `down` leaves `closed` | holds, 19 s | holds, 42 s | holds, 81 s | holds, 7 min |
+| No `motorUp` when `closed` | holds, 4 s | holds, 8 s | holds, 13 s | holds, 68 s |
+| Stops moving up after an object | counterexample, 2 s | counterexample, 1 s | counterexample, 1 s | counterexample, 1 s |
+| Stops moving up in express mode after an object | holds, 6 s | holds, 14 s | holds, 28 s | holds, 141 s |
+| All four (`check`) | 31 s | 65 s | 123 s | 10.5 min |
+
+The results are the same for all the trace lengths.
+With `tl 10`, the counterexample still comes in a second, but proving the three properties that hold takes ten minutes, most of it for the first one.
+A property that holds is proven only for the traces up to the maximum trace length and within the scopes.
 
 ## It must be impossible for the user to request opening and the window remains closed
 
+A transition holds trivially in a state where its source does not, so `never (wc.req = down --> wc.WinStates.stopped.closed)` would not say this.
+Instead, the request in the state `closed` leads to another state.
+
 ```clafer
-wc3 : WinController
-assert [ never wc3.req = down --> wc3.WinStates.stopped.closed ]
+assert [ wc.req = down && wc.WinStates.stopped.closed --> no wc.WinStates.stopped.closed ]
 ```
 
 ## It must be impossible for the window to be `closed` and continue sending `motorUp` command
@@ -265,8 +289,7 @@ assert [ never wc3.req = down --> wc3.WinStates.stopped.closed ]
 It is a safety property to prevent burning the motor.
 
 ```clafer
-wc4 : WinController
-assert [ never wc4.WinStates.stopped.closed && wc4.motor.cmd=motorUp ]
+assert [ never wc.WinStates.stopped.closed && wc.motor.cmd=motorUp ]
 ```
 
 ## The window must never continue `movingUp` after an object was detected
@@ -274,6 +297,39 @@ assert [ never wc4.WinStates.stopped.closed && wc4.motor.cmd=motorUp ]
 It is a safety property to prevent injury.
 
 ```clafer
-wc5 : WinController
-assert [ never wc5.objectDetected --> wc5.WinStates.movingUp ]
+assert [ wc.objectDetected --> no wc.WinStates.movingUp ]
+```
+
+This property has a counterexample: the window keeps moving up in `basic`, while the user holds the button, with an object detected.
+Only the express mode `movingUpX` is protected, which the following property states.
+It has no counterexample.
+
+```clafer
+assert [ wc.objectDetected && wc.WinStates.movingUp.movingUpX --> no wc.WinStates.movingUp ]
+```
+
+## An example positive scenario
+
+All the Clafer code on a page forms one model.
+Therefore, the scenarios are not part of the model of this page.
+To try one, open the model in the IDE and add it under `wc`.
+
+The window opens, the user reverses it, moves it up in express mode, and an object stops it.
+The scenario states its first state, since a chain is an implication from its first state, which holds trivially when the trace starts elsewhere.
+
+```
+    [ initially (WinStates.stopped.closed && req=down) ]
+    [ initially (WinStates.stopped.closed && req=down --> WinStates.movingDown -->> req=up
+        --> WinStates.movingUp.basic && req=expressUp --> WinStates.movingUp.movingUpX -->> objectDetected
+        --> WinStates.stopped.partlyOpen) ]
+```
+
+## It must be possible to go from closed to open via partiallyOpen state
+
+The window moves down between the states in which it is stopped.
+
+```
+    [ initially WinStates.stopped.closed ]
+    [ initially (WinStates.stopped.closed -->> WinStates.movingDown -->> WinStates.stopped.partlyOpen
+        -->> WinStates.movingDown -->> WinStates.stopped.open) ]
 ```
