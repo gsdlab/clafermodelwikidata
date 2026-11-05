@@ -41,6 +41,31 @@ The constructs mean the following:
 * `flashing -->> normal`: `flashing` lasts at least one step and must eventually end.
 * `green --> yellow` and the others: the strict cycles inside a state.
 
+## Properties
+
+An assertion must hold in every trace of every traffic light, and the command `check` looks for a counterexample within the scopes and the maximum trace length.
+The quantifier needs the parentheses: a transition binds more loosely than `|`.
+
+The light never goes from green directly to red, and it is green right after it was off:
+
+```clafer
+assert [ all t : TrafficLight_1 | (t.on.normal.green --> no t.on.normal.red) ]
+assert [ all t : TrafficLight_1 | (t.off --> t.on.normal.green) ]
+```
+
+The transition `red --> green` lasts as long as the parent of `red`, `normal`.
+When `normal` switches to `flashing`, or `on` to `off`, the transition lapses, so this assertion has a counterexample, e.g., red followed by `yellow_on`:
+
+```clafer
+assert [ all t : TrafficLight_1 | (t.on.normal.red --> t.on.normal.green) ]
+```
+
+This one has none:
+
+```clafer
+assert [ all t : TrafficLight_1 | (t.on.normal.red --> (t.on.normal.green || t.on.flashing || t.off)) ]
+```
+
 ## Scenarios
 
 A scenario is a concrete traffic light with a constraint on its trace.
