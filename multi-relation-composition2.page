@@ -53,9 +53,9 @@ Milk : Item
 [alloy|
 fact {
      compose
-     [ c0_contains,    ~r_c0_contains,    c0_contains_ref
-     , c0_category,    ~r_c0_category,    c0_category_ref
-     , c0_allCategory, ~r_c0_allCategory, c0_allCategory_ref
+     [ contains,    ~r_contains,    contains_ref
+     , category,    ~r_category,    category_ref
+     , allCategory, ~r_allCategory, allCategory_ref
      ]
 }
 pred compose[
@@ -78,9 +78,9 @@ Escape to Alloy to compose `all b : Bundle | b.allCategory = b <: contains >< ca
 [alloy|
 fact {
      compose
-     [ c0_contains,    ~r_c0_contains,    c0_contains_ref
-     , c0_category,    ~r_c0_category,    c0_category_ref
-     , c0_allCategory, ~r_c0_allCategory, c0_allCategory_ref
+     [ contains,    ~r_contains,    contains_ref
+     , category,    ~r_category,    category_ref
+     , allCategory, ~r_allCategory, allCategory_ref
      ]
 }
 pred compose[

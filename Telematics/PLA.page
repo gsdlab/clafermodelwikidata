@@ -20,8 +20,8 @@ a single or two channels; two channels afford independent programming for the
 driver and the passengers. The choice is represented as the xor-group
 channel. By default, each channel has one associated
 display; however, we can add one extra display per channel, as indicated by
-the optional feature <a href="#c69_extraDisplay">extraDisplay</a>. 
-Finally, we can choose <a href="#c72_large">large</a> or <a href="#c71_small">small</a> displays (displaySize).
+the optional feature <a href="#extraDisplay">extraDisplay</a>. 
+Finally, we can choose <a href="#telematicsSystem__size__large">large</a> or <a href="#telematicsSystem__size__small">small</a> displays (displaySize).
 
 ```clafer
 telematicsSystem
@@ -39,10 +39,10 @@ telematicsSystem
     [ small <=> ! plaECU.display.options.size.large ]
 ```
 
-There are two types of components: <a href="#c23_ECU">ECU</a>s (electronic control units) and <a href="#c24_display">display</a>s.
-Each display has exactly one <a href="#c23_ECU">ECU</a> as its server. All components have a version.
-Components themselves may have <a href="#c1_options">options</a>, like the display size or <a href="#c5_cache">cache</a>. 
-We can also specify the cache size and decide whether it is <a href="#c7_fixed">fixed</a> or
+There are two types of components: <a href="#ECU">ECU</a>s (electronic control units) and <a href="#root__display">display</a>s.
+Each display has exactly one <a href="#ECU">ECU</a> as its server. All components have a version.
+Components themselves may have <a href="#root__options">options</a>, like the display size or <a href="#cache">cache</a>. 
+We can also specify the cache size and decide whether it is <a href="#fixed">fixed</a> or
 can be updated dynamically. Thus, the solution space model consists of a class
 model of component types and a feature model of component options.
 

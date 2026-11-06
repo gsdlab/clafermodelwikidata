@@ -45,9 +45,9 @@ allItem ->> Item 6..*
 [alloy|
 fact {
   compose 
-  [ c0_bundles,  c0_bundles_ref
-  , c0_contains, ~r_c0_contains, c0_contains_ref
-  , c0_allItem,  c0_allItem_ref
+  [ bundles,  bundles_ref
+  , contains, ~r_contains, contains_ref
+  , allItem,  allItem_ref
   ]
 }
 
@@ -71,9 +71,9 @@ Escape to Alloy to compose `allItem = bundles ; contains`:
 [alloy|
 fact {
   compose 
-  [ c0_bundles,  c0_bundles_ref                   // family
-  , c0_contains, ~r_c0_contains, c0_contains_ref  // span
-  , c0_allItem,  c0_allItem_ref                   // family
+  [ bundles,  bundles_ref                   // family
+  , contains, ~r_contains, contains_ref  // span
+  , allItem,  allItem_ref                   // family
   ]
 }
 
