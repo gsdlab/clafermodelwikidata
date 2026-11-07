@@ -118,3 +118,6 @@ On until `yellow_off`, then the flashing cycle step by step:
 t3 : TrafficLight_1
     [ initially (on -->> yellow_off --> yellow_on --> yellow_off) ]
 ```
+
+```{.clafer .ide}
+```

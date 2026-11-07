@@ -10,13 +10,13 @@ categories: behavioral
 ```{.clafer .links}
 ```
 
-First, we'd like to express the states of the websocket and the transitions among them. 
+First, we'd like to express the states of the websocket and the transitions among them.
 When a websocket is created it starts in the state `ready`, which we model as the `initial` state.
-Upon entering each state initially, the websocket is not accepting any requests. 
-Furthermore, in the states `closed` and `failed`, the websocket is not accepting any requests permanently. 
+Upon entering each state initially, the websocket is not accepting any requests.
+Furthermore, in the states `closed` and `failed`, the websocket is not accepting any requests permanently.
 
-The request, if exists, points to either `open` or `close`. 
-The children of the request indicate `success` or `failure` of the request. 
+The request, if exists, points to either `open` or `close`.
+The children of the request indicate `success` or `failure` of the request.
 
 ```clafer
 enum Request = open | close
@@ -27,7 +27,7 @@ abstract WebSocket
             [ initially no request ]
             [ request=open -[request.success]-> opened ]
             [ request=open -[request.failure]-> failed ]
-        opened 
+        opened
             [ initially no request ]
             [ request=close -[request.success]->  closed ]
             [ request=close -[request.failure]->  failed ]
@@ -40,6 +40,9 @@ abstract WebSocket
         failure
 ```
 
+```{.clafer .ide}
+```
+
 ## Example scenarios
 
 The example scenarios serve as test cases, whereby we can state the intended behavior of the websocket.
@@ -48,7 +51,7 @@ A chain of transitions is a sequence, read from left to right, and `initially` a
 Without `initially`, the chain would have to hold in every state of the trace, which contradicts the behavior above.
 For example, the socket can remain in the state `opened` for an arbitrary number of snapshots until the request to close is received.
 We express that using the transition `-->>`.
-In the other cases, state changes must occur in the next snapshot as required by `-->`. 
+In the other cases, state changes must occur in the next snapshot as required by `-->`.
 
 ### Web socket successfully opened and closed
 
@@ -57,7 +60,7 @@ webSocketOpenedClosed : WebSocket
     [ initially (ready --> request=open && request.success --> opened -->> request=close && request.success --> closed --> closed) ]
 ```
 
-We call such a temporal constraint a *trace specification*. 
+We call such a temporal constraint a *trace specification*.
 
 #### Trace 1
 

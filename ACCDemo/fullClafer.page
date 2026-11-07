@@ -1,10 +1,10 @@
 ---
 title: Domain Modeling, Verification, and Validation
-... 
+...
 
 > Back to [Intro]()
 
-Car 
+Car
 
 ```clafer
 abstract car
@@ -34,7 +34,7 @@ abstract cc
     acc ?
 ```
 
-Specialization 
+Specialization
 
 ```clafer
 abstract camaro : car
@@ -52,4 +52,7 @@ bumbleBee : camaro
 ```
 
 ```{.clafer .summary}
+```
+
+```{.clafer .ide}
 ```

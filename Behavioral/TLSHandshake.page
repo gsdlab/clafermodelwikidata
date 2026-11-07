@@ -228,3 +228,6 @@ Protocol : Domain
         fatalError --> fatalError
             [ handshakeStatus = failed ]
 ```
+
+```{.clafer .ide}
+```

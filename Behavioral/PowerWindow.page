@@ -3,7 +3,7 @@ title: Behavioral Modeling - Power Window
 categories: behavioral
 ...
 
-This example demonstrates modeling both structure and behaviour with variability. 
+This example demonstrates modeling both structure and behaviour with variability.
 
 ```{.clafer .links}
 ```
@@ -20,7 +20,7 @@ abstract final Feature
 abstract final FeatureModel
 ```
 
-## Model 
+## Model
 
 The optional feature `express` indicates the functionality of automatically closing the window.
 The feature `pinchProtection` indicates the functionality of detecting obstacles and stopping the window.
@@ -38,8 +38,8 @@ WinFeatures : FeatureModel
 
 Simple component modeling.
 Nesting the `Port` under `Component` ensures that all ports are always children of components.
-The components are final because we do not allow dynamic reconfiguration; 
-however, the ports are not final: 
+The components are final because we do not allow dynamic reconfiguration;
+however, the ports are not final:
 a port instance can appear to point to a value, disappear, and a new instance can appear to point to a different value.
 
 ```clafer
@@ -56,7 +56,7 @@ abstract State
 abstract final StateMachine
 ```
 
-## Model 
+## Model
 
 Commands received by the window motor.
 
@@ -66,7 +66,7 @@ motorStop : Command
 motorDown : Command
 ```
 
-Window motor. 
+Window motor.
 The port `cmd` is mandatory, meaning that the motor must always be given a command.
 
 ```clafer
@@ -74,7 +74,7 @@ abstract WinMotor : Component
     cmd : Port -> Command
 ```
 
-Requests from the user. 
+Requests from the user.
 Observe, that the request `expressUp` is optional.
 
 ```clafer
@@ -85,7 +85,7 @@ stop : UserRequest
 down : UserRequest
 ```
 
-The user request `expressUp` is only available when the feature `express` is present (alphabet variability). 
+The user request `expressUp` is only available when the feature `express` is present (alphabet variability).
 
 ```clafer
 [ express <=> expressUp ]
@@ -98,7 +98,7 @@ The component `pinchDetector` of each `WinController` is only required if the fe
 ```
 
 Instances of the ports `endOfTravel` and `objectDetected` appear when the corresponding binary signal is received.
-On the other hand, instances of the port `req` point to a specific user request. 
+On the other hand, instances of the port `req` point to a specific user request.
 No instance of the port `req` indicates no user request.
 Finally, we allow at most one of `req`, `endOfTravel`, and `objectDetected` in order to remove non-determinism.
 After an `expressUp`, the user does not need to hold the button: the window keeps moving up on its own.
@@ -167,7 +167,7 @@ The substates last as long as their parent: `this --> closed` lapses when the wi
 
 ### Disabling `objectDetected` port
 
-Without the feature `pinchProtection`, the port `objectDetected` should be inactive. 
+Without the feature `pinchProtection`, the port `objectDetected` should be inactive.
 Having the feature will allow receiving the signal `objectDetected`.
 
 ```clafer
@@ -179,8 +179,8 @@ Having the feature will allow receiving the signal `objectDetected`.
 Two kinds of window controllers.
 They are abstract: a concrete controller is one of them, e.g., `wc : WinCtrWithChime` instead of `wc : WinController` below.
 A model with several concrete controllers is solved for all of them together, which takes much longer.
- 
-## With continuous chime 
+
+## With continuous chime
 
 ```clafer
 abstract WinCtrWithContChime : WinController
@@ -332,4 +332,7 @@ The window moves down between the states in which it is stopped.
     [ initially WinStates.stopped.closed ]
     [ initially (WinStates.stopped.closed -->> WinStates.movingDown -->> WinStates.stopped.partlyOpen
         -->> WinStates.movingDown -->> WinStates.stopped.open) ]
+```
+
+```{.clafer .ide}
 ```

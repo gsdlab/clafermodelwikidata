@@ -1,7 +1,7 @@
 Master is giving positive examples:
 
 ```clafer
-ExamplePhone1 
+ExamplePhone1
    display
       LCD
    GSM
@@ -10,7 +10,7 @@ ExamplePhone1
 ```
 
 ```clafer
-ExamplePhone2 
+ExamplePhone2
    display
       OLED
    GSM
@@ -18,7 +18,7 @@ ExamplePhone2
 ```
 
 ```clafer
-ExampleTablet1 
+ExampleTablet1
    display
       AMOLED
    HSPA
@@ -42,7 +42,7 @@ ExamplePhone3
 <b>negative</b>
 
 ```clafer
-ExampleTablet2 
+ExampleTablet2
    display
       AMOLED
    HSPA
@@ -62,7 +62,7 @@ abstract AndroidDevice1
    GSM
    HSPA ?
    CPU 1..4
-   xor input 
+   xor input
       keyboard
       touchscreen
 ```
@@ -71,7 +71,7 @@ and a specialization:
 
 ```clafer
 abstract AndroidPhone : AndroidDevice
-   [ GSM ] 
+   [ GSM ]
    [ # CPU < 4 ]
 ```
 
@@ -87,7 +87,7 @@ abstract AndroidDevice
    GSM ?
    HSPA ?
    CPU 1..4
-   xor input 
+   xor input
       keyboard
       touchscreen
 ```
@@ -101,13 +101,16 @@ AndroidPhone4 : AndroidPhone
    GSM
    HSPA
    CPU 2
-   input 
+   input
       touchscreen
 ```
 
 Luke discovers new variants and checks whether the positive ones are included and whether negative ones are excluded.
 
 ```{.clafer .summary}
+```
+
+```{.clafer .ide}
 ```
 
 End.

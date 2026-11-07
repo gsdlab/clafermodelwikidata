@@ -32,6 +32,12 @@ string
 clafer
 ```
 
+### Empty set
+
+```
+noclafer
+```
+
 ## Declarations of model elements
 
 ### Element

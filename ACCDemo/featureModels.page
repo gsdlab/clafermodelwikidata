@@ -1,6 +1,6 @@
 ---
 title: Feature Modeling and Configuration
-... 
+...
 
 
 > Back to [Intro]()
@@ -13,16 +13,16 @@ abstract Car
     CC ?
         ACC ?
             [FCA]
-    xor Transmission 
+    xor Transmission
         Automatic
         Manual
     FCA ?
-        xor Sensor 
-            Radar 
-            Lidar 
+        xor Sensor
+            Radar
+            Lidar
         xor Alert  ?
-            Haptic 
-            Audible 
+            Haptic
+            Audible
 
 aCar : Car
 ```
@@ -30,4 +30,7 @@ aCar : Car
 Rendering in Common Variability Language (CVL) notation for variability abstraction
 
 ```{.clafer .cvlGraph}
+```
+
+```{.clafer .ide}
 ```
